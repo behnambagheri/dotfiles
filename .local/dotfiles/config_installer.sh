@@ -92,9 +92,8 @@ ln -sf "$HOME/.local/dotfiles/fish_prompt.fish" "$HOME/.local/share/omf/themes/l
 # Install Fisher (if not already installed)
 if ! fish -c "functions -q fisher"; then
     echo "Installing Fisher..."
-    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | fish
 fi
-
 # Install Fisher plugins
 echo "Installing Fisher plugins..."
 fish -c "
