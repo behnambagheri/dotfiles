@@ -3,7 +3,8 @@
 set -e  # Exit on error
 
 echo "Updating system and installing Fish shell..."
-sudo apt update && sudo apt install -y fish curl git
+#sudo apt update
+sudo apt install -y fish curl git
 
 # Check if Fish shell is installed before proceeding
 if command -v fish &>/dev/null; then
