@@ -30,16 +30,7 @@ if [ ! -d "$HOME/.local/share/omf" ]; then
 fi
 
 # Install OMF theme
-omf install lambda
-
-# Define `config` function for managing dotfiles
-echo "Creating 'config' function for Git-managed dotfiles..."
-fish -c 'function config; git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $argv; end'
-fish -c 'funcsave config'
-
-# Remove default Lambda theme prompt (if it exists)
-rm -f "$HOME/.local/share/omf/themes/lambda/functions/fish_right_prompt.fish"
-rm -f "$HOME/.local/share/omf/themes/lambda/functions/fish_prompt.fish"
+fish -c 'omf install lambda'
 
 # Clone dotfiles repository if it doesn't exist
 if [ ! -d "$HOME/.dotfiles" ]; then
@@ -54,6 +45,17 @@ git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local status.showUntra
 
 # Hard reset dotfiles to repo state
 git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME reset --hard
+
+
+# Define `config` function for managing dotfiles
+#echo "Creating 'config' function for Git-managed dotfiles..."
+#fish -c 'function config; git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $argv; end'
+#fish -c 'funcsave config'
+
+# Remove default Lambda theme prompt (if it exists)
+rm -f "$HOME/.local/share/omf/themes/lambda/functions/fish_right_prompt.fish"
+rm -f "$HOME/.local/share/omf/themes/lambda/functions/fish_prompt.fish"
+
 
 # Ensure the target directory exists before symlinking
 mkdir -p "$HOME/.local/share/omf/themes/lambda/functions"
