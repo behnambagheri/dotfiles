@@ -113,6 +113,7 @@ fish -c "
     fisher install asim-tahir/docker.fish
     fisher install brgmnn/fish-docker-compose
     fisher install asim-tahir/docker-compose.fish
+    fisher install PatrickF1/fzf.fish
 "
 
 echo "Dotfiles installation and Fish setup complete!"
