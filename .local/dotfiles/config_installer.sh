@@ -12,14 +12,14 @@ echo "Updating system and installing the latest Fish shell..."
 if [[ "$(uname -s)" == "Linux" ]]; then
     if command -v apt &>/dev/null; then
         sudo apt-add-repository ppa:fish-shell/release-3 -y
-        sudo apt install -y fish curl git bat fdclone
+        sudo apt install -y fish curl git bat fdclone vim
     elif command -v dnf &>/dev/null; then
-        sudo dnf install -y fish curl git bat fdclone
+        sudo dnf install -y fish curl git bat fdclone vim
     elif command -v pacman &>/dev/null; then
-        sudo pacman -S --noconfirm fish curl git bat fdclone
+        sudo pacman -S --noconfirm fish curl git bat fdclone vim
     fi
 elif [[ "$(uname -s)" == "Darwin" ]]; then
-    brew install fish
+    brew install fish curl git vim bat fdclone
 fi
 
 # Install fzf (Fuzzy Finder)
@@ -115,5 +115,17 @@ fish -c "
     fisher install asim-tahir/docker-compose.fish
     fisher install PatrickF1/fzf.fish
 "
+
+# Install Vim-Plug if not installed
+if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
+    echo "Installing Vim-Plug..."
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
+
+# Install Vim plugins automatically
+echo "Installing Vim plugins with PlugInstall..."
+vim +PlugInstall +qall
+
 
 echo "Dotfiles installation and Fish setup complete!"
