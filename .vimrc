@@ -41,7 +41,7 @@
 "for kde terminal(konsole)
 ":noremap <silent> #5 :!konsole --hold -e './%' <CR> <CR> 
 " execute bash & python script with F5
-:map <C-p> :w<CR>:!chmod +x;clear;python './%' <CR>
+:map <C-p> :w<CR>:!chmod +x;clear;python3 './%' <CR>
 :map <C-b> :w<CR>:!chmod +x;clear;bash './%' <CR>
 
 "========================================================
