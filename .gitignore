@@ -14,8 +14,14 @@
 #.vim/plugged/indentLine/.gitignore
 #.vim/plugged/nerdtree/.gitignore
 #.vim/plugged/nerdtree/.git
+.vim/plugged/indentLine/.git 
+.vim/plugged/nerdtree/.git 
+.vim/plugged/vim-airline/.git 
+.vim/plugged/vim-airline-clock/.git 
+.vim/plugged/vim-airline-themes/.git 
+.vim/plugged/vim-json/.git 
+.vim/plugged/vim-yaml/.git 
 
+#.git/ 
 
-.git/ 
-
-!.git
+#!.git
