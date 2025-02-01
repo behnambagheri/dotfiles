@@ -102,23 +102,43 @@ fi
 
 # Install Fisher plugins
 echo "Installing Fisher plugins..."
-fish -c "
-    fisher install jorgebucaran/fisher
-    fisher install blackjid/plugin-kubectl
-    fisher install meaningful-ooo/sponge
-    fisher install jhillyerd/plugin-git
-    fisher install gazorby/fish-abbreviation-tips
-    fisher install jethrokuan/z
-    fisher install patrickf3139/colored-man-pages
-    fisher install laughedelic/brew-completions
-    fisher install markcial/upto
-    fisher install jorgebucaran/autopair.fish
-    fisher install laughedelic/pisces
-    fisher install asim-tahir/docker.fish
-    fisher install brgmnn/fish-docker-compose
-    fisher install asim-tahir/docker-compose.fish
-    fisher install PatrickF1/fzf.fish
-"
+
+fish -c "fisher install jorgebucaran/fisher"
+fish -c "fisher install meaningful-ooo/sponge"
+fish -c "fisher install jhillyerd/plugin-git"
+fish -c "fisher install gazorby/fish-abbreviation-tips"
+fish -c "fisher install jethrokuan/z"
+fish -c "fisher install patrickf3139/colored-man-pages"
+fish -c "fisher install markcial/upto"
+fish -c "fisher install jorgebucaran/autopair.fish"
+fish -c "fisher install laughedelic/pisces"
+fish -c "fisher install PatrickF1/fzf.fish"
+
+# Install Docker plugins only if Docker is installed
+if command -v docker &>/dev/null; then
+    echo "Docker detected! Installing Docker plugins..."
+    fish -c "fisher install asim-tahir/docker.fish"
+    fish -c "fisher install brgmnn/fish-docker-compose"
+    fish -c "fisher install asim-tahir/docker-compose.fish"
+else
+    echo "Docker not found. Skipping Docker plugins."
+fi
+
+# Install Kubernetes plugin only if kubectl is installed
+if command -v kubectl &>/dev/null; then
+    echo "kubectl detected! Installing Kubernetes plugin..."
+    fish -c "fisher install blackjid/plugin-kubectl"
+else
+    echo "kubectl not found. Skipping Kubernetes plugin."
+fi
+
+# Install Homebrew completion plugin only on macOS
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    echo "macOS detected! Installing Homebrew completions..."
+    fish -c "fisher install laughedelic/brew-completions"
+else
+    echo "Not macOS. Skipping Homebrew completions."
+fi
 
 # Install Vim-Plug if not installed
 if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
