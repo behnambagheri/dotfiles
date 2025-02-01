@@ -1,0 +1,3 @@
+function ed
+deactivate
+end
