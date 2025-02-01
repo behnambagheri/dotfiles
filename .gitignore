@@ -22,6 +22,13 @@
 .vim/plugged/vim-json/.git 
 .vim/plugged/vim-yaml/.git 
 
+.vim/plugged/indentLine/.gitignore 
+.vim/plugged/nerdtree/.gitignore
+.vim/plugged/vim-airline/.gitignore
+.vim/plugged/vim-airline-clock/.gitignore 
+.vim/plugged/vim-airline-themes/.gitignore
+.vim/plugged/vim-json/.gitignore
+.vim/plugged/vim-yaml/.gitignore
 #.git/ 
 
 #!.git
