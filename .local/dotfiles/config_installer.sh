@@ -2,9 +2,27 @@
 
 set -e  # Exit on error
 
-echo "Updating system and installing Fish shell..."
+#echo "Updating system and installing Fish shell..."
 #sudo apt update
-sudo apt install -y fish curl git
+#sudo apt install -y fish
+#
+
+
+echo "Updating system and installing the latest Fish shell..."
+if [[ "$(uname -s)" == "Linux" ]]; then
+    if command -v apt &>/dev/null; then
+        sudo apt-add-repository ppa:fish-shell/release-3 -y
+        sudo apt install -y fish curl git
+    elif command -v dnf &>/dev/null; then
+        sudo dnf install -y fish curl git
+    elif command -v pacman &>/dev/null; then
+        sudo pacman -S --noconfirm fish curl git
+    fi
+elif [[ "$(uname -s)" == "Darwin" ]]; then
+    brew install fish
+fi
+
+
 
 # Check if Fish shell is installed before proceeding
 if command -v fish &>/dev/null; then
