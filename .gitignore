@@ -6,3 +6,11 @@
 .config/fish/config.fish
 .config/fish/conf.d/iterm_tab_colors.fish
 .config/fish/completions/fisher.fish
+
+
+.vim/plugged/*/.git
+
+.vim/plugged/indentLine/.git
+.vim/plugged/indentLine/.gitignore
+.vim/plugged/nerdtree/.gitignore
+.vim/plugged/nerdtree/.git
