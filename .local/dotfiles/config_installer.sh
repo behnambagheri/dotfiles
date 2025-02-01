@@ -1,22 +1,26 @@
 #!/bin/bash
+##Install:
+# bash <(git clone  git@github.com:behnambagheri/dotfiles.git /tmp/dotfiles && echo /tmp/dotfiles/.local/dotfiles/config_installer.sh)
+##Update:
+#config pull && bash .local/dotfiles/config_installer.sh
 
 set -e  # Exit on error
 
 #echo "Updating system and installing Fish shell..."
-#sudo apt update
-#sudo apt install -y fish
+#apt update
+#apt install -y fish
 #
 
 
 echo "Updating system and installing the latest Fish shell..."
 if [[ "$(uname -s)" == "Linux" ]]; then
     if command -v apt &>/dev/null; then
-        sudo apt-add-repository ppa:fish-shell/release-3 -y
-        sudo apt install -y fish curl git bat fdclone vim
+        apt-add-repository ppa:fish-shell/release-3 -y
+        apt install -y fish curl git bat fdclone vim
     elif command -v dnf &>/dev/null; then
-        sudo dnf install -y fish curl git bat fdclone vim
+        dnf install -y fish curl git bat fdclone vim
     elif command -v pacman &>/dev/null; then
-        sudo pacman -S --noconfirm fish curl git bat fdclone vim
+        pacman -S --noconfirm fish curl git bat fdclone vim
     fi
 elif [[ "$(uname -s)" == "Darwin" ]]; then
     brew install fish curl git vim bat fdclone
@@ -63,7 +67,7 @@ fish -c 'omf install lambda'
 # Clone dotfiles repository if it doesn't exist
 if [ ! -d "$HOME/.dotfiles" ]; then
     echo "Cloning dotfiles repository..."
-    git clone --bare git@github.com:behnambagheri/dotfiles.git "$HOME/.dotfiles"
+    git clone --bare https://github.com/behnambagheri/dotfiles.git "$HOME/.dotfiles"
 else
     echo "Dotfiles repository already exists, skipping clone."
 fi
