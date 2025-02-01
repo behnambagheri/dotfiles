@@ -1,50 +1,3 @@
-#!/bin/bash 
-
-#sudo apt update
-#sudo apt install -y fish
-#fish --version
-#fish
-#chsh -s $(which fish)
-#set -U fish_greeting ""
-#curl -L https://get.oh-my.fish | fish
-#omf install lambda
-#
-#
-#function config
-#        git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $argv
-#    end
-#
-#funcsave config
-#
-#rm .local/share/omf/themes/lambda/functions/fish_right_prompt.fish
-#rm .local/share/omf/themes/lambda/functions/fish_prompt.fish
-#
-#git clone --bare git@github.com:behnambagheri/dotfiles.git $HOME/.dotfiles
-#git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local --add status.showUntrackedFiles no
-#git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME reset --hard
-#
-#ln -s  ~/.local/dotfiles/fish_prompt.fish  ~/.local/share/omf/themes/lambda/functions/fish_prompt.fish
-#
-#
-#curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
-#
-#
-#fisher install jorgebucaran/fisher
-#fisher install blackjid/plugin-kubectl
-#fisher install meaningful-ooo/sponge
-#fisher install jhillyerd/plugin-git
-#fisher install gazorby/fish-abbreviation-tips
-#fisher install jethrokuan/z
-#fisher install patrickf3139/colored-man-pages
-#fisher install laughedelic/brew-completions
-#fisher install markcial/upto
-#fisher install jorgebucaran/autopair.fish
-#fisher install laughedelic/pisces
-#fisher install asim-tahir/docker.fish
-#fisher install brgmnn/fish-docker-compose
-#fisher install asim-tahir/docker-compose.fish
-
-
 #!/bin/bash
 
 set -e  # Exit on error
@@ -77,7 +30,7 @@ if [ ! -d "$HOME/.local/share/omf" ]; then
 fi
 
 # Install OMF theme
-fish -c 'omf install lambda'
+omf install lambda
 
 # Define `config` function for managing dotfiles
 echo "Creating 'config' function for Git-managed dotfiles..."
