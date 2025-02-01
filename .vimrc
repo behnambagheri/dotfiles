@@ -11,7 +11,7 @@
 :colorscheme  molokai "Set colorScheme
 :set nocp " This changes the values of a LOT of options, enabling features which are not Vi compatible but really really nice
 "":set clipboard=unnamed
-"":set clipboard=unnamedplus
+:set clipboard=unnamedplus
 :set autoindent " Automatic indentation
 :set cindent " This turns on C style indentation
 :set si " Smart indent
@@ -22,8 +22,6 @@
 :set noswapfile " Avoid swap files
 :set mouse=a " Mouse Integration
 ""set mouse-=a
-
-
 " auto complete for ( , " , ' , [ , { 
 :inoremap        (  ()<Left>
 :inoremap        "  ""<Left>
@@ -33,10 +31,10 @@
 :inoremap      {  {}<Left>
 
 " auto comment and uncooment with F6 and F7 key
-:autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
-:autocmd FileType sh,ruby,python,bash   let b:comment_leader = '# '
-:noremap <silent> #6 :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR> " commenting line with F6
-:noremap <silent> #7 :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR> " uncommenting line with F7
+"":autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
+"":autocmd FileType sh,ruby,python,bash   let b:comment_leader = '# '
+"":noremap <silent> #6 :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR> " commenting line with F6
+"":noremap <silent> #7 :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR> " uncommenting line with F7
 
 "for kde terminal(konsole)
 ":noremap <silent> #5 :!konsole --hold -e './%' <CR> <CR> 
@@ -58,9 +56,9 @@
 ":noremap <silent> #5 :!konsole --hold -e 'python ./%' <CR> <CR>" execute python script with F5
 "========================================================
 
-:noremap <silent> #3 :tabprevious<CR> " switch to previous tab with F3
-:noremap <silent> #4 :tabnext<CR> " switch to next tab with F2
-:map <F8> :setlocal spell! spelllang=en_us<CR> " check spelling with F8
+"":noremap <silent> #3 :tabprevious<CR> " switch to previous tab with F3
+"":noremap <silent> #4 :tabnext<CR> " switch to next tab with F2
+"":map <F8> :setlocal spell! spelllang=en_us<CR> " check spelling with F8
 :set pastetoggle=<F2> " Paste mode toggle with F2 Pastemode disable auto-indent and bracket auto-compelation and it helps you to paste code fro elsewhere .
 
 map <C-s> :w<CR>" save project with control+s
