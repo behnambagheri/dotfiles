@@ -12,16 +12,25 @@ echo "Updating system and installing the latest Fish shell..."
 if [[ "$(uname -s)" == "Linux" ]]; then
     if command -v apt &>/dev/null; then
         sudo apt-add-repository ppa:fish-shell/release-3 -y
-        sudo apt install -y fish curl git
+        sudo apt install -y fish curl git bat fdclone
     elif command -v dnf &>/dev/null; then
-        sudo dnf install -y fish curl git
+        sudo dnf install -y fish curl git bat fdclone
     elif command -v pacman &>/dev/null; then
-        sudo pacman -S --noconfirm fish curl git
+        sudo pacman -S --noconfirm fish curl git bat fdclone
     fi
 elif [[ "$(uname -s)" == "Darwin" ]]; then
     brew install fish
 fi
 
+# Install fzf (Fuzzy Finder)
+echo "Installing fzf..."
+if [ ! -d "$HOME/.fzf" ]; then
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+else
+    echo "fzf already exists, skipping clone."
+fi
+
+~/.fzf/install --all
 
 
 # Check if Fish shell is installed before proceeding
