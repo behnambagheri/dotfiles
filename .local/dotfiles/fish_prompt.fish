@@ -20,14 +20,6 @@ function fish_prompt
     end
   end
 
-  if test (uname -n | cut -d . -f 1) = "Bagheri-MacBook-Pro"
-#     set -l bagher hiiiiii
-    set -g current_user bea
-    set -g kubenv_current_cluster (kubectl config view --minify --output 'jsonpath={.contexts[0].context.cluster}' | cut -d'@' -f1)
-    set -g kubenv_current_namespace (kubectl config view --minify --output 'jsonpath={.contexts[0].context.namespace}' | cut -d'@' -f1)
-  else
-    set -g current_user (whoami)
-  end
 
 
   # Setup colors
@@ -65,18 +57,42 @@ function fish_prompt
     set exit_color (set_color red)
   end
 
-  ##
-  ## Line 1
-  ##
-  echo -n $hostcolor'╭─'$hotpink$current_user$white' at '$orange$__fish_prompt_hostname$white' in '$limegreen(pwd | sed "s=$HOME=⌁=")$turquoise $white'['$purple$kubenv_current_namespace ''$blue'⎈ '$hotpink$kubenv_current_cluster''$white']'$white' ('$exit_color$last_status$white')'
+  if test (uname -n | cut -d . -f 1) = "Bagheri-MacBook-Pro"
+      set -g current_user bea
+      set -g kubenv_current_cluster (kubectl config view --minify --output 'jsonpath={.contexts[0].context.cluster}' | cut -d'@' -f1)
+      set -g kubenv_current_namespace (kubectl config view --minify --output 'jsonpath={.contexts[0].context.namespace}' | cut -d'@' -f1)
+      ##
+      ## Line 1
+      ##
+      echo -n $hostcolor'╭─'$hotpink$current_user$white' at '$orange$__fish_prompt_hostname$white' in '$limegreen(pwd | sed "s=$HOME=⌁=")$turquoise $white'['$purple$kubenv_current_namespace ''$blue'⎈ '$hotpink$kubenv_current_cluster''$white']'$white' ('$exit_color$last_status$white')'
 
-  __fish_git_prompt " (%s)"
-  echo
+      __fish_git_prompt " (%s)"
+      echo
 
-  ##
-  ## Line 2
-  ##
-  echo -n $hostcolor'╰'
+      ##
+      ## Line 2
+      ##
+      echo -n $hostcolor'╰'
+
+  else
+
+      set -g current_user (whoami)
+
+      ##
+      ## Line 1
+      ##
+      echo -n $hostcolor'╭─'$hotpink$current_user$white' at '$orange$__fish_prompt_hostname$white' in '$limegreen(pwd | sed "s=$HOME=⌁=")$turquoise $white' ('$exit_color$last_status$white')'
+
+      __fish_git_prompt " (%s)"
+      echo
+
+      ##
+      ## Line 2
+      ##
+      echo -n $hostcolor'╰'
+
+
+  end
 
   # Disable virtualenv's default prompt
   set -g VIRTUAL_ENV_DISABLE_PROMPT true
