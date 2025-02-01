@@ -1,8 +1,9 @@
 function fish_prompt
-  sync_history
-
   # Cache the last command's exit status at the very beginning of the function
   set -l last_status $status
+
+  sync_history
+
 
   # Calculate hostname once
   if not set -q __fish_prompt_hostname
@@ -18,6 +19,16 @@ function fish_prompt
         set -g __fish_prompt_char 'λ'
     end
   end
+
+  if test (uname -n | cut -d . -f 1) = "Bagheri-MacBook-Pro"
+#     set -l bagher hiiiiii
+    set -g current_user bea
+    set -g kubenv_current_cluster (kubectl config view --minify --output 'jsonpath={.contexts[0].context.cluster}' | cut -d'@' -f1)
+    set -g kubenv_current_namespace (kubectl config view --minify --output 'jsonpath={.contexts[0].context.namespace}' | cut -d'@' -f1)
+  else
+    set -g current_user (whoami)
+  end
+
 
   # Setup colors
   set -l hostcolor (set_color (uname -n | md5sum | cut -f1 -d' ' | tr -d '\n' | tail -c6))
@@ -43,9 +54,8 @@ function fish_prompt
   set -g __fish_git_prompt_show_informative_status true
 
   # Kubernetes context
-  set -l kubenv_current_cluster (kubectl config view --minify --output 'jsonpath={.contexts[0].context.cluster}' | cut -d'@' -f1)
-  set -l kubenv_current_namespace (kubectl config view --minify --output 'jsonpath={.contexts[0].context.namespace}' | cut -d'@' -f1)
-  set -l current_user bea
+
+#   set -l current_user bea
 
   # Exit status with color
   set -l exit_color
@@ -58,7 +68,7 @@ function fish_prompt
   ##
   ## Line 1
   ##
-  echo -n $hostcolor'╭─'$hotpink$current_user$white' at '$orange$__fish_prompt_hostname$white' in '$limegreen(pwd | sed "s=$HOME=⌁=")$turquoise $white'['$purple$kubenv_current_namespace ''$blue'⎈ '$hotpink$kubenv_current_cluster''$white']'
+  echo -n $hostcolor'╭─'$hotpink$current_user$white' at '$orange$__fish_prompt_hostname$white' in '$limegreen(pwd | sed "s=$HOME=⌁=")$turquoise $white'['$purple$kubenv_current_namespace ''$blue'⎈ '$hotpink$kubenv_current_cluster''$white']'$white' ('$exit_color$last_status$white')'
 
   __fish_git_prompt " (%s)"
   echo
