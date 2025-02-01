@@ -1,0 +1,8 @@
+.config/fish/functions/fisher.fish
+.config/fish/functions/__differentiate_tab_colors.fish
+.config/fish/conf.d/omf.fish
+.config/fish/fish_variables
+
+.config/fish/config.fish
+.config/fish/conf.d/iterm_tab_colors.fish
+.config/fish/completions/fisher.fish
