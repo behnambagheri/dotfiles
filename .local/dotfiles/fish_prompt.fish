@@ -81,7 +81,7 @@ function fish_prompt
       ##
       ## Line 1
       ##
-      echo -n $hostcolor'╭─'$hotpink$current_user$white' at '$white'{'$orange$__fish_prompt_hostname$white'} in '$limegreen(pwd | sed "s=$HOME=⌁=")$turquoise $white'('$exit_color$last_status$white')'
+      echo -n $hostcolor'╭─'$hotpink$current_user$white' at '$white'{ '$orange$__fish_prompt_hostname$white' } in '$limegreen(pwd | sed "s=$HOME=⌁=")$turquoise $white'('$exit_color$last_status$white')'
 
       __fish_git_prompt " (%s)"
       echo
