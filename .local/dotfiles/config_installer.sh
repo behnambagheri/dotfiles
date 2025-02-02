@@ -1,6 +1,6 @@
 #!/bin/bash
 ##Install:
-# bash <(git clone  git@github.com:behnambagheri/dotfiles.git /tmp/dotfiles && echo /tmp/dotfiles/.local/dotfiles/config_installer.sh)
+#bash <(GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone git@github.com:behnambagheri/dotfiles.git /tmp/dotfiles && echo /tmp/dotfiles/.local/dotfiles/config_installer.sh)
 ##Update:
 #config pull && bash .local/dotfiles/config_installer.sh
 
