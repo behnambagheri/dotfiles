@@ -67,7 +67,8 @@ fish -c 'omf install lambda'
 # Clone dotfiles repository if it doesn't exist
 if [ ! -d "$HOME/.dotfiles" ]; then
     echo "Cloning dotfiles repository..."
-    git clone --bare git@github.com:behnambagheri/dotfiles.git "$HOME/.dotfiles"
+    #git clone --bare git@github.com:behnambagheri/dotfiles.git "$HOME/.dotfiles"
+    git clone --bare https://github.com/behnambagheri/dotfiles.git "$HOME/.dotfiles"
 else
     echo "Dotfiles repository already exists, skipping clone."
 fi
