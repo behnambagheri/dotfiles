@@ -10,7 +10,14 @@ set -e  # Exit on error
 #sudo apt update
 #sudo apt install -y fish
 #
-
+# Check if --with-proxy argument is provided
+INSTALL_PROXY=false
+for arg in "$@"; do
+    if [[ "$arg" == "--with-proxy" ]]; then
+        INSTALL_PROXY=true
+        break
+    fi
+done
 
 echo "Updating system and installing the latest Fish shell..."
 if [[ "$(uname -s)" == "Linux" ]]; then
@@ -152,7 +159,7 @@ fi
 echo "Installing Vim plugins with PlugInstall..."
 vim +PlugInstall +qall
 
-i
+
 # === Install Sing-box ===
 echo "Installing Sing-box..."
 if command -v apt &>/dev/null; then
@@ -180,6 +187,7 @@ else
     echo "Error: Configuration file not found at $CONFIG_SOURCE"
     exit 1
 fi
+
 
 echo "Dotfiles installation and Fish setup complete!"
 
