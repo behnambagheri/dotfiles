@@ -188,6 +188,19 @@ EOF
     echo "DNF/YUM proxy configured successfully!"
 }
 
+
+# Enable and Start Sing-box Service
+enable_singbox_service() {
+    echo "Enabling and starting Sing-box service..."
+    if command -v systemctl &>/dev/null; then
+        sudo systemctl enable --now sing-box
+        echo "Sing-box service started and enabled on boot."
+    else
+        echo "Error: systemctl not found. Unable to enable Sing-box service."
+        exit 1
+    fi
+}
+
 # === Install Sing-box only if --with-proxy is provided ===
 if [ "$INSTALL_PROXY" = true ]; then
     echo "Installing Sing-box..."
@@ -218,6 +231,9 @@ if [ "$INSTALL_PROXY" = true ]; then
         echo "Error: Configuration file not found at $CONFIG_SOURCE"
         exit 1
     fi
+        # Enable and Start Sing-box service
+    enable_singbox_service
+
 else
     echo "Skipping Sing-box installation and proxy setup (no --with-proxy argument provided)."
 fi
