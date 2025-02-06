@@ -167,7 +167,7 @@ PROXY="socks5h://127.0.0.1:7890"
 # APT Proxy Setup (For Debian-based systems)
 setup_apt_proxy() {
     echo "Configuring APT proxy..."
-    sudo bash -c "cat > /etc/apt/apt.conf.d/proxy.conf" <<EOF
+    sudo bash -c "cat > /etc/apt/apt.conf.d/01proxy" <<EOF
 Acquire::http::Proxy  "$PROXY";
 Acquire::https::Proxy "$PROXY";
 EOF
