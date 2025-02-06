@@ -201,20 +201,29 @@ enable_singbox_service() {
     fi
 }
 
+
+
 # === Install Sing-box only if --with-proxy is provided ===
 if [ "$INSTALL_PROXY" = true ]; then
     echo "Installing Sing-box..."
     if command -v apt &>/dev/null; then
         echo "Detected Debian-based system. Installing Sing-box..."
+        sudo mkdir -p /etc/apt/keyrings
+        sudo curl -fsSL https://sing-box.app/gpg.key -o /etc/apt/keyrings/sagernet.asc
+        sudo chmod a+r /etc/apt/keyrings/sagernet.asc
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/sagernet.asc] https://deb.sagernet.org/ * *" | \
+            sudo tee /etc/apt/sources.list.d/sagernet.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install -y sing-box
         setup_apt_proxy  # Apply APT proxy
-        bash <(curl -fsSL https://sing-box.app/deb-install.sh)
+
     elif command -v dnf &>/dev/null; then
         echo "Detected RedHat-based system. Installing Sing-box..."
+        sudo dnf -y install dnf-plugins-core
+        sudo dnf config-manager --add-repo https://sing-box.app/sing-box.repo
+        sudo dnf install -y sing-box
         setup_dnf_yum_proxy  # Apply DNF/YUM proxy
-        bash <(curl -fsSL https://sing-box.app/rpm-install.sh)
-    elif command -v pacman &>/dev/null; then
-        echo "Detected Arch Linux system. Installing Sing-box..."
-        bash <(curl -fsSL https://sing-box.app/arch-install.sh)
+
     else
         echo "Unsupported package manager. Skipping Sing-box installation."
     fi
@@ -225,21 +234,20 @@ if [ "$INSTALL_PROXY" = true ]; then
 
     if [ -f "$CONFIG_SOURCE" ]; then
         echo "Copying Sing-box configuration file..."
+        sudo mkdir -p /etc/sing-box
         sudo cp "$CONFIG_SOURCE" "$CONFIG_DEST"
         echo "Configuration file copied successfully."
     else
         echo "Error: Configuration file not found at $CONFIG_SOURCE"
         exit 1
     fi
-        # Enable and Start Sing-box service
+
+    # Enable and Start Sing-box service
     enable_singbox_service
 
 else
     echo "Skipping Sing-box installation and proxy setup (no --with-proxy argument provided)."
 fi
-
-
-
 
 
 echo "Dotfiles installation and Fish setup complete!"
