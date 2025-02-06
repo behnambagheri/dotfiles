@@ -177,7 +177,7 @@ fi
 
 # Copy configuration file for Sing-box
 CONFIG_SOURCE="$HOME/.local/dotfiles/singbox.json"
-CONFIG_DEST="/etc/config.json"
+CONFIG_DEST="/etc/sing-box/config.json"
 
 if [ -f "$CONFIG_SOURCE" ]; then
     echo "Copying Sing-box configuration file..."
