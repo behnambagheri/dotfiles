@@ -152,7 +152,37 @@ fi
 echo "Installing Vim plugins with PlugInstall..."
 vim +PlugInstall +qall
 
+i
+# === Install Sing-box ===
+echo "Installing Sing-box..."
+if command -v apt &>/dev/null; then
+    echo "Detected Debian-based system. Installing Sing-box..."
+    bash <(curl -fsSL https://sing-box.app/deb-install.sh)
+elif command -v dnf &>/dev/null; then
+    echo "Detected RedHat-based system. Installing Sing-box..."
+    bash <(curl -fsSL https://sing-box.app/rpm-install.sh)
+elif command -v pacman &>/dev/null; then
+    echo "Detected Arch Linux system. Installing Sing-box..."
+    bash <(curl -fsSL https://sing-box.app/arch-install.sh)
+else
+    echo "Unsupported package manager. Skipping Sing-box installation."
+fi
+
+# Copy configuration file for Sing-box
+CONFIG_SOURCE="$HOME/.local/dotfiles/singbox.json"
+CONFIG_DEST="/etc/config.json"
+
+if [ -f "$CONFIG_SOURCE" ]; then
+    echo "Copying Sing-box configuration file..."
+    sudo cp "$CONFIG_SOURCE" "$CONFIG_DEST"
+    echo "Configuration file copied successfully."
+else
+    echo "Error: Configuration file not found at $CONFIG_SOURCE"
+    exit 1
+fi
 
 echo "Dotfiles installation and Fish setup complete!"
+
+
 
 
