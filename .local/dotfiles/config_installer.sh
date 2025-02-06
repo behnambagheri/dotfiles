@@ -160,33 +160,70 @@ echo "Installing Vim plugins with PlugInstall..."
 vim +PlugInstall +qall
 
 
-# === Install Sing-box ===
-echo "Installing Sing-box..."
-if command -v apt &>/dev/null; then
-    echo "Detected Debian-based system. Installing Sing-box..."
-    bash <(curl -fsSL https://sing-box.app/deb-install.sh)
-elif command -v dnf &>/dev/null; then
-    echo "Detected RedHat-based system. Installing Sing-box..."
-    bash <(curl -fsSL https://sing-box.app/rpm-install.sh)
-elif command -v pacman &>/dev/null; then
-    echo "Detected Arch Linux system. Installing Sing-box..."
-    bash <(curl -fsSL https://sing-box.app/arch-install.sh)
+
+# Define proxy settings
+PROXY="socks5h://127.0.0.1:7890"
+
+# APT Proxy Setup (For Debian-based systems)
+setup_apt_proxy() {
+    echo "Configuring APT proxy..."
+    sudo bash -c "cat > /etc/apt/apt.conf.d/proxy.conf" <<EOF
+Acquire::http::Proxy  "$PROXY";
+Acquire::https::Proxy "$PROXY";
+EOF
+    echo "APT proxy configured successfully!"
+}
+
+# DNF/YUM Proxy Setup (For RedHat-based systems)
+setup_dnf_yum_proxy() {
+    echo "Configuring DNF/YUM proxy..."
+    sudo bash -c "cat >> /etc/dnf/dnf.conf" <<EOF
+proxy=$PROXY
+EOF
+
+    sudo bash -c "cat >> /etc/yum.conf" <<EOF
+proxy=$PROXY
+EOF
+
+    echo "DNF/YUM proxy configured successfully!"
+}
+
+# === Install Sing-box only if --with-proxy is provided ===
+if [ "$INSTALL_PROXY" = true ]; then
+    echo "Installing Sing-box..."
+    if command -v apt &>/dev/null; then
+        echo "Detected Debian-based system. Installing Sing-box..."
+        setup_apt_proxy  # Apply APT proxy
+        bash <(curl -fsSL https://sing-box.app/deb-install.sh)
+    elif command -v dnf &>/dev/null; then
+        echo "Detected RedHat-based system. Installing Sing-box..."
+        setup_dnf_yum_proxy  # Apply DNF/YUM proxy
+        bash <(curl -fsSL https://sing-box.app/rpm-install.sh)
+    elif command -v pacman &>/dev/null; then
+        echo "Detected Arch Linux system. Installing Sing-box..."
+        bash <(curl -fsSL https://sing-box.app/arch-install.sh)
+    else
+        echo "Unsupported package manager. Skipping Sing-box installation."
+    fi
+
+    # Copy configuration file for Sing-box
+    CONFIG_SOURCE="$HOME/.local/dotfiles/singbox.json"
+    CONFIG_DEST="/etc/config.json"
+
+    if [ -f "$CONFIG_SOURCE" ]; then
+        echo "Copying Sing-box configuration file..."
+        sudo cp "$CONFIG_SOURCE" "$CONFIG_DEST"
+        echo "Configuration file copied successfully."
+    else
+        echo "Error: Configuration file not found at $CONFIG_SOURCE"
+        exit 1
+    fi
 else
-    echo "Unsupported package manager. Skipping Sing-box installation."
+    echo "Skipping Sing-box installation and proxy setup (no --with-proxy argument provided)."
 fi
 
-# Copy configuration file for Sing-box
-CONFIG_SOURCE="$HOME/.local/dotfiles/singbox.json"
-CONFIG_DEST="/etc/sing-box/config.json"
 
-if [ -f "$CONFIG_SOURCE" ]; then
-    echo "Copying Sing-box configuration file..."
-    sudo cp "$CONFIG_SOURCE" "$CONFIG_DEST"
-    echo "Configuration file copied successfully."
-else
-    echo "Error: Configuration file not found at $CONFIG_SOURCE"
-    exit 1
-fi
+
 
 
 echo "Dotfiles installation and Fish setup complete!"
