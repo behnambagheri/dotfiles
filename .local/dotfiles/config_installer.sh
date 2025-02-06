@@ -155,3 +155,4 @@ vim +PlugInstall +qall
 
 echo "Dotfiles installation and Fish setup complete!"
 
+
