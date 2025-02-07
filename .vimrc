@@ -170,6 +170,11 @@ function! ToggleMouse()
     endif
 endfunction
 
+" Save a read-only file with sudo using F10
+command! W execute 'w !sudo tee % >/dev/null' | edit!
+nnoremap <F10> :W<CR>
+
+
 "  End of .vimrc
 " =============================
 
