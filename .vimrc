@@ -121,6 +121,7 @@ autocmd FileType sh,ruby,python,bash let b:comment_leader = '# '
 autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
 autocmd FileType sh,ruby,python,bash let b:comment_leader = '# '
 autocmd FileType nginx let b:comment_leader = '# '
+autocmd FileType * if !exists('b:comment_leader') | let b:comment_leader = '# ' | endif
 " Map F5 to toggle comments
 noremap <silent> <F5> :<C-B>silent <C-E>call ToggleComment()<CR>
 
