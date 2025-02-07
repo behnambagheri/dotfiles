@@ -12,6 +12,7 @@ syntax enable
 set termguicolors      " Use full 24-bit colors
 colorscheme molokai
 
+
 " Better searching
 set ignorecase         " Ignore case in searches
 set smartcase          " Case-sensitive if search contains uppercase
