@@ -25,7 +25,7 @@ if [[ "$(uname -s)" == "Linux" ]]; then
         sudo apt-add-repository ppa:fish-shell/release-3 -y
         sudo apt install -y fish curl git bat fdclone vim
     elif command -v dnf &>/dev/null; then
-        sudo dnf install -y fish curl git bat fdclone vim
+        sudo dnf install -y fish curl git bat fd-find vim
     elif command -v pacman &>/dev/null; then
         sudo pacman -S --noconfirm fish curl git bat fdclone vim
     fi
