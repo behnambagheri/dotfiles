@@ -101,6 +101,16 @@ set encoding=utf-8
 
 
 
+" Remember the last cursor position when reopening a file
+if has("autocmd")
+  autocmd BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \   exe "normal! g`\"" |
+        \ endif
+endif
+
+
+
 " Use ctrl-[hjkl] to select the active split!
 nmap <silent> <c-k> :wincmd k<CR>
 nmap <silent> <c-j> :wincmd j<CR>
@@ -121,7 +131,13 @@ autocmd FileType sh,ruby,python,bash let b:comment_leader = '# '
 autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
 autocmd FileType sh,ruby,python,bash let b:comment_leader = '# '
 autocmd FileType nginx let b:comment_leader = '# '
+
+" Set default comment leader for unknown file types
 autocmd FileType * if !exists('b:comment_leader') | let b:comment_leader = '# ' | endif
+
+" Optionally set specific file type for PostgreSQL config files if needed
+autocmd BufNewFile,BufRead *.conf set filetype=conf
+
 " Map F5 to toggle comments
 noremap <silent> <F5> :<C-B>silent <C-E>call ToggleComment()<CR>
 
