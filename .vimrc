@@ -131,7 +131,8 @@ autocmd FileType sh,ruby,python,bash let b:comment_leader = '# '
 autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
 autocmd FileType sh,ruby,python,bash let b:comment_leader = '# '
 autocmd FileType nginx let b:comment_leader = '# '
-
+" Set comment leader for Vim configuration files
+autocmd FileType vim let b:comment_leader = '" '
 " Set default comment leader for unknown file types
 autocmd FileType * if !exists('b:comment_leader') | let b:comment_leader = '# ' | endif
 
