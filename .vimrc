@@ -29,7 +29,8 @@ set smartindent        " Smart auto-indentation
 
 " Clipboard
 set clipboard=unnamedplus  " Use system clipboard for copy/paste
-
+nnoremap yy "+yy
+vnoremap y "+y
 " Status line and UI improvements
 set showcmd            " Show commands as you type them
 set wildmenu           " Enhance command-line completion
@@ -56,6 +57,7 @@ set synmaxcol=200      " Limit syntax highlighting for long lines
 
 " Key mappings
 nnoremap <Space> :noh<CR>   " Spacebar clears search highlights
+
 " plugins
 
 "Vim-Pluged
@@ -67,6 +69,7 @@ Plug 'https://github.com/vim-airline/vim-airline'
 Plug 'https://github.com/Yggdroot/indentLine'
 Plug 'https://github.com/elzr/vim-json'
 Plug 'stephpy/vim-yaml'
+Plug 'https://github.com/jiangmiao/auto-pairs'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -108,14 +111,6 @@ if has("autocmd")
         \   exe "normal! g`\"" |
         \ endif
 endif
-
-
-
-" Use ctrl-[hjkl] to select the active split!
-nmap <silent> <c-k> :wincmd k<CR>
-nmap <silent> <c-j> :wincmd j<CR>
-nmap <silent> <c-h> :wincmd h<CR>
-nmap <silent> <c-l> :wincmd l<CR>
 
 
 nnoremap <F3> :if &number == 1 \| set nonumber norelativenumber \| else \| set number \| endif<CR>" =============================
