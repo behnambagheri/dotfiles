@@ -1,0 +1,18 @@
+ChallengeResponseAuthentication no
+UsePAM yes
+PrintMotd no
+AcceptEnv LANG LC_*
+Subsystem sftp  /usr/lib/openssh/sftp-server
+PasswordAuthentication no
+PermitRootLogin no
+MaxAuthTries 6
+MaxSessions 10
+PubkeyAuthentication yes
+GSSAPIAuthentication no
+GSSAPICleanupCredentials no
+X11Forwarding no
+PrintMotd no
+ClientAliveInterval 120
+ClientAliveCountMax 6
+# AllowGroups ssh_users
+AllowTcpForwarding yes
