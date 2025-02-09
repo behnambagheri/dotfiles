@@ -287,6 +287,8 @@ if [ "$INSTALL_PROXY" = true ]; then
         if ! sudo grep -Fxq "$MODIFICATION_LINE" "$FETCH_SCRIPT_DEST"; then
             echo "Appending public proxy modification to sing-box-fetch.sh..."
             echo "$MODIFICATION_LINE" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
+            echo "systemctl restart sing-box.service" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
+
             enable_singbox_service
             echo "Public proxy settings applied successfully."
         else
