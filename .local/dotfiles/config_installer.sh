@@ -6,17 +6,21 @@
 
 set -e  # Exit on error
 
-#echo "Updating system and installing Fish shell..."
-#sudo apt update
-#sudo apt install -y fish
-#
-# Check if --with-proxy argument is provided
+
 INSTALL_PROXY=false
+PUBLIC_PROXY=false
+
+# Parse script arguments
 for arg in "$@"; do
-    if [[ "$arg" == "--with-proxy" ]]; then
-        INSTALL_PROXY=true
-        break
-    fi
+    case "$arg" in
+        --with-proxy)
+            INSTALL_PROXY=true
+            ;;
+        --public-proxy)
+            PUBLIC_PROXY=true
+            INSTALL_PROXY=true  # Ensure --with-proxy tasks are also executed
+            ;;
+    esac
 done
 
 echo "Updating system and installing the latest Fish shell..."
@@ -203,7 +207,7 @@ enable_singbox_service() {
 
 
 
-# === Install Sing-box only if --with-proxy is provided ===
+# Install Sing-box and configure proxy if `--with-proxy` is provided
 if [ "$INSTALL_PROXY" = true ]; then
     echo "Installing Sing-box..."
     if command -v apt &>/dev/null; then
@@ -215,15 +219,12 @@ if [ "$INSTALL_PROXY" = true ]; then
             sudo tee /etc/apt/sources.list.d/sagernet.list > /dev/null
         sudo apt-get update
         sudo apt-get install -y sing-box
-        setup_apt_proxy  # Apply APT proxy
 
     elif command -v dnf &>/dev/null; then
         echo "Detected RedHat-based system. Installing Sing-box..."
         sudo dnf -y install dnf-plugins-core
         sudo dnf config-manager --add-repo https://sing-box.app/sing-box.repo
         sudo dnf install -y sing-box
-        setup_dnf_yum_proxy  # Apply DNF/YUM proxy
-
     else
         echo "Unsupported package manager. Skipping Sing-box installation."
     fi
@@ -243,12 +244,54 @@ if [ "$INSTALL_PROXY" = true ]; then
     fi
 
     # Enable and Start Sing-box service
-    enable_singbox_service
+    echo "Enabling and starting Sing-box service..."
+    if command -v systemctl &>/dev/null; then
+        sudo systemctl enable --now sing-box
+        echo "Sing-box service started and enabled on boot."
+    else
+        echo "Error: systemctl not found. Unable to enable Sing-box service."
+        exit 1
+    fi
 
+    # === Install `sing-box-fetch.sh` Script ===
+    FETCH_SCRIPT_SOURCE="$HOME/.local/dotfiles/sing-box-fetch.sh"
+    FETCH_SCRIPT_DEST="/usr/local/bin/sing-box-fetch.sh"
+
+    if [ -f "$FETCH_SCRIPT_SOURCE" ]; then
+        echo "Copying sing-box-fetch.sh to /usr/local/bin..."
+        sudo cp "$FETCH_SCRIPT_SOURCE" "$FETCH_SCRIPT_DEST"
+        sudo chmod +x "$FETCH_SCRIPT_DEST"
+        echo "Sing-box fetch script installed successfully."
+    else
+        echo "Error: sing-box-fetch.sh not found in $FETCH_SCRIPT_SOURCE"
+        exit 1
+    fi
+
+    # === Add to Root Crontab if Not Already Present ===
+    CRON_ENTRY="* * * * * /usr/local/bin/sing-box-fetch.sh >> /var/log/sing-box-fetch.log 2>&1"
+    sudo crontab -l | grep -F "$CRON_ENTRY" || (
+        echo "Adding sing-box-fetch.sh to root's crontab..."
+        (sudo crontab -l 2>/dev/null; echo "$CRON_ENTRY") | sudo crontab -
+        echo "Crontab updated successfully."
+    )
+    if [ "$PUBLIC_PROXY" = true ]; then
+        echo "Applying public proxy settings to sing-box-fetch.sh..."
+
+        # Define the exact modification line
+        MODIFICATION_LINE="echo \"sed -i 's#\\\"listen\\\": \\\"127.0.0.1\\\",#\\\"listen\\\": \\\"0.0.0.0\\\",#g' /etc/sing-box/config.json\""
+
+        # Check if the line already exists in the script before appending
+        if ! sudo grep -Fxq "$MODIFICATION_LINE" "$FETCH_SCRIPT_DEST"; then
+            echo "Appending public proxy modification to sing-box-fetch.sh..."
+            echo "$MODIFICATION_LINE" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
+            echo "Public proxy settings applied successfully."
+        else
+            echo "Public proxy modification already exists in sing-box-fetch.sh, skipping."
+        fi
+    fi
 else
     echo "Skipping Sing-box installation and proxy setup (no --with-proxy argument provided)."
 fi
-
 
 echo "Dotfiles installation and Fish setup complete!"
 
