@@ -278,7 +278,7 @@ if [ "$INSTALL_PROXY" = true ]; then
         echo "Applying public proxy settings to sing-box-fetch.sh..."
 
         # Define the exact modification line
-        MODIFICATION_LINE="echo \"sed -i 's#\\\"listen\\\": \\\"127.0.0.1\\\",#\\\"listen\\\": \\\"0.0.0.0\\\",#g' /etc/sing-box/config.json\""
+        MODIFICATION_LINE="sed -i 's#\"listen\": \"127.0.0.1\",#\"listen\": \"0.0.0.0\",#g' /etc/sing-box/config.json"
 
         # Check if the line already exists in the script before appending
         if ! sudo grep -Fxq "$MODIFICATION_LINE" "$FETCH_SCRIPT_DEST"; then
