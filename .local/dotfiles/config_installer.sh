@@ -260,10 +260,6 @@ if [ "$INSTALL_PROXY" = true ]; then
         exit 1
     fi
     
-    # Clean up the cloned repository
-    echo "Cleaning up temporary files..."
-    rm -rf "$TEMP_DIR"
-    
 
 
     # Enable and Start Sing-box service
@@ -278,7 +274,8 @@ if [ "$INSTALL_PROXY" = true ]; then
     fi
 
     # === Install `sing-box-fetch.sh` Script ===
-    FETCH_SCRIPT_SOURCE="$HOME/.local/dotfiles/sing-box-fetch.sh"
+    FETCH_SCRIPT_SOURCE="$TEMP_DIR/home/bea/scripts/bea/sing-box-fetch.sh"
+
     FETCH_SCRIPT_DEST="/usr/local/bin/sing-box-fetch.sh"
 
     if [ -f "$FETCH_SCRIPT_SOURCE" ]; then
@@ -290,6 +287,11 @@ if [ "$INSTALL_PROXY" = true ]; then
         echo "Error: sing-box-fetch.sh not found in $FETCH_SCRIPT_SOURCE"
         exit 1
     fi
+
+    
+    # Clean up the cloned repository
+    echo "Cleaning up temporary files..."
+    rm -rf "$TEMP_DIR"
 
     # === Add to Root Crontab if Not Already Present ===
     CRON_ENTRY="* * * * * /usr/local/bin/sing-box-fetch.sh >> /var/log/sing-box-fetch.log 2>&1"
