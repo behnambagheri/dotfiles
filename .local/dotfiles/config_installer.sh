@@ -231,10 +231,24 @@ if [ "$INSTALL_PROXY" = true ]; then
         echo "Unsupported package manager. Skipping Sing-box installation."
     fi
 
-    # Copy configuration file for Sing-box
-    CONFIG_SOURCE="$HOME/.local/dotfiles/singbox.json"
-    CONFIG_DEST="/etc/sing-box/config.json"
 
+    # Define source and destination paths for configuration
+    GIT_REPO="git@github.com:behnambagheri/lab.git"
+    TEMP_DIR="/tmp/lab"
+    CONFIG_SOURCE="$TEMP_DIR/var/www/subscription/sbox/routers.json"
+    CONFIG_DEST="/etc/sing-box/config.json"
+    
+    # Clone the repository
+    echo "Cloning repository from $GIT_REPO..."
+    git clone "$GIT_REPO" "$TEMP_DIR"
+    
+    # Check if git clone was successful
+    if [ $? -ne 0 ]; then
+        echo "Error: Git clone failed."
+        exit 1
+    fi
+    
+    # Check if the configuration file exists
     if [ -f "$CONFIG_SOURCE" ]; then
         echo "Copying Sing-box configuration file..."
         sudo mkdir -p /etc/sing-box
@@ -242,8 +256,15 @@ if [ "$INSTALL_PROXY" = true ]; then
         echo "Configuration file copied successfully."
     else
         echo "Error: Configuration file not found at $CONFIG_SOURCE"
+        rm -rf "$TEMP_DIR"  # Clean up the cloned repository
         exit 1
     fi
+    
+    # Clean up the cloned repository
+    echo "Cleaning up temporary files..."
+    rm -rf "$TEMP_DIR"
+    
+
 
     # Enable and Start Sing-box service
     echo "Enabling and starting Sing-box service..."
