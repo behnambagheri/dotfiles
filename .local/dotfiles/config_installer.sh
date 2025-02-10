@@ -300,6 +300,19 @@ if [ "$INSTALL_PROXY" = true ]; then
         (sudo crontab -l 2>/dev/null; echo "$CRON_ENTRY") | sudo crontab -
         echo "Crontab updated successfully."
     )
+
+
+
+    if command -v apt &>/dev/null; then
+        setup_apt_proxy
+    elif command -v dnf &>/dev/null; then
+        setup_dnf_yum_proxy
+    else
+        echo "Unsupported package manager. Skipping Sing-box installation."
+    fi
+
+
+
     if [ "$PUBLIC_PROXY" = true ]; then
         echo "Applying public proxy settings to sing-box-fetch.sh..."
 
