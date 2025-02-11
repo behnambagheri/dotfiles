@@ -158,8 +158,6 @@ else
     echo "Docker not found. Skipping Docker plugins."
 fi
 
-echo "add done_notify"
-source "$TEMP_DIR/home/bea/scripts/bea/done_notify.fish"
 
 
 
@@ -384,6 +382,10 @@ if [ "$INSTALL_PROXY" = true ]; then
 else
     echo "Skipping Sing-box installation and proxy setup (no --with-proxy argument provided)."
 fi
+
+
+echo "add done_notify"
+source "$TEMP_DIR/home/bea/scripts/bea/done_notify.fish"
 
     
 # Clean up the cloned repository
