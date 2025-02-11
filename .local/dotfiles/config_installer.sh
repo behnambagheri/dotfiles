@@ -158,6 +158,7 @@ fi
 
 echo "Install iterm2 shell_integration"
 curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
+source $HOME/.iterm2_shell_integration.fish
 
 echo "Starting pipx and VirtualFish installation..."
 
