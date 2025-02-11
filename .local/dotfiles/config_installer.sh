@@ -397,7 +397,7 @@ if [ -f "$DONE_NOTIFY_PATH" ]; then
 
     fish -c "source $DONE_NOTIFY_PATH"
 
-    cp "$DONE_NOTIFY_PATH" "/Users/behnam/.local/dotfiles/"
+    cp "$DONE_NOTIFY_PATH" "$HOME/.local/dotfiles/"
     
     fish -c "source $HOME/.local/dotfiles/done_notify.fish"
 else
