@@ -180,7 +180,6 @@ fi
 
 # Ensure pipx path is set
 pipx ensurepath
-sudo pipx ensurepath --global  # Optional for global use
 
 # Install VirtualFish
 pipx install virtualfish
