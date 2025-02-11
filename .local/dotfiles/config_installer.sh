@@ -129,6 +129,7 @@ fish -c "fisher install laughedelic/pisces"
 fish -c "fisher install PatrickF1/fzf.fish"
 fish -c "fisher install nickeb96/puffer-fish"
 fish -c "fisher install acomagu/fish-async-prompt"
+fish -c "fisher install franciscolourenco/done"
 
 # Install Docker plugins only if Docker is installed
 if command -v docker &>/dev/null; then
