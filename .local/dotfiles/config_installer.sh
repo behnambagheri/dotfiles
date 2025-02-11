@@ -384,9 +384,19 @@ else
 fi
 
 
-echo "add done_notify"
-fish -c "source $TEMP_DIR/bea/scripts/bea/done_notify.fish"
+echo "Adding done_notify..."
 
+# Corrected path (removed extra 'home')
+DONE_NOTIFY_PATH="$TEMP_DIR/bea/scripts/bea/done_notify.fish"
+
+# Ensure the script exists before sourcing
+if [ -f "$DONE_NOTIFY_PATH" ]; then
+    echo "Sourcing done_notify.fish..."
+    fish -c "source $DONE_NOTIFY_PATH"
+else
+    echo "Error: done_notify.fish not found at $DONE_NOTIFY_PATH"
+    exit 1
+fi
     
 # Clean up the cloned repository
 echo "Cleaning up temporary files..."
