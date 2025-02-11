@@ -135,10 +135,12 @@ autocmd FileType * if !exists('b:comment_leader') | let b:comment_leader = '# ' 
 autocmd BufNewFile,BufRead *.conf set filetype=conf
 
 " Map F5 to toggle comments
-noremap <silent> <F5> :<C-B>silent <C-E>call ToggleComment()<CR>
+"
+"" Map F5 to toggle comments and move to the next line
+noremap <silent> <F5> :<C-B>silent <C-E>call ToggleCommentAndMove()<CR>
 
-" Toggle function
-function! ToggleComment()
+" Toggle function with cursor movement
+function! ToggleCommentAndMove()
     " Check if the current line is commented
     if getline('.') =~ '^\s*' . escape(b:comment_leader, '/\*.$^~[]')
         " Uncomment the line
@@ -147,8 +149,25 @@ function! ToggleComment()
         " Comment the line
         execute 'silent! s/^/\=b:comment_leader/'
     endif
+    " Move cursor to the next line
+    execute 'normal! j'
     nohlsearch
 endfunction
+"
+"noremap <silent> <F5> :<C-B>silent <C-E>call ToggleComment()<CR>
+"
+"" Toggle function
+"function! ToggleComment()
+"    " Check if the current line is commented
+"    if getline('.') =~ '^\s*' . escape(b:comment_leader, '/\*.$^~[]')
+"        " Uncomment the line
+"        execute 'silent! s/^\s*' . escape(b:comment_leader, '/\*.$^~[]') . '//e'
+"    else
+"        " Comment the line
+"        execute 'silent! s/^/\=b:comment_leader/'
+"    endif
+"    nohlsearch
+"endfunction
 
 
 " Toggle mouse support with F6
