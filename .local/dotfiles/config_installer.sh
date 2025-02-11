@@ -156,6 +156,8 @@ else
     echo "Not macOS. Skipping Homebrew completions."
 fi
 
+echo "Install iterm2 shell_integration"
+curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
 
 echo "Starting pipx and VirtualFish installation..."
 
