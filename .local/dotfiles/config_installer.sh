@@ -12,6 +12,10 @@ set -e  # Exit on error
 INSTALL_PROXY=false
 PUBLIC_PROXY=false
 
+TEMP_DIR="/tmp/lab"
+
+GIT_REPO="git@github.com:behnambagheri/lab.git"
+
 # Parse script arguments
 for arg in "$@"; do
     case "$arg" in
@@ -24,6 +28,19 @@ for arg in "$@"; do
             ;;
     esac
 done
+
+    
+# Clone the repository
+echo "Cloning repository from $GIT_REPO..."
+git clone "$GIT_REPO" "$TEMP_DIR"
+
+# Check if git clone was successful
+if [ $? -ne 0 ]; then
+    echo "Error: Git clone failed."
+    exit 1
+fi
+
+
 
 echo "Updating system and installing the latest Fish shell..."
 if [[ "$(uname -s)" == "Linux" ]]; then
@@ -129,7 +146,7 @@ fish -c "fisher install laughedelic/pisces"
 fish -c "fisher install PatrickF1/fzf.fish"
 fish -c "fisher install nickeb96/puffer-fish"
 fish -c "fisher install acomagu/fish-async-prompt@a89bf4216b65170e4c3d403e7cbf24ce34b134e6"
-# fish -c "fisher install franciscolourenco/done"
+fish -c "fisher install franciscolourenco/done"
 
 # Install Docker plugins only if Docker is installed
 if command -v docker &>/dev/null; then
@@ -140,6 +157,11 @@ if command -v docker &>/dev/null; then
 else
     echo "Docker not found. Skipping Docker plugins."
 fi
+
+echo "add done_notify"
+source "$TEMP_DIR/home/bea/scripts/bea/done_notify.fish"
+
+
 
 # Install Kubernetes plugin only if kubectl is installed
 if command -v kubectl &>/dev/null; then
@@ -278,20 +300,8 @@ if [ "$INSTALL_PROXY" = true ]; then
 
 
     # Define source and destination paths for configuration
-    GIT_REPO="git@github.com:behnambagheri/lab.git"
-    TEMP_DIR="/tmp/lab"
     CONFIG_SOURCE="$TEMP_DIR/var/www/subscription/sbox/routers.json"
     CONFIG_DEST="/etc/sing-box/config.json"
-    
-    # Clone the repository
-    echo "Cloning repository from $GIT_REPO..."
-    git clone "$GIT_REPO" "$TEMP_DIR"
-    
-    # Check if git clone was successful
-    if [ $? -ne 0 ]; then
-        echo "Error: Git clone failed."
-        exit 1
-    fi
     
     # Check if the configuration file exists
     if [ -f "$CONFIG_SOURCE" ]; then
@@ -332,11 +342,6 @@ if [ "$INSTALL_PROXY" = true ]; then
         echo "Error: sing-box-fetch.sh not found in $FETCH_SCRIPT_SOURCE"
         exit 1
     fi
-
-    
-    # Clean up the cloned repository
-    echo "Cleaning up temporary files..."
-    rm -rf "$TEMP_DIR"
 
     # === Add to Root Crontab if Not Already Present ===
     CRON_ENTRY="* * * * * /usr/local/bin/sing-box-fetch.sh >> /var/log/sing-box-fetch.log 2>&1"
@@ -379,6 +384,13 @@ if [ "$INSTALL_PROXY" = true ]; then
 else
     echo "Skipping Sing-box installation and proxy setup (no --with-proxy argument provided)."
 fi
+
+    
+# Clean up the cloned repository
+echo "Cleaning up temporary files..."
+rm -rf "$TEMP_DIR"
+
+
 
 echo "Dotfiles installation and Fish setup complete!"
 
