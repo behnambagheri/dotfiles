@@ -385,7 +385,7 @@ fi
 
 
 echo "add done_notify"
-source "$TEMP_DIR/home/bea/scripts/bea/done_notify.fish"
+fish -c "source $TEMP_DIR/bea/scripts/bea/done_notify.fish"
 
     
 # Clean up the cloned repository
