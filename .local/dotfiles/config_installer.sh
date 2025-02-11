@@ -399,6 +399,7 @@ if [ -f "$DONE_NOTIFY_PATH" ]; then
 
     cp "$DONE_NOTIFY_PATH" "/Users/behnam/.local/dotfiles/"
     
+    fish -c "source $HOME/.local/dotfiles/done_notify.fish"
 else
     echo "Error: done_notify.fish not found at $DONE_NOTIFY_PATH"
     exit 1
@@ -414,7 +415,7 @@ echo "Dotfiles installation and Fish setup complete!"
 
 echo "Enter this manually:"
 
-echo "source /Users/behnam/.local/dotfiles/done_notify.fish"
+echo "source $HOME/.local/dotfiles/done_notify.fish"
 
 
 
