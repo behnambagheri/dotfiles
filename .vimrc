@@ -104,6 +104,20 @@ set encoding=utf-8
 
 
 
+" Enable syntax highlighting for SSH config files
+augroup ssh_config_syntax
+    autocmd!
+    autocmd BufRead,BufNewFile ~/.ssh/config,~/.ssh/config.d/* setfiletype sshconfig
+augroup END
+
+" Enable syntax highlighting for Fish scripts
+augroup fish_syntax
+    autocmd!
+    autocmd BufNewFile,BufRead *.fish setfiletype fish
+augroup END
+
+
+
 " Remember the last cursor position when reopening a file
 if has("autocmd")
   autocmd BufReadPost *

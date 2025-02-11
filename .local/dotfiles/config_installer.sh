@@ -404,7 +404,7 @@ else
     echo "Error: done_notify.fish not found at $DONE_NOTIFY_PATH"
     exit 1
 fi
-    
+
 # Clean up the cloned repository
 echo "Cleaning up temporary files..."
 rm -rf "$TEMP_DIR"
