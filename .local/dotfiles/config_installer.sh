@@ -393,6 +393,9 @@ DONE_NOTIFY_PATH="$TEMP_DIR/home/bea/scripts/bea/done_notify.fish"
 if [ -f "$DONE_NOTIFY_PATH" ]; then
     echo "Sourcing done_notify.fish..."
     fish -c "source $DONE_NOTIFY_PATH"
+    fish -c "fisher install franciscolourenco/done"
+
+    fish -c "source $DONE_NOTIFY_PATH"
 else
     echo "Error: done_notify.fish not found at $DONE_NOTIFY_PATH"
     exit 1
