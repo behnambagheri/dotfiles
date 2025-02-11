@@ -387,7 +387,7 @@ fi
 echo "Adding done_notify..."
 
 # Corrected path (removed extra 'home')
-DONE_NOTIFY_PATH="$TEMP_DIR/bea/scripts/bea/done_notify.fish"
+DONE_NOTIFY_PATH="$TEMP_DIR/home/bea/scripts/bea/done_notify.fish"
 
 # Ensure the script exists before sourcing
 if [ -f "$DONE_NOTIFY_PATH" ]; then
