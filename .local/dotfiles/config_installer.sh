@@ -396,6 +396,9 @@ if [ -f "$DONE_NOTIFY_PATH" ]; then
     fish -c "fisher install franciscolourenco/done"
 
     fish -c "source $DONE_NOTIFY_PATH"
+
+    cp "$DONE_NOTIFY_PATH" "/Users/behnam/.local/dotfiles/"
+    
 else
     echo "Error: done_notify.fish not found at $DONE_NOTIFY_PATH"
     exit 1
@@ -409,6 +412,9 @@ rm -rf "$TEMP_DIR"
 
 echo "Dotfiles installation and Fish setup complete!"
 
+echo "Enter this manually:"
+
+echo "source /Users/behnam/.local/dotfiles/done_notify.fish"
 
 
 
