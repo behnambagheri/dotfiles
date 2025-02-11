@@ -184,6 +184,7 @@ pipx ensurepath
 # Install VirtualFish
 pipx install virtualfish
 pipx ensurepath
+export PATH="$HOME/.local/bin:$PATH"
 
 # Configure VirtualFish
 vf install compat_aliases auto_activation
