@@ -152,6 +152,43 @@ else
     echo "Not macOS. Skipping Homebrew completions."
 fi
 
+
+echo "Starting pipx and VirtualFish installation..."
+
+# Detect OS type
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    if command -v apt &> /dev/null; then
+        echo "Detected Ubuntu/Debian-based system..."
+        sudo apt update
+        sudo apt install -y pipx
+    elif command -v dnf &> /dev/null; then
+        echo "Detected Fedora-based system..."
+        sudo dnf install -y pipx
+    else
+        echo "Unsupported Linux distribution. Please install pipx manually."
+        exit 1
+    fi
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Detected macOS..."
+    brew install pipx
+else
+    echo "Unsupported OS. Exiting."
+    exit 1
+fi
+
+# Ensure pipx path is set
+pipx ensurepath
+sudo pipx ensurepath --global  # Optional for global use
+
+# Install VirtualFish
+pipx install virtualfish
+pipx ensurepath
+
+# Configure VirtualFish
+vf install compat_aliases auto_activation
+
+echo "pipx and VirtualFish installation completed successfully."
+
 # Install Vim-Plug if not installed
 if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
     echo "Installing Vim-Plug..."

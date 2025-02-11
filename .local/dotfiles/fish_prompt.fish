@@ -59,8 +59,8 @@ function fish_prompt
 
   if test (uname -n | cut -d . -f 1) = "Bagheri-MacBook-Pro"
       set -g current_user bea
-      set -g kubenv_current_cluster (kubectl config view --minify --output 'jsonpath={.contexts[0].context.cluster}' | cut -d'@' -f1)
-      set -g kubenv_current_namespace (kubectl config view --minify --output 'jsonpath={.contexts[0].context.namespace}' | cut -d'@' -f1)
+      set -g kubenv_current_cluster (kubectl config view --minify --output 'jsonpath={.contexts[0].context.cluster}' 2> /dev/null | cut -d'@' -f1)
+      set -g kubenv_current_namespace (kubectl config view --minify --output 'jsonpath={.contexts[0].context.namespace}' 2> /dev/null | cut -d'@' -f1)
       ##
       ## Line 1
       ##
@@ -99,9 +99,12 @@ function fish_prompt
 
   # Support for virtual environment name
   if set -q VIRTUAL_ENV
-    echo -n "($turquoise"(basename "$VIRTUAL_ENV")"$white)"
+    echo -n -s "($turquoise"(basename "$VIRTUAL_ENV")"$white)"
   end
 
+#   if set -q VIRTUAL_ENV
+#     echo -n -s (set_color  $turquoise) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
+#   end
   ##
   ## Support for vi mode
   ##
