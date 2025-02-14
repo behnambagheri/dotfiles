@@ -422,3 +422,4 @@ echo "source $HOME/.local/dotfiles/done_notify.fish"
 
 
 
+
