@@ -227,7 +227,8 @@ fi
 # Install Vim plugins automatically
 echo "Installing Vim plugins with PlugInstall..."
 vim +PlugInstall +qall
-
+# vim +CocInstall\ coc-pyright +q
+vim -es -c "CocInstall coc-pyright" -c "q"
 
 
 # Define proxy settings
