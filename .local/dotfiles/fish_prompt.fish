@@ -105,9 +105,6 @@ function fish_prompt
 if set -q VIRTUAL_ENV
     echo -n -s (set_color -b normal 5fdfff) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
 end
-#   if set -q VIRTUAL_ENV
-#     echo -n -s (set_color  $turquoise) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
-#   end
   ##
   ## Support for vi mode
   ##

@@ -70,6 +70,7 @@ Plug 'https://github.com/Yggdroot/indentLine'
 Plug 'https://github.com/elzr/vim-json'
 Plug 'stephpy/vim-yaml'
 Plug 'https://github.com/jiangmiao/auto-pairs'
+Plug 'chr4/nginx.vim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
