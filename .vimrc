@@ -70,9 +70,6 @@ Plug 'https://github.com/Yggdroot/indentLine'
 Plug 'https://github.com/elzr/vim-json'
 Plug 'stephpy/vim-yaml'
 Plug 'https://github.com/jiangmiao/auto-pairs'
-Plug 'chr4/nginx.vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -171,26 +168,6 @@ function! ToggleCommentAndMove()
     nohlsearch
 endfunction
 
-" python autocomplete
-autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
-let g:coc_disable_startup_warning = 1
-" next line using shift+enter
-inoremap <S-CR> <C-o>j
-"
-"noremap <silent> <F5> :<C-B>silent <C-E>call ToggleComment()<CR>
-"
-"" Toggle function
-"function! ToggleComment()
-"    " Check if the current line is commented
-"    if getline('.') =~ '^\s*' . escape(b:comment_leader, '/\*.$^~[]')
-"        " Uncomment the line
-"        execute 'silent! s/^\s*' . escape(b:comment_leader, '/\*.$^~[]') . '//e'
-"    else
-"        " Comment the line
-"        execute 'silent! s/^/\=b:comment_leader/'
-"    endif
-"    nohlsearch
-"endfunction
 
 
 " Toggle mouse support with F6

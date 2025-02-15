@@ -56,25 +56,25 @@ elif [[ "$(uname -s)" == "Darwin" ]]; then
     brew install fish curl git vim bat fdclone
 fi
 
-
-# Install Node.js using NodeSource
-echo "Installing Node.js..."
-curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# Verify installation
-echo "Verifying Node.js installation..."
-node_version=$(node -v)
-npm_version=$(npm -v)
-
-if [[ -n "$node_version" && -n "$npm_version" ]]; then
-    echo "Node.js installed successfully!"
-    echo "Node.js version: $node_version"
-    echo "NPM version: $npm_version"
-else
-    echo "Node.js installation failed."
-    exit 1
-fi
+#### Disable node installation till need node on the machines
+## Install Node.js using NodeSource
+#echo "Installing Node.js..."
+#curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+#sudo apt install -y nodejs
+#
+## Verify installation
+#echo "Verifying Node.js installation..."
+#node_version=$(node -v)
+#npm_version=$(npm -v)
+#
+#if [[ -n "$node_version" && -n "$npm_version" ]]; then
+#    echo "Node.js installed successfully!"
+#    echo "Node.js version: $node_version"
+#    echo "NPM version: $npm_version"
+#else
+#    echo "Node.js installation failed."
+#    exit 1
+#fi
 
 # Install fzf (Fuzzy Finder)
 echo "Installing fzf..."
@@ -247,8 +247,7 @@ fi
 # Install Vim plugins automatically
 echo "Installing Vim plugins with PlugInstall..."
 vim +PlugInstall +qall
-# vim +CocInstall\ coc-pyright +q
-vim -es -c "CocInstall coc-pyright" -c "q"
+#vim -es -c "CocInstall coc-pyright" -c "q"
 
 
 # Define proxy settings
