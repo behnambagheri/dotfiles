@@ -85,7 +85,7 @@ call plug#end()
 :set omnifunc=syntaxcomplete " This is necessary for acp plugin
 :let g:acp_behaviorKeywordLength = 1 "  Length of keyword characters before the cursor, which are needed to attempt keyword completion
 
-
+au BufRead,BufNewFile *.nginx,nginx.conf,*.conf set ft=nginx
 
 
 au! BufRead,BufNewFile *.json set filetype=json
