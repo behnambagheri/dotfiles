@@ -173,7 +173,7 @@ endfunction
 
 " python autocomplete
 autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
-
+let g:coc_disable_startup_warning = 1
 " next line using shift+enter
 inoremap <S-CR> <C-o>j
 "
