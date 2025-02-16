@@ -46,7 +46,7 @@ echo "Updating system and installing the latest Fish shell..."
 if [[ "$(uname -s)" == "Linux" ]]; then
     if command -v apt &>/dev/null; then
         sudo apt-add-repository ppa:fish-shell/release-3 -y
-        sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq neovim python3-pip
+        sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq neovim python3-full python3-pip
     elif command -v dnf &>/dev/null; then
         sudo dnf install -y fish curl git bat fd-find vim util-linux-user tar neovim
     elif command -v pacman &>/dev/null; then
@@ -252,6 +252,35 @@ vim +PlugInstall +qall
 
 echo "Installing neovim"
 /usr/bin/python3 -m pip install --user neovim
+# Set the virtual environment path
+VENV_PATH="$HOME/.venvs/neovim"
+
+# Create the virtual environment if it doesn't exist
+if [ ! -d "$VENV_PATH" ]; then
+    echo "Creating Python virtual environment for Neovim..."
+    python3 -m venv "$VENV_PATH"
+else
+    echo "Virtual environment already exists at $VENV_PATH."
+fi
+
+# Activate the virtual environment
+echo "Activating virtual environment..."
+source "$VENV_PATH/bin/activate"
+
+# Install the Neovim Python package
+echo "Installing Neovim Python package..."
+pip install --upgrade pip
+pip install neovim
+
+# Deactivate the virtual environment
+deactivate
+
+echo "Setup complete! Make sure to add this to your init.vim:"
+echo "let g:python3_host_prog = \"$VENV_PATH/bin/python\""
+
+
+
+
 
 # Define proxy settings
 PROXY="socks5h://127.0.0.1:7890"
