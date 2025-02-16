@@ -43,20 +43,68 @@ if [ $? -ne 0 ]; then
 fi
 
 
-
 echo "Updating system and installing the latest Fish shell..."
+
 if [[ "$(uname -s)" == "Linux" ]]; then
     if command -v apt &>/dev/null; then
-        sudo apt-add-repository ppa:fish-shell/release-3 -y
-        sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq python3-full python3-pip ripgrep
+        export NEEDRESTART_MODE=a
+        export DEBIAN_FRONTEND=noninteractive
+
+        echo "Adding Fish Shell repository..."
+        sudo add-apt-repository -y ppa:fish-shell/release-3
+
+        echo "Updating package list..."
+        sudo apt update -y
+
+        echo "Installing packages..."
+        sudo apt install -y fish curl git bat fd-find vim glances curl wget \
+            dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc \
+            build-essential net-tools iproute2 unzip bind9-utils prometheus-node-exporter \
+            ncdu nethogs jq python3-full python3-pip ripgrep
+
     elif command -v dnf &>/dev/null; then
-        sudo dnf install -y fish curl git bat fd-find vim util-linux-user tar 
+        echo "Installing packages with DNF..."
+        sudo dnf install -y fish curl git bat fd-find vim util-linux-user tar
+
     elif command -v pacman &>/dev/null; then
-        sudo pacman -S --noconfirm fish curl git bat fdclone vim 
+        echo "Installing packages with Pacman..."
+        sudo pacman -S --noconfirm fish curl git bat fd vim
     fi
+
 elif [[ "$(uname -s)" == "Darwin" ]]; then
-    brew install fish curl git vim bat fdclone
+    if command -v brew &>/dev/null; then
+        echo "Installing packages with Homebrew..."
+        brew install fish curl git vim bat fd
+    else
+        echo "Homebrew not found. Please install Homebrew first: https://brew.sh/"
+        exit 1
+    fi
+else
+    echo "Unsupported operating system."
+    exit 1
 fi
+
+
+
+
+
+# echo "Updating system and installing the latest Fish shell..."
+# if [[ "$(uname -s)" == "Linux" ]]; then
+#     if command -v apt &>/dev/null; then
+#         
+#         export NEEDRESTART_MODE=a
+#         export DEBIAN_FRONTEND=noninteractive
+# 
+#         sudo apt-add-repository ppa:fish-shell/release-3 -y
+#         sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq python3-full python3-pip ripgrep
+#     elif command -v dnf &>/dev/null; then
+#         sudo dnf install -y fish curl git bat fd-find vim util-linux-user tar 
+#     elif command -v pacman &>/dev/null; then
+#         sudo pacman -S --noconfirm fish curl git bat fdclone vim 
+#     fi
+# elif [[ "$(uname -s)" == "Darwin" ]]; then
+#     brew install fish curl git vim bat fdclone
+# fi
 
 #### Disable node installation till need node on the machines
 ## Install Node.js using NodeSource
@@ -209,6 +257,9 @@ echo "Starting pipx and VirtualFish installation..."
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     if command -v apt &> /dev/null; then
         echo "Detected Ubuntu/Debian-based system..."
+        export NEEDRESTART_MODE=a
+        export DEBIAN_FRONTEND=noninteractive
+
         sudo apt update
         sudo apt install -y pipx
     elif command -v dnf &> /dev/null; then
@@ -261,6 +312,9 @@ INSTALL_DIR="$HOME/neovim-build"
 
 # Update package list and install dependencies
 echo "Installing build dependencies..."
+        export NEEDRESTART_MODE=a
+        export DEBIAN_FRONTEND=noninteractive
+
 sudo apt update
 sudo apt install -y ninja-build gettext cmake unzip curl git
 
