@@ -399,23 +399,15 @@ source ~/.bashrc
 
 echo "Installing Vim-Plug for Neovim..."
 
-# Install Vim-Plug if not installed
+# Install Vim-Plug if not already installed
 if [ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" ]; then
-    echo "Downloading Vim-Plug..."
-    curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-           https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-else
-    echo "Vim-Plug is already installed."
+    echo "Installing Vim-Plug..."
+    curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
-# Ensure Neovim is installed before running PlugInstall
-if command -v nvim &>/dev/null; then
-    echo "Installing Vim plugins with PlugInstall..."
-    nvim --headless +PlugInstall +qall
-else
-    echo "Neovim installation failed. Skipping plugin installation."
-    exit 1
-fi
+echo "Installing Vim plugins..."
+nvim --headless +PlugInstall +qall
 
 echo "Installing coc.nvim extensions..."
 
