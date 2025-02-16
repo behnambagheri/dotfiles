@@ -60,7 +60,7 @@ if [[ "$(uname -s)" == "Linux" ]]; then
         sudo apt install -y fish curl git bat fd-find vim glances curl wget \
             dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc \
             build-essential net-tools iproute2 unzip bind9-utils prometheus-node-exporter \
-            ncdu nethogs jq python3-full python3-pip ripgrep
+            ncdu nethogs jq python3-full python3-pip python3-venv ripgrep
 
     elif command -v dnf &>/dev/null; then
         echo "Installing packages with DNF..."
