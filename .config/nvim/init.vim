@@ -16,6 +16,23 @@ set clipboard=unnamedplus  " Use system clipboard for copy/paste
 nnoremap yy "+yy
 vnoremap y "+y
 
+" Enable OSC 52 clipboard support
+lua << EOF
+vim.g.clipboard = {
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+  },
+}
+EOF
+
+
+
 set showcmd            " Show commands as you type them
 " set wildmenu           " Enhance command-line completion
 set ruler              " Show cursor position in status bar
