@@ -354,6 +354,8 @@ echo "Cleaning up..."
 cd ~
 rm -rf "$INSTALL_DIR"
 
+sudo chown -R $(id -u):$(id -g) "$HOME/.local/share/nvim"
+
 echo "Neovim installation completed successfully!"
 
 
@@ -400,11 +402,9 @@ source ~/.bashrc
 echo "Installing Vim-Plug for Neovim..."
 
 # Install Vim-Plug if not already installed
-if [ ! -f "$HOME/.local/share/nvim/site/autoload/plug.vim" ]; then
     echo "Installing Vim-Plug..."
     curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-fi
 
 echo "Installing Vim plugins..."
 nvim --headless +PlugInstall +qall
