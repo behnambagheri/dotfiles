@@ -313,90 +313,50 @@ if command -v nvim &>/dev/null; then
 
 else
 
-echo "Installing Neovim..."
+  echo "Installing Neovim..."
 
-# Define the installation directory
-INSTALL_DIR="$HOME/neovim-build"
+  # Define the installation directory
+  INSTALL_DIR="$HOME/neovim-build"
 
-# Update package list and install dependencies
-echo "Installing build dependencies..."
-export NEEDRESTART_MODE=a
-export DEBIAN_FRONTEND=noninteractive
+  # Update package list and install dependencies
+  echo "Installing build dependencies..."
+  export NEEDRESTART_MODE=a
+  export DEBIAN_FRONTEND=noninteractive
 
-sudo apt update
-sudo apt install -y ninja-build gettext cmake unzip curl git
+  sudo apt update
+  sudo apt install -y ninja-build gettext cmake unzip curl git
 
-# Clone the Neovim repository
-echo "Cloning Neovim repository..."
-git clone https://github.com/neovim/neovim.git "$INSTALL_DIR"
+  # Clone the Neovim repository
+  echo "Cloning Neovim repository..."
+  git clone https://github.com/neovim/neovim.git "$INSTALL_DIR"
 
-# Navigate to the Neovim directory
-cd "$INSTALL_DIR"
+  # Navigate to the Neovim directory
+  cd "$INSTALL_DIR"
 
-# Checkout the stable version
-echo "Checking out the stable version of Neovim..."
-git checkout stable
+  # Checkout the stable version
+  echo "Checking out the stable version of Neovim..."
+  git checkout stable
 
-# Build Neovim
-echo "Building Neovim..."
-make CMAKE_BUILD_TYPE=RelWithDebInfo
+  # Build Neovim
+  echo "Building Neovim..."
+  make CMAKE_BUILD_TYPE=RelWithDebInfo
 
-# Install Neovim
-echo "Installing Neovim..."
-sudo make install
+  # Install Neovim
+  echo "Installing Neovim..."
+  sudo make install
 
-# Verify installation
-echo "Verifying Neovim installation..."
-nvim --version
+  # Verify installation
+  echo "Verifying Neovim installation..."
+  nvim --version
 
-# Cleanup: Remove the build directory
-echo "Cleaning up..."
-cd ~
-rm -rf "$INSTALL_DIR"
+  # Cleanup: Remove the build directory
+  echo "Cleaning up..."
+  cd ~
+  rm -rf "$INSTALL_DIR"
 
 
 fi
 
-echo "Installing Neovim..."
-
-# Define the installation directory
-INSTALL_DIR="$HOME/neovim-build"
-
-# Update package list and install dependencies
-echo "Installing build dependencies..."
-export NEEDRESTART_MODE=a
-export DEBIAN_FRONTEND=noninteractive
-
-sudo apt update
-sudo apt install -y ninja-build gettext cmake unzip curl git
-
-# Clone the Neovim repository
-echo "Cloning Neovim repository..."
-git clone https://github.com/neovim/neovim.git "$INSTALL_DIR"
-
-# Navigate to the Neovim directory
-cd "$INSTALL_DIR"
-
-# Checkout the stable version
-echo "Checking out the stable version of Neovim..."
-git checkout stable
-
-# Build Neovim
-echo "Building Neovim..."
-make CMAKE_BUILD_TYPE=RelWithDebInfo
-
-# Install Neovim
-echo "Installing Neovim..."
-sudo make install
-
-# Verify installation
-echo "Verifying Neovim installation..."
-nvim --version
-
-# Cleanup: Remove the build directory
-echo "Cleaning up..."
-cd ~
-rm -rf "$INSTALL_DIR"
 
 sudo chown -R $(id -u):$(id -g) "$HOME/.local/share/nvim"
 
@@ -453,28 +413,9 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 echo "Installing Vim plugins..."
 nvim --headless +PlugInstall +qall
 
-echo "Installing coc.nvim extensions..."
-
-# Ensure Neovim is installed
-if ! command -v nvim &>/dev/null; then
-    echo "Neovim is not installed. Please install Neovim first."
-    exit 1
-fi
-
-# Ensure coc.nvim is installed
-if [ ! -d "$HOME/.local/share/nvim/site/pack/plugged/coc.nvim" ]; then
-    echo "coc.nvim is not installed. Please run :PlugInstall inside Neovim first."
-    exit 1
-fi
-
 # Ensure Neovim and coc.nvim are installed before running CocInstall
-if [ -d "$HOME/.local/share/nvim/site/pack/plugged/coc.nvim" ]; then
-    echo "Installing coc.nvim extensions..."
-    nvim --headless -c 'CocInstall -sync coc-json coc-html coc-css coc-yaml' -c 'qall'
-else
-    echo "coc.nvim is not installed. Run :PlugInstall inside Neovim first."
-fi
-echo "coc.nvim extensions installed successfully!"
+echo "Installing coc.nvim extensions..."
+nvim --headless -c 'CocInstall -sync coc-json coc-html coc-css coc-yaml' -c 'qall'
 
 echo "Neovim setup completed successfully!"
 
