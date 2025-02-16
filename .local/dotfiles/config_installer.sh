@@ -8,6 +8,8 @@
 
 set -e  # Exit on error
 
+export NEEDRESTART_MODE=a
+export DEBIAN_FRONTEND=noninteractive
 
 INSTALL_PROXY=false
 PUBLIC_PROXY=false
@@ -46,8 +48,7 @@ echo "Updating system and installing the latest Fish shell..."
 if [[ "$(uname -s)" == "Linux" ]]; then
     if command -v apt &>/dev/null; then
         sudo apt-add-repository ppa:fish-shell/release-3 -y
-        sudo add-apt-repository ppa:neovim-ppa/stable -y
-        sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq python3-full python3-pip ripgrep neovim
+        sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq python3-full python3-pip ripgrep
     elif command -v dnf &>/dev/null; then
         sudo dnf install -y fish curl git bat fd-find vim util-linux-user tar 
     elif command -v pacman &>/dev/null; then
@@ -57,25 +58,25 @@ elif [[ "$(uname -s)" == "Darwin" ]]; then
     brew install fish curl git vim bat fdclone
 fi
 
-### Disable node installation till need node on the machines
-# Install Node.js using NodeSource
-echo "Installing Node.js..."
-curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# Verify installation
-echo "Verifying Node.js installation..."
-node_version=$(node -v)
-npm_version=$(npm -v)
-
-if [[ -n "$node_version" && -n "$npm_version" ]]; then
-    echo "Node.js installed successfully!"
-    echo "Node.js version: $node_version"
-    echo "NPM version: $npm_version"
-else
-    echo "Node.js installation failed."
-    exit 1
-fi
+#### Disable node installation till need node on the machines
+## Install Node.js using NodeSource
+#echo "Installing Node.js..."
+#curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+#sudo apt install -y nodejs
+#
+## Verify installation
+#echo "Verifying Node.js installation..."
+#node_version=$(node -v)
+#npm_version=$(npm -v)
+#
+#if [[ -n "$node_version" && -n "$npm_version" ]]; then
+#    echo "Node.js installed successfully!"
+#    echo "Node.js version: $node_version"
+#    echo "NPM version: $npm_version"
+#else
+#    echo "Node.js installation failed."
+#    exit 1
+#fi
 
 # Install fzf (Fuzzy Finder)
 echo "Installing fzf..."
@@ -255,43 +256,43 @@ echo "Installing neovim"
 
 
 
-## Define the installation directory
-#INSTALL_DIR="$HOME/neovim-build"
-#
-## Update package list and install dependencies
-#echo "Installing build dependencies..."
-#sudo apt update
-#sudo apt install -y ninja-build gettext cmake unzip curl git
-#
-## Clone the Neovim repository
-#echo "Cloning Neovim repository..."
-#git clone https://github.com/neovim/neovim.git "$INSTALL_DIR"
-#
-## Navigate to the Neovim directory
-#cd "$INSTALL_DIR"
-#
-## Checkout the stable version
-#echo "Checking out the stable version of Neovim..."
-#git checkout stable
-#
-## Build Neovim
-#echo "Building Neovim..."
-#make CMAKE_BUILD_TYPE=RelWithDebInfo
-#
-## Install Neovim
-#echo "Installing Neovim..."
-#sudo make install
-#
-## Verify installation
-#echo "Verifying Neovim installation..."
-#nvim --version
-#
-## Cleanup: Remove the build directory
-#echo "Cleaning up..."
-#cd ~
-#rm -rf "$INSTALL_DIR"
-#
-#echo "Neovim installation completed successfully!"
+# Define the installation directory
+INSTALL_DIR="$HOME/neovim-build"
+
+# Update package list and install dependencies
+echo "Installing build dependencies..."
+sudo apt update
+sudo apt install -y ninja-build gettext cmake unzip curl git
+
+# Clone the Neovim repository
+echo "Cloning Neovim repository..."
+git clone https://github.com/neovim/neovim.git "$INSTALL_DIR"
+
+# Navigate to the Neovim directory
+cd "$INSTALL_DIR"
+
+# Checkout the stable version
+echo "Checking out the stable version of Neovim..."
+git checkout stable
+
+# Build Neovim
+echo "Building Neovim..."
+make CMAKE_BUILD_TYPE=RelWithDebInfo
+
+# Install Neovim
+echo "Installing Neovim..."
+sudo make install
+
+# Verify installation
+echo "Verifying Neovim installation..."
+nvim --version
+
+# Cleanup: Remove the build directory
+echo "Cleaning up..."
+cd ~
+rm -rf "$INSTALL_DIR"
+
+echo "Neovim installation completed successfully!"
 
 
 
