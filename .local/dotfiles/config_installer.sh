@@ -307,11 +307,10 @@ echo "Installing neovim"
 
 
 echo "Checking if Neovim is already installed..."
-
 if command -v nvim &>/dev/null; then
     echo "Neovim is already installed! Skipping installation."
     nvim --version
-    exit 0
+    exit 0  # Stop execution if Neovim is already installed
 fi
 
 echo "Installing Neovim..."
@@ -393,8 +392,10 @@ deactivate
 echo "Setup complete! Make sure to add this to your init.vim:"
 echo "let g:python3_host_prog = \"$VENV_PATH/bin/python\""
 
-sudo npm install -g neovim
-
+npm install -g neovim --prefix="$HOME/.npm-global"
+export PATH="$HOME/.npm-global/bin:$PATH"
+echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
 
 echo "Installing Vim-Plug for Neovim..."
 
@@ -407,10 +408,14 @@ else
     echo "Vim-Plug is already installed."
 fi
 
-
-echo "Installing Vim plugins with PlugInstall..."
-nvim --headless +PlugInstall +qall
-
+# Ensure Neovim is installed before running PlugInstall
+if command -v nvim &>/dev/null; then
+    echo "Installing Vim plugins with PlugInstall..."
+    nvim --headless +PlugInstall +qall
+else
+    echo "Neovim installation failed. Skipping plugin installation."
+    exit 1
+fi
 
 echo "Installing coc.nvim extensions..."
 
@@ -426,9 +431,13 @@ if [ ! -d "$HOME/.local/share/nvim/site/pack/plugged/coc.nvim" ]; then
     exit 1
 fi
 
-# Install coc.nvim extensions in headless mode
-nvim --headless -c 'CocInstall -sync coc-json coc-html coc-css coc-yaml' -c 'qall'
-
+# Ensure Neovim and coc.nvim are installed before running CocInstall
+if [ -d "$HOME/.local/share/nvim/site/pack/plugged/coc.nvim" ]; then
+    echo "Installing coc.nvim extensions..."
+    nvim --headless -c 'CocInstall -sync coc-json coc-html coc-css coc-yaml' -c 'qall'
+else
+    echo "coc.nvim is not installed. Run :PlugInstall inside Neovim first."
+fi
 echo "coc.nvim extensions installed successfully!"
 
 echo "Neovim setup completed successfully!"
