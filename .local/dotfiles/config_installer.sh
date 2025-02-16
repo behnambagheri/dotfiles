@@ -326,7 +326,7 @@ deactivate
 echo "Setup complete! Make sure to add this to your init.vim:"
 echo "let g:python3_host_prog = \"$VENV_PATH/bin/python\""
 
-sudo npm install -g neovim
+# sudo npm install -g neovim
 
 
 
