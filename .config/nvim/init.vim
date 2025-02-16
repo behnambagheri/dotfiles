@@ -29,7 +29,7 @@ set encoding=utf-8
 
 syntax enable
 set termguicolors      " Use full 24-bit colors
-colorscheme molokai
+" colorscheme molokai
 
 " Key mappings
 nnoremap <Space> :noh<CR>   " Spacebar clears search highlights
