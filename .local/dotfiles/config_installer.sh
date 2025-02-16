@@ -385,6 +385,7 @@ fi
 # Activate the virtual environment
 echo "Activating virtual environment..."
 source "$VENV_PATH/bin/activate"
+sudo chown -R $(id -u):$(id -g) "$HOME/.local/share/nvim"
 
 # Install the Neovim Python package
 echo "Installing Neovim Python package..."
@@ -404,14 +405,17 @@ echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
 echo "Installing Vim-Plug for Neovim..."
+sudo chown -R $(id -u):$(id -g) "$HOME/.local/share/nvim"
 
 # Install Vim-Plug if not already installed
 echo "Installing Vim-Plug..."
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+sudo chown -R $(id -u):$(id -g) "$HOME/.local/share/nvim"
 
 echo "Installing Vim plugins..."
 nvim --headless +PlugInstall +qall
+sudo chown -R $(id -u):$(id -g) "$HOME/.local/share/nvim"
 
 # Ensure Neovim and coc.nvim are installed before running CocInstall
 echo "Installing coc.nvim extensions..."
