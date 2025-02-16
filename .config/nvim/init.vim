@@ -10,7 +10,12 @@ set shiftwidth=4       " Number of spaces for auto-indent
 set softtabstop=4      " Soft tab stops for smoother indenting
 set autoindent         " Copy indentation from previous line
 set smartindent        " Smart auto-indentation
+" set clipboard=unnamedplus  " Use system clipboard for copy/paste
+" " Clipboard
 set clipboard=unnamedplus  " Use system clipboard for copy/paste
+nnoremap yy "+yy
+vnoremap y "+y
+
 set showcmd            " Show commands as you type them
 " set wildmenu           " Enhance command-line completion
 set ruler              " Show cursor position in status bar
