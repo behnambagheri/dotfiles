@@ -46,11 +46,11 @@ echo "Updating system and installing the latest Fish shell..."
 if [[ "$(uname -s)" == "Linux" ]]; then
     if command -v apt &>/dev/null; then
         sudo apt-add-repository ppa:fish-shell/release-3 -y
-        sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq
+        sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq neovim
     elif command -v dnf &>/dev/null; then
-        sudo dnf install -y fish curl git bat fd-find vim util-linux-user tar 
+        sudo dnf install -y fish curl git bat fd-find vim util-linux-user tar neovim
     elif command -v pacman &>/dev/null; then
-        sudo pacman -S --noconfirm fish curl git bat fdclone vim
+        sudo pacman -S --noconfirm fish curl git bat fdclone vim neovim
     fi
 elif [[ "$(uname -s)" == "Darwin" ]]; then
     brew install fish curl git vim bat fdclone
@@ -249,6 +249,9 @@ echo "Installing Vim plugins with PlugInstall..."
 vim +PlugInstall +qall
 #vim -es -c "CocInstall coc-pyright" -c "q"
 
+
+echo "Installing neovim"
+/usr/bin/python3 -m pip install --user neovim
 
 # Define proxy settings
 PROXY="socks5h://127.0.0.1:7890"
