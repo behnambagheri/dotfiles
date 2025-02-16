@@ -400,10 +400,10 @@ source ~/.bashrc
 echo "Installing Vim-Plug for Neovim..."
 
 # Install Vim-Plug if not already installed
-if [ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" ]; then
+if [ ! -f "$HOME/.local/share/nvim/site/autoload/plug.vim" ]; then
     echo "Installing Vim-Plug..."
-    curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
 echo "Installing Vim plugins..."
