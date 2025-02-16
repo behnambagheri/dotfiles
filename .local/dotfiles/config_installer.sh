@@ -310,7 +310,51 @@ echo "Checking if Neovim is already installed..."
 if command -v nvim &>/dev/null; then
     echo "Neovim is already installed! Skipping installation."
     nvim --version
-    exit 0  # Stop execution if Neovim is already installed
+
+else
+
+echo "Installing Neovim..."
+
+# Define the installation directory
+INSTALL_DIR="$HOME/neovim-build"
+
+# Update package list and install dependencies
+echo "Installing build dependencies..."
+export NEEDRESTART_MODE=a
+export DEBIAN_FRONTEND=noninteractive
+
+sudo apt update
+sudo apt install -y ninja-build gettext cmake unzip curl git
+
+# Clone the Neovim repository
+echo "Cloning Neovim repository..."
+git clone https://github.com/neovim/neovim.git "$INSTALL_DIR"
+
+# Navigate to the Neovim directory
+cd "$INSTALL_DIR"
+
+# Checkout the stable version
+echo "Checking out the stable version of Neovim..."
+git checkout stable
+
+# Build Neovim
+echo "Building Neovim..."
+make CMAKE_BUILD_TYPE=RelWithDebInfo
+
+# Install Neovim
+echo "Installing Neovim..."
+sudo make install
+
+# Verify installation
+echo "Verifying Neovim installation..."
+nvim --version
+
+# Cleanup: Remove the build directory
+echo "Cleaning up..."
+cd ~
+rm -rf "$INSTALL_DIR"
+
+
 fi
 
 echo "Installing Neovim..."
@@ -402,9 +446,9 @@ source ~/.bashrc
 echo "Installing Vim-Plug for Neovim..."
 
 # Install Vim-Plug if not already installed
-    echo "Installing Vim-Plug..."
-    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+echo "Installing Vim-Plug..."
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 echo "Installing Vim plugins..."
 nvim --headless +PlugInstall +qall
