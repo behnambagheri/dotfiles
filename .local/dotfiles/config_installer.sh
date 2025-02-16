@@ -383,6 +383,22 @@ echo "let g:python3_host_prog = \"$VENV_PATH/bin/python\""
 # sudo npm install -g neovim
 
 
+echo "Installing Vim-Plug for Neovim..."
+
+# Install Vim-Plug if not installed
+if [ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" ]; then
+    echo "Downloading Vim-Plug..."
+    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+           https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+else
+    echo "Vim-Plug is already installed."
+fi
+
+
+echo "Installing Vim plugins with PlugInstall..."
+nvim --headless +PlugInstall +qall
+
+echo "Neovim setup completed successfully!"
 
 # Define proxy settings
 PROXY="socks5h://127.0.0.1:7890"

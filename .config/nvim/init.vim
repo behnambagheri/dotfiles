@@ -42,7 +42,7 @@ set sidescrolloff=8    " Keep some padding at the sides
 set lazyredraw         " Don't redraw screen while executing macros
 set nowrap             " Don't wrap long lines
 set undofile           " Enable persistent undo
-set undodir=~/.vim/undo
+set undodir=~/.vim/nvim_undo
 " set foldmethod=indent  " Fold based on indentation
 " set foldlevel=99       " Open all folds by default
 " set synmaxcol=200      " Limit syntax highlighting for long lines
@@ -51,8 +51,9 @@ set encoding=utf-8
 
 syntax enable
 set termguicolors      " Use full 24-bit colors
-" colorscheme molokai
-
+colorscheme molokai
+let g:molokai_original = 1
+let g:rehash256 = 1
 " Key mappings
 nnoremap <Space> :noh<CR>   " Spacebar clears search highlights
 
@@ -61,6 +62,12 @@ nnoremap <C-p> :w<CR>:!chmod +x %; clear; python3 %<CR>
 
 " Run the current file with Bash (Ctrl + B)
 nnoremap <C-b> :w<CR>:!chmod +x %; clear; bash %<CR>
+
+
+:set omnifunc=syntaxcomplete " This is necessary for acp plugin
+:let g:acp_behaviorKeywordLength = 1 "  Length of keyword characters before the cursor, which are needed to attempt keyword completion
+
+
 
 " Remember the last cursor position when reopening a file
 if has("autocmd")
@@ -168,3 +175,65 @@ let g:python3_host_prog = "$HOME/.venvs/neovim/bin/python"
 " EOF
 
 
+
+" ============================
+"       Vim-Plug Setup
+" ============================
+" Specify plugin directory
+call plug#begin('~/.vim/plugged')
+
+" Plugin List
+Plug 'vim-airline/vim-airline'
+Plug 'Yggdroot/indentLine'
+Plug 'elzr/vim-json'
+Plug 'stephpy/vim-yaml'
+Plug 'jiangmiao/auto-pairs'
+
+
+" Initialize plugins
+call plug#end()
+
+" ============================
+"       General Settings
+" ============================
+filetype plugin on    " Enable plugin filetype support
+set showmatch         " Show matching brackets
+set encoding=utf-8    " Set encoding to UTF-8
+
+" Enable GUI options if supported
+set guioptions+=a
+
+" ============================
+"       Key Mappings
+" ============================
+" Run Python Script with Ctrl + P
+nnoremap <C-p> :w<CR>:!chmod +x %; clear; python3 %<CR>
+
+" Run Bash Script with Ctrl + B
+nnoremap <C-b> :w<CR>:!chmod +x %; clear; bash %<CR>
+
+" Toggle paste mode with F2
+set pastetoggle=<F2>
+
+" ============================
+"       Autocomplete Settings
+" ============================
+set omnifunc=syntaxcomplete  " Enable syntax-based completion
+let g:acp_behaviorKeywordLength = 1 " Trigger completion with 1 character
+
+" ============================
+"       File Type Specific Settings
+" ============================
+" Set filetype for nginx config files
+autocmd BufRead,BufNewFile *.nginx,nginx.conf,*.conf set ft=nginx
+
+" JSON-specific settings
+augroup json_autocmd
+  autocmd!
+  autocmd FileType json set autoindent
+  autocmd FileType json set formatoptions=tcq2l
+  autocmd FileType json set textwidth=78 shiftwidth=2
+  autocmd FileType json set softtabstop=2 tabstop=8
+  autocmd FileType json set expandtab
+  autocmd FileType json set foldmethod=syntax
+augroup END
