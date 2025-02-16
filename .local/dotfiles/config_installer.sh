@@ -251,7 +251,7 @@ vim +PlugInstall +qall
 
 
 echo "Installing neovim"
-/usr/bin/python3 -m pip install --user neovim
+# /usr/bin/python3 -m pip install --user neovim
 # Set the virtual environment path
 VENV_PATH="$HOME/.venvs/neovim"
 
