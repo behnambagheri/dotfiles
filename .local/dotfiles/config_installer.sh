@@ -382,16 +382,16 @@ source "$VENV_PATH/bin/activate"
 
 # Install the Neovim Python package
 echo "Installing Neovim Python package..."
-pip install --upgrade pip
-pip install neovim
-pip install 'python-lsp-server[all]'
+$HOME/.venvs/neovim/bin/pip install --upgrade pip
+$HOME/.venvs/neovim/bin/pip install neovim
+$HOME/.venvs/neovim/bin/pip install 'python-lsp-server[all]'
 
 # Deactivate the virtual environment
 deactivate
 
 echo "Setup complete! Make sure to add this to your init.vim:"
 echo "let g:python3_host_prog = \"$VENV_PATH/bin/python\""
-
+sudo chown -R $(id -u):$(id -g) "$HOME/.npm"
 npm install -g neovim --prefix="$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
