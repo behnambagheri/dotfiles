@@ -306,14 +306,23 @@ vim +PlugInstall +qall
 echo "Installing neovim"
 
 
+echo "Checking if Neovim is already installed..."
+
+if command -v nvim &>/dev/null; then
+    echo "Neovim is already installed! Skipping installation."
+    nvim --version
+    exit 0
+fi
+
+echo "Installing Neovim..."
 
 # Define the installation directory
 INSTALL_DIR="$HOME/neovim-build"
 
 # Update package list and install dependencies
 echo "Installing build dependencies..."
-        export NEEDRESTART_MODE=a
-        export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+export DEBIAN_FRONTEND=noninteractive
 
 sudo apt update
 sudo apt install -y ninja-build gettext cmake unzip curl git
@@ -345,6 +354,9 @@ nvim --version
 echo "Cleaning up..."
 cd ~
 rm -rf "$INSTALL_DIR"
+
+echo "Neovim installation completed successfully!"
+
 
 echo "Neovim installation completed successfully!"
 
