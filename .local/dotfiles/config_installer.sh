@@ -46,7 +46,7 @@ echo "Updating system and installing the latest Fish shell..."
 if [[ "$(uname -s)" == "Linux" ]]; then
     if command -v apt &>/dev/null; then
         sudo apt-add-repository ppa:fish-shell/release-3 -y
-        sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq neovim
+        sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq neovim python3-pip
     elif command -v dnf &>/dev/null; then
         sudo dnf install -y fish curl git bat fd-find vim util-linux-user tar neovim
     elif command -v pacman &>/dev/null; then
