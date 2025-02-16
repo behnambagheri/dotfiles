@@ -8,8 +8,8 @@
 
 set -e  # Exit on error
 
-export NEEDRESTART_MODE=a
-export DEBIAN_FRONTEND=noninteractive
+NEEDRESTART_MODE=a
+DEBIAN_FRONTEND=noninteractive
 
 INSTALL_PROXY=false
 PUBLIC_PROXY=false
