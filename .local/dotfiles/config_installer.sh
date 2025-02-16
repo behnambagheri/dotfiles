@@ -385,6 +385,7 @@ source "$VENV_PATH/bin/activate"
 echo "Installing Neovim Python package..."
 pip install --upgrade pip
 pip install neovim
+pip install 'python-lsp-server[all]'
 
 # Deactivate the virtual environment
 deactivate
@@ -409,6 +410,26 @@ fi
 
 echo "Installing Vim plugins with PlugInstall..."
 nvim --headless +PlugInstall +qall
+
+
+echo "Installing coc.nvim extensions..."
+
+# Ensure Neovim is installed
+if ! command -v nvim &>/dev/null; then
+    echo "Neovim is not installed. Please install Neovim first."
+    exit 1
+fi
+
+# Ensure coc.nvim is installed
+if [ ! -d "$HOME/.local/share/nvim/site/pack/plugged/coc.nvim" ]; then
+    echo "coc.nvim is not installed. Please run :PlugInstall inside Neovim first."
+    exit 1
+fi
+
+# Install coc.nvim extensions in headless mode
+nvim --headless -c 'CocInstall -sync coc-json coc-html coc-css coc-yaml' -c 'qall'
+
+echo "coc.nvim extensions installed successfully!"
 
 echo "Neovim setup completed successfully!"
 

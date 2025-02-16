@@ -1,0 +1,10 @@
+{
+  "suggest.noselect": false,
+  "suggest.enablePreview": true,
+  "languageserver": {
+    "python": {
+      "command": $HOME/".venvs/neovim/bin/pylsp",
+      "filetypes": ["python"]
+    }
+  }
+}

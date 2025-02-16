@@ -44,7 +44,7 @@ set nowrap             " Don't wrap long lines
 set undofile           " Enable persistent undo
 set undodir=~/.vim/nvim_undo
 " set foldmethod=indent  " Fold based on indentation
-" set foldlevel=99       " Open all folds by default
+set foldlevel=99       " Open all folds by default
 " set synmaxcol=200      " Limit syntax highlighting for long lines
 set encoding=utf-8
 " set mouse=a            " Enable mouse support
@@ -188,6 +188,7 @@ Plug 'Yggdroot/indentLine'
 Plug 'elzr/vim-json'
 Plug 'stephpy/vim-yaml'
 Plug 'jiangmiao/auto-pairs'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 
 " Initialize plugins
@@ -237,3 +238,32 @@ augroup json_autocmd
   autocmd FileType json set expandtab
   autocmd FileType json set foldmethod=syntax
 augroup END
+
+
+
+
+
+
+
+
+" Use <Tab> to trigger completion
+inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" Enter to confirm completion
+" inoremap <silent><expr> <CR> pumvisible() ? coc#_select_confirm() : "\<CR>"
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+" inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+
+" Use K to show documentation
+nnoremap <silent> K :call CocActionAsync('doHover')<CR>
+
+" Use [g and ]g to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Use gd to go to definition
+nmap <silent> gd <Plug>(coc-definition)
+
+" Use gr to rename
+nmap <silent> gr <Plug>(coc-rename)
