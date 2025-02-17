@@ -61,7 +61,7 @@ vim.keymap.set("n", "<F3>", ":if &number == 1 | set nonumber norelativenumber | 
 vim.keymap.set("n", "<F4>", ":IndentLinesToggle<CR>", { noremap = true }) -- Toggle IndentLines
 vim.keymap.set("n", "<F5>", ":lua ToggleCommentAndMove()<CR>", { noremap = true, silent = true }) -- Toggle comments
 vim.keymap.set("n", "<F6>", ":lua ToggleMouse()<CR>", { noremap = true }) -- Toggle Mouse Support
-vim.keymap.set("n", "<F10>", ":lua SudoSave()<CR>", { noremap = true }) -- Save Read-Only File
+vim.keymap.set("n", "<F10>", ":lua SudoSaveAndExit()<CR>", { noremap = true }) -- Save Read-Only File
 
 -- ============================
 --       Functions
@@ -78,14 +78,16 @@ function ToggleMouse()
     end
 end
 
--- Save a read-only file
-function SudoSave()
+-- Save and exit a read-only file
+function SudoSaveAndExit()
     local tmpfile = vim.fn.tempname()
     vim.cmd("write! " .. tmpfile)
     vim.cmd("silent !mv " .. tmpfile .. " " .. vim.fn.expand("%"))
     vim.cmd("edit!")
-    print("File saved successfully!")
+    print("File saved successfully! Exiting Neovim...")
+    vim.cmd("qall!")  -- Exit Neovim after saving
 end
+
 function ToggleCommentAndMove()
     local comment_leader = vim.b.comment_leader or "# " -- Default to `# ` for unknown filetypes
     local line = vim.api.nvim_get_current_line()
