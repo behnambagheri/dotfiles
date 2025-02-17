@@ -34,6 +34,9 @@ done
     
 # Clone the repository
 echo "Cloning repository from $GIT_REPO..."
+if [[ -d "/tmp/lab" ]]; then
+    rm -rf /tmp/lab /tmp/dotfiles
+fi
 git clone "$GIT_REPO" "$TEMP_DIR"
 
 # Check if git clone was successful
