@@ -181,7 +181,7 @@ call plug#end()
 --       LSP Configuration
 -- ============================
 
-require'lspconfig'.bashls.setup{}
+-- require'lspconfig'.bashls.setup{}
 
 -- ============================
 --       Completion Key Bindings
