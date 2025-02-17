@@ -130,25 +130,31 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 --       Plugins (Lazy.nvim)
 -- ============================
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git", "clone", "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath
-  })
-end
-vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({
-    { "vim-airline/vim-airline" },
-    { "Yggdroot/indentLine" },
-    { "elzr/vim-json" },
-    { "stephpy/vim-yaml" },
-    { "jiangmiao/auto-pairs" },
-    { "chr4/nginx.vim" },
-    { "neoclide/coc.nvim", branch = "release" },
-    { "neovim/nvim-lspconfig" }
-})
+-- Ensure vim-plug is installed
+local plug_path = vim.fn.stdpath("data") .. "/site/autoload/plug.vim"
+if vim.fn.empty(vim.fn.glob(plug_path)) > 0 then
+    vim.fn.system({
+        "curl", "-fLo", plug_path, "--create-dirs",
+        "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+    })
+end
+
+-- Start Plugin Setup
+vim.cmd [[
+call plug#begin('~/.vim/plugged')
+
+Plug 'vim-airline/vim-airline'
+Plug 'Yggdroot/indentLine'
+Plug 'elzr/vim-json'
+Plug 'stephpy/vim-yaml'
+Plug 'jiangmiao/auto-pairs'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neovim/nvim-lspconfig'
+
+call plug#end()
+]]
+
 
 -- ============================
 --       LSP Configuration
