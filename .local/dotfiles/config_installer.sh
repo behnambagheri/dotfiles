@@ -2,9 +2,9 @@
 ##Install:
 #bash <(GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone git@github.com:behnambagheri/dotfiles.git /tmp/dotfiles && echo /tmp/dotfiles/.local/dotfiles/config_installer.sh)
 ##Update:
-#config pull && bash .local/dotfiles/config_installer.sh
+#config-update
 ##Fix:
-# rm -rf .dotfiles &&     git clone --bare https://github.com/behnambagheri/dotfiles.git "$HOME/.dotfiles" && git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no && git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME reset --hard
+# rm -rf .dotfiles /tmp/lab /tmp/dotftiles && git clone --bare https://github.com/behnambagheri/dotfiles.git "$HOME/.dotfiles" && git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no && git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME reset --hard
 
 set -e  # Exit on error
 
@@ -89,28 +89,6 @@ else
     exit 1
 fi
 
-
-
-
-
-# echo "Updating system and installing the latest Fish shell..."
-# if [[ "$(uname -s)" == "Linux" ]]; then
-#     if command -v apt &>/dev/null; then
-#         
-#         export NEEDRESTART_MODE=a
-#         export DEBIAN_FRONTEND=noninteractive
-# 
-#         sudo apt-add-repository ppa:fish-shell/release-3 -y
-#         sudo apt install -y fish curl git bat fdclone vim glances curl wget dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc build-essential net-tools iproute2 unzip bind9-* prometheus-node-exporter ncdu nethogs ncdu jq python3-full python3-pip ripgrep
-#     elif command -v dnf &>/dev/null; then
-#         sudo dnf install -y fish curl git bat fd-find vim util-linux-user tar 
-#     elif command -v pacman &>/dev/null; then
-#         sudo pacman -S --noconfirm fish curl git bat fdclone vim 
-#     fi
-# elif [[ "$(uname -s)" == "Darwin" ]]; then
-#     brew install fish curl git vim bat fdclone
-# fi
-
 ### Disable node installation till need node on the machines
 # Install Node.js using NodeSource
 echo "Installing Node.js..."
@@ -183,6 +161,7 @@ git --git-dir="$HOME"/.dotfiles/ --work-tree="$HOME" config --local status.showU
 
 # Hard reset dotfiles to repo state
 git --git-dir="$HOME"/.dotfiles/ --work-tree="$HOME" reset --hard
+git --git-dir="$HOME"/.dotfiles/ --work-tree="$HOME" config pull.rebase false
 
 
 # Define `config` function for managing dotfiles
