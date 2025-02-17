@@ -169,3 +169,8 @@ vim.api.nvim_set_keymap("n", "[g", "<Plug>(coc-diagnostic-prev)", { silent = tru
 vim.api.nvim_set_keymap("n", "]g", "<Plug>(coc-diagnostic-next)", { silent = true })
 vim.api.nvim_set_keymap("n", "gd", "<Plug>(coc-definition)", { silent = true })
 vim.api.nvim_set_keymap("n", "gr", "<Plug>(coc-rename)", { silent = true })
+
+
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.python3_host_prog = os.getenv("HOME") .. "/.venvs/neovim/bin/python"
