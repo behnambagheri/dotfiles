@@ -113,6 +113,9 @@ install_with_package_manager(){
 
       if [ "$INSTALL_PROXY" = true ]; then
         log "Installing Sing-box..." "$MAGENTA"
+          # Ensure non-interactive mode
+        export NEEDRESTART_MODE=a
+        export DEBIAN_FRONTEND=noninteractive
         sudo apt install -y sing-box
       fi
     fi
@@ -124,10 +127,13 @@ install_with_package_manager(){
 
 
 install_nodejs(){
-  local node_version npm_version
+  local node_version npm_version NEEDRESTART_MODE DEBIAN_FRONTEND
     # Install Node.js using NodeSource
   log "Installing Node.js..." "$CYAN"
   curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    # Ensure non-interactive mode
+  export NEEDRESTART_MODE=a
+  export DEBIAN_FRONTEND=noninteractive
   sudo apt install -y nodejs
 
   # Verify installation
