@@ -148,11 +148,11 @@ install_nodejs(){
 install_fzf(){
 
   # Install fzf (Fuzzy Finder)
-  echo "Installing fzf..."
+  log "Installing fzf..." "$CYAN"
   if [ ! -d "$HOME/.fzf" ]; then
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
   else
-    echo "fzf already exists, skipping clone."
+    log "fzf already exists, skipping clone." "$YELLOW"
   fi
 
   ~/.fzf/install --all
@@ -162,7 +162,7 @@ install_fzf(){
 install_omf(){
     # Install Oh My Fish (OMF) if not already installed
   if [ ! -d "$HOME/.local/share/omf" ]; then
-      echo "Installing Oh My Fish..."
+      log "Installing Oh My Fish..." "$CYAN"
       curl -L https://get.oh-my.fish | fish
   fi
 
@@ -171,7 +171,7 @@ install_omf(){
 install_fisher(){
     # Install Fisher (if not already installed)
   if ! fish -c "functions -q fisher"; then
-      echo "Installing Fisher..."
+      log "Installing Fisher..." "$CYAN"
   #    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
       fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher'
   fi
@@ -185,14 +185,14 @@ install_lambda_theme(){
 
 configure_done_notify(){
   local DONE_NOTIFY_PATH
-  echo "Adding done_notify..."
+  log "Adding done_notify..." "$CYAN"
 
   # Corrected path (removed extra 'home')
   DONE_NOTIFY_PATH="$TEMP_DIR/home/bea/scripts/bea/done_notify.fish"
 
   # Ensure the script exists before sourcing
   if [ -f "$DONE_NOTIFY_PATH" ]; then
-  #    echo "Sourcing done_notify.fish..."
+      log "Sourcing done_notify.fish..." "$CYAN"
       fish -c "source $DONE_NOTIFY_PATH"
       fish -c "fisher install franciscolourenco/done"
 
@@ -202,7 +202,7 @@ configure_done_notify(){
 
       fish -c "source $HOME/.local/dotfiles/done_notify.fish"
   else
-      echo "Error: done_notify.fish not found at $DONE_NOTIFY_PATH"
+      log "Error: done_notify.fish not found at $DONE_NOTIFY_PATH" "$RED"
       exit 1
   fi
 }
@@ -210,7 +210,7 @@ configure_done_notify(){
 install_fish_plugins(){
 
   # Install Fisher plugins
-  echo "Installing Fisher plugins..."
+  log "Installing Fisher plugins..." "$CYAN"
 
   fish -c "fisher install jorgebucaran/fisher"
   fish -c "fisher install meaningful-ooo/sponge"
@@ -229,12 +229,12 @@ install_fish_plugins(){
 
   # Install Docker plugins only if Docker is installed
   if command -v docker &>/dev/null; then
-      echo "Docker detected! Installing Docker plugins..."
+      log "Docker detected! Installing Docker plugins..." "$MAGENTA"
       fish -c "fisher install asim-tahir/docker.fish"
       fish -c "fisher install brgmnn/fish-docker-compose"
       fish -c "fisher install asim-tahir/docker-compose.fish"
   else
-      echo "Docker not found. Skipping Docker plugins."
+      log "Docker not found. Skipping Docker plugins." "$YELLOW"
   fi
 
 
@@ -242,24 +242,24 @@ install_fish_plugins(){
 
   # Install Kubernetes plugin only if kubectl is installed
   if command -v kubectl &>/dev/null; then
-      echo "kubectl detected! Installing Kubernetes plugin..."
+      log "kubectl detected! Installing Kubernetes plugin..." "$MAGENTA"
       fish -c "fisher install blackjid/plugin-kubectl"
   else
-      echo "kubectl not found. Skipping Kubernetes plugin."
+      log "kubectl not found. Skipping Kubernetes plugin." "$YELLOW"
   fi
 
   # Install Homebrew completion plugin only on macOS
   if [[ "$(uname -s)" == "Darwin" ]]; then
-      echo "macOS detected! Installing Homebrew completions..."
+      log "macOS detected! Installing Homebrew completions..." "$MAGENTA"
       fish -c "fisher install laughedelic/brew-completions"
   else
-      echo "Not macOS. Skipping Homebrew completions."
+      log "Not macOS. Skipping Homebrew completions." "$YELLOW"
   fi
 
 }
 
 install_iterm2_shell_integrations(){
-  echo "Install iterm2 shell_integration"
+  log "Install iterm2 shell_integration" "$CYAN"
   curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
   # source $HOME/.iterm2_shell_integration.fish
 }
@@ -276,59 +276,59 @@ install_virtual_fish(){
   # Configure VirtualFish
   vf install compat_aliases auto_activation
 
-  echo "VirtualFish installation completed successfully."
+  log "VirtualFish installation completed successfully." "$GREEN"
 
 }
 
 install_nvim(){
   local  INSTALL_DIR
-  echo "Installing neovim"
+  log "Installing neovim" "$CYAN"
 
 
-  echo "Checking if Neovim is already installed..."
+  log "Checking if Neovim is already installed..." "$MAGENTA"
   if command -v nvim &>/dev/null; then
-      echo "Neovim is already installed! Skipping installation."
+      log "Neovim is already installed! Skipping installation." "$YELLOW"
       nvim --version
 
   else
 
-    echo "Installing Neovim..."
+    log "Installing Neovim..." "$CYAN"
 
     # Define the installation directory
     INSTALL_DIR="$HOME/neovim-build"
 
 
     # Clone the Neovim repository
-    echo "Cloning Neovim repository..."
+    log "Cloning Neovim repository..." "$CYAN"
     git clone https://github.com/neovim/neovim.git "$INSTALL_DIR"
 
     # Navigate to the Neovim directory
     cd "$INSTALL_DIR" || exit
 
     # Checkout the stable version
-    echo "Checking out the stable version of Neovim..."
+    log "Checking out the stable version of Neovim..." "$BLUE"
     git checkout stable
 
     # Build Neovim
-    echo "Building Neovim..."
+    log "Building Neovim..." "$BLUE"
     make CMAKE_BUILD_TYPE=RelWithDebInfo
 
     # Install Neovim
-    echo "Installing Neovim..."
+    log "Installing Neovim..." "$CYAN"
     sudo make install
 
     # Verify installation
-    echo "Verifying Neovim installation..."
+    log "Verifying Neovim installation..." "$MAGENTA"
     nvim --version
 
     # Cleanup: Remove the build directory
-    echo "Cleaning up..."
+    log "Cleaning up..." "$BLUE"
     cd "$HOME" || exit
     rm -rf "$INSTALL_DIR"
 
 
 
-    echo "Neovim installation completed successfully!"
+    log "Neovim installation completed successfully!" "$GREEN"
 
 
   fi
@@ -355,20 +355,20 @@ configure_fish(){
 
   # Check if Fish shell is installed before proceeding
   if command -v fish &>/dev/null; then
-    echo "Fish installed successfully: $(fish --version)"
+    log "Fish installed successfully: $(fish --version)" "$GREEN"
   else
-    echo "Error: Fish installation failed!"
+    log "Error: Fish installation failed!" "$RED"
     exit 1
   fi
 
   # Change the default shell to Fish (only if necessary)
   if [[ "$SHELL" != "$(which fish)" ]]; then
-      echo "Setting Fish as default shell..."
+      log "Setting Fish as default shell..." "$BLUE"
       chsh -s "$(which fish)"
   fi
 
   # Configure Fish
-  echo "Configuring Fish..."
+  log "Configuring Fish..." "$MAGENTA"
   fish -c 'set -U fish_greeting ""'
 
 
@@ -380,13 +380,13 @@ configure_vim(){
 
   # Install Vim-Plug if not installed
   if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
-      echo "Installing Vim-Plug..."
+      log "Installing Vim-Plug..." "$CYAN"
       curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
           https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   fi
 
   # Install Vim plugins automatically
-  echo "Installing Vim plugins with PlugInstall..."
+  log "Installing Vim plugins with PlugInstall..." "$CYAN"
   vim +PlugInstall +qall
   #vim -es -c "CocInstall coc-pyright" -c "q"
 
@@ -402,19 +402,19 @@ configure_nvim(){
 
     # Create the virtual environment if it doesn't exist
     if [ ! -d "$VENV_PATH" ]; then
-        echo "Creating Python virtual environment for Neovim..."
+        log "Creating Python virtual environment for Neovim..." "$CYAN"
         python3 -m venv "$VENV_PATH"
     else
-        echo "Virtual environment already exists at $VENV_PATH."
+        log "Virtual environment already exists at $VENV_PATH." "$YELLOW"
     fi
 
     # Activate the virtual environment
-    echo "Activating virtual environment..."
+    log "Activating virtual environment..." "$BLUE"
     # shellcheck source=./activate
     source "$VENV_PATH/bin/activate"
 
     # Install the Neovim Python package
-    echo "Installing Neovim Python package..."
+    log "Installing Neovim Python package..." "$CYAN"
     "$HOME"/.venvs/neovim/bin/pip install --upgrade pip
     "$HOME"/.venvs/neovim/bin/pip install neovim
     "$HOME"/.venvs/neovim/bin/pip install 'python-lsp-server[all]'
@@ -422,8 +422,7 @@ configure_nvim(){
     # Deactivate the virtual environment
     deactivate
 
-    echo "Setup complete! Make sure to add this to your init.vim:"
-    #echo "let g:python3_host_prog = \"$VENV_PATH/bin/python\""
+    log "Setup complete! Make sure to add this to your init.vim:" "$GREEN"
     if [[ -d "$HOME/.npm" ]]; then
       sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.npm"
     fi
@@ -432,27 +431,25 @@ configure_nvim(){
     sudo npm install -g neovim
     sudo npm install -g bash-language-server
     export PATH="$HOME/.npm-global/bin:$PATH"
-    echo "export PATH=""$HOME"/.npm-global/bin:"$PATH""" >> ~/.bashrc
     # shellcheck source=/Users/behnam/.bashrc
     source ~/.bashrc
 
-    echo "Installing Vim-Plug for Neovim..."
+    log "Installing Vim-Plug for Neovim..." "$CYAN"
 
     # Install Vim-Plug if not already installed
-    echo "Installing Vim-Plug..."
     curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-    echo "Installing Vim plugins..."
+    log "Installing NeoVim plugins..." "$CYAN"
     sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.local/state/nvim/"
 
     nvim --headless +PlugInstall +qall
 
     # Ensure Neovim and coc.nvim are installed before running CocInstall
-    echo "Installing coc.nvim extensions..."
+    log "Installing coc.nvim extensions..." "$CYAN"
     nvim --headless -c 'CocInstall -sync coc-json coc-html coc-css coc-yaml coc-sh' -c 'qall'
 
-    echo "Neovim setup completed successfully!"
+    log "Neovim setup completed successfully!" "$GREEN"
 
 
 }
@@ -460,24 +457,24 @@ configure_nvim(){
 
 # APT Proxy Setup (For Debian-based systems)
 setup_apt_proxy() {
-    echo "Configuring APT proxy..."
+    log "Configuring APT proxy..." "$BLUE"
     sudo bash -c "cat > /etc/apt/apt.conf.d/01proxy" <<EOF
 Acquire::http::Proxy  "$PROXY";
 Acquire::https::Proxy "$PROXY";
 EOF
-    echo "APT proxy configured successfully!"
+    log "APT proxy configured successfully!" "$GREEN"
 }
 
 # Enable and Start Sing-box Service
 enable_singbox_service() {
-    echo "Enabling and starting Sing-box service..."
+    log "Enabling and starting Sing-box service..." "$BLUE"
     if command -v systemctl &>/dev/null; then
         sudo systemctl enable --now sing-box
         sudo systemctl restart sing-box
 
-        echo "Sing-box service started and enabled on boot."
+        log "Sing-box service started and enabled on boot." "$BLUE"
     else
-        echo "Error: systemctl not found. Unable to enable Sing-box service."
+        log "Error: systemctl not found. Unable to enable Sing-box service." "$RED"
         exit 1
     fi
 }
@@ -495,12 +492,12 @@ configure_singbox(){
 
       # Check if the configuration file exists
       if [ -f "$CONFIG_SOURCE" ]; then
-          echo "Copying Sing-box configuration file..."
+          log "Copying Sing-box configuration file..." "$MAGENTA"
           sudo mkdir -p /etc/sing-box
           sudo cp "$CONFIG_SOURCE" "$CONFIG_DEST"
-          echo "Configuration file copied successfully."
+          log "Configuration file copied successfully." "$GREEN"
       else
-          echo "Error: Configuration file not found at $CONFIG_SOURCE"
+          log "Error: Configuration file not found at $CONFIG_SOURCE" "$RED"
           rm -rf "$TEMP_DIR"  # Clean up the cloned repository
           exit 1
       fi
@@ -508,13 +505,13 @@ configure_singbox(){
 
 
       # Enable and Start Sing-box service
-      echo "Enabling and starting Sing-box service..."
+      log "Enabling and starting Sing-box service..." "$MAGENTA"
       if command -v systemctl &>/dev/null; then
           sudo systemctl enable --now sing-box
           sudo systemctl restart sing-box
-          echo "Sing-box service started and enabled on boot."
+          log "Sing-box service started and enabled on boot." "$GREEN"
       else
-          echo "Error: systemctl not found. Unable to enable Sing-box service."
+          log "Error: systemctl not found. Unable to enable Sing-box service." "$RED"
           exit 1
       fi
 
@@ -524,21 +521,21 @@ configure_singbox(){
       FETCH_SCRIPT_DEST="/usr/local/bin/sing-box-fetch.sh"
 
       if [ -f "$FETCH_SCRIPT_SOURCE" ]; then
-          echo "Copying sing-box-fetch.sh to /usr/local/bin..."
+          log "Copying sing-box-fetch.sh to /usr/local/bin..." "$MAGENTA"
           sudo cp "$FETCH_SCRIPT_SOURCE" "$FETCH_SCRIPT_DEST"
           sudo chmod +x "$FETCH_SCRIPT_DEST"
-          echo "Sing-box fetch script installed successfully."
+          log "Sing-box fetch script installed successfully." "$GREEN"
       else
-          echo "Error: sing-box-fetch.sh not found in $FETCH_SCRIPT_SOURCE"
+          log "Error: sing-box-fetch.sh not found in $FETCH_SCRIPT_SOURCE" "$GREEN"
           exit 1
       fi
 
       # === Add to Root Crontab if Not Already Present ===
       CRON_ENTRY="* * * * * /usr/local/bin/sing-box-fetch.sh >> /var/log/sing-box-fetch.log 2>&1"
       sudo crontab -l | grep -F "$CRON_ENTRY" || (
-          echo "Adding sing-box-fetch.sh to root's crontab..."
+          log "Adding sing-box-fetch.sh to root's crontab..." "$BLUE"
           (sudo crontab -l 2>/dev/null; echo "$CRON_ENTRY") | sudo crontab -
-          echo "Crontab updated successfully."
+          log "Crontab updated successfully." "$GREEN"
       )
 
 
@@ -547,13 +544,13 @@ configure_singbox(){
           setup_apt_proxy
 
       else
-          echo "Unsupported package manager. Skipping Sing-box installation."
+          log "Unsupported package manager. Skipping Sing-box installation." "$RED"
       fi
 
 
 
       if [ "$PUBLIC_PROXY" = true ]; then
-          echo "Applying public proxy settings to sing-box-fetch.sh..."
+          log "Applying public proxy settings to sing-box-fetch.sh..." "$MAGENTA"
 
           # Define the exact modification line
           MODIFICATION_LINE="sed -i 's#\"listen\": \"127.0.0.1\",#\"listen\": \"0.0.0.0\",#g' /etc/sing-box/config.json"
@@ -561,19 +558,19 @@ configure_singbox(){
 
           # Check if the line already exists in the script before appending
           if ! sudo grep -Fxq "$MODIFICATION_LINE" "$FETCH_SCRIPT_DEST"; then
-              echo "Appending public proxy modification to sing-box-fetch.sh..."
+              log "Appending public proxy modification to sing-box-fetch.sh..." "$MAGENTA"
               echo "$MODIFICATION_LINE" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
               echo "$MODIFICATION_LINE2" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
               echo "systemctl restart sing-box.service" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
 
               enable_singbox_service
-              echo "Public proxy settings applied successfully."
+              log "Public proxy settings applied successfully." "$GREEN"
           else
-              echo "Public proxy modification already exists in sing-box-fetch.sh, skipping."
+              log "Public proxy modification already exists in sing-box-fetch.sh, skipping." "$YELLOW"
           fi
       fi
   else
-      echo "Skipping Sing-box installation and proxy setup (no --with-proxy argument provided)."
+      log "Skipping Sing-box installation and proxy setup (no --with-proxy argument provided)." "$YELLOW"
   fi
 }
 
@@ -581,10 +578,10 @@ initialize_config(){
 
   # Clone dotfiles repository if it doesn't exist
   if [ ! -d "$HOME/.dotfiles" ]; then
-      echo "Cloning dotfiles repository..."
+      log "Cloning dotfiles repository..." "$CYAN"
       git clone --bare git@github.com:behnambagheri/dotfiles.git "$HOME/.dotfiles"
   else
-      echo "Dotfiles repository already exists, skipping clone."
+      log "Dotfiles repository already exists, skipping clone." "$YELLOW"
   fi
 
   # Configure Git to ignore untracked files
@@ -606,12 +603,12 @@ initialize_config(){
 
 cleanup(){
   # Clean up the cloned repository
-  echo "Cleaning up temporary files..."
+  log "Cleaning up temporary files..." "$BLUE"
   rm -rf "$TEMP_DIR"
 }
 
 source_varibales(){
-  echo "source variables..."
+  log "source variables..." "$BLUE"
   fish -c "source $HOME/.local/dotfiles/variables.fish"
 }
 
@@ -632,4 +629,4 @@ initialize_config
 source_varibales
 cleanup
 
-echo "Dotfiles installation and Fish setup complete!"
+log "Dotfiles installation and Fish setup complete!" "$GREEN"
