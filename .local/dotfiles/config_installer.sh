@@ -40,7 +40,9 @@ fi
 git clone "$GIT_REPO" "$TEMP_DIR"
 
 # Check if git clone was successful
-if [ $? -ne 0 ]; then
+if git clone "$GIT_REPO" "$TEMP_DIR"; then
+    echo "Git clone success."
+  else
     echo "Error: Git clone failed."
     exit 1
 fi
@@ -177,10 +179,10 @@ else
 fi
 
 # Configure Git to ignore untracked files
-git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no
+git --git-dir="$HOME"/.dotfiles/ --work-tree="$HOME" config --local status.showUntrackedFiles no
 
 # Hard reset dotfiles to repo state
-git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME reset --hard
+git --git-dir="$HOME"/.dotfiles/ --work-tree="$HOME" reset --hard
 
 
 # Define `config` function for managing dotfiles
@@ -361,7 +363,7 @@ else
 fi
 
 
-sudo chown -R $(id -u):$(id -g) "$HOME/.local/share/nvim"
+sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.local/share/nvim"
 
 echo "Neovim installation completed successfully!"
 
@@ -387,26 +389,30 @@ fi
 
 # Activate the virtual environment
 echo "Activating virtual environment..."
+# shellcheck source=./activate
 source "$VENV_PATH/bin/activate"
 
 # Install the Neovim Python package
 echo "Installing Neovim Python package..."
-$HOME/.venvs/neovim/bin/pip install --upgrade pip
-$HOME/.venvs/neovim/bin/pip install neovim
-$HOME/.venvs/neovim/bin/pip install 'python-lsp-server[all]'
+"$HOME"/.venvs/neovim/bin/pip install --upgrade pip
+"$HOME"/.venvs/neovim/bin/pip install neovim
+"$HOME"/.venvs/neovim/bin/pip install 'python-lsp-server[all]'
 
 # Deactivate the virtual environment
 deactivate
 
 echo "Setup complete! Make sure to add this to your init.vim:"
 #echo "let g:python3_host_prog = \"$VENV_PATH/bin/python\""
-sudo chown -R $(id -u):$(id -g) "$HOME/.npm"
+if [[ -d "$HOME/.npm" ]]; then
+  sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.npm"
+fi
 npm install -g neovim --prefix="$HOME/.npm-global"
 npm install -g bash-language-server --prefix="$HOME/.npm-global"
 sudo npm install -g neovim
 sudo npm install -g bash-language-server
 export PATH="$HOME/.npm-global/bin:$PATH"
-echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
+echo "export PATH=""$HOME"/.npm-global/bin:"$PATH""" >> ~/.bashrc
+# shellcheck source=/Users/behnam/.bashrc
 source ~/.bashrc
 
 echo "Installing Vim-Plug for Neovim..."
@@ -417,7 +423,7 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 echo "Installing Vim plugins..."
-sudo chown -R $(id -u):$(id -g) "$HOME/.local/state/nvim/"
+sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.local/state/nvim/"
 
 nvim --headless +PlugInstall +qall
 
