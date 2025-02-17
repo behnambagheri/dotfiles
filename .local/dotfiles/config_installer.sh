@@ -400,6 +400,8 @@ echo "Setup complete! Make sure to add this to your init.vim:"
 #sudo chown -R $(id -u):$(id -g) "$HOME/.npm"
 npm install -g neovim --prefix="$HOME/.npm-global"
 npm install -g bash-language-server --prefix="$HOME/.npm-global"
+sudo npm install -g neovim
+sudo npm install -g bash-language-server
 export PATH="$HOME/.npm-global/bin:$PATH"
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc

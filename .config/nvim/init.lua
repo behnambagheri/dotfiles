@@ -14,7 +14,6 @@ vim.opt.shiftwidth = 4                   -- Number of spaces for auto-indent
 vim.opt.softtabstop = 4                  -- Soft tab stops for smoother indenting
 vim.opt.autoindent = true                -- Copy indentation from previous line
 vim.opt.smartindent = true               -- Smart auto-indentation
-vim.opt.clipboard = "unnamedplus"        -- Use system clipboard
 vim.opt.showcmd = true                   -- Show commands as you type them
 vim.opt.ruler = true                     -- Show cursor position in status bar
 vim.opt.cursorline = true                -- Highlight the current line
@@ -29,6 +28,28 @@ vim.opt.encoding = "utf-8"               -- Set encoding to UTF-8
 
 vim.cmd("syntax enable")                 -- Enable syntax highlighting
 
+-- ============================
+--       Clipboard Configs
+-- ============================
+-- Use system clipboard for copy/paste
+vim.opt.clipboard = "unnamedplus"
+
+-- Map `yy` and `y` to copy to system clipboard
+vim.api.nvim_set_keymap("n", "yy", '"+yy', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "y", '"+y', { noremap = true, silent = true })
+
+-- Enable OSC 52 clipboard support
+vim.g.clipboard = {
+  name = "OSC 52",
+  copy = {
+    ["+"] = function(lines, _) require("vim.ui.clipboard.osc52").copy("+")(lines) end,
+    ["*"] = function(lines, _) require("vim.ui.clipboard.osc52").copy("*")(lines) end,
+  },
+  paste = {
+    ["+"] = function() return require("vim.ui.clipboard.osc52").paste("+")() end,
+    ["*"] = function() return require("vim.ui.clipboard.osc52").paste("*")() end,
+  },
+}
 -- ============================
 --       Key Mappings
 -- ============================
