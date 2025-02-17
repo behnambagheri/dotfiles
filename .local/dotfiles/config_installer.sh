@@ -80,7 +80,11 @@ clone_projects(){
 
 install_with_package_manager(){
   local NEEDRESTART_MODE DEBIAN_FRONTEND
-    log "Updating system and installing the latest Fish shell..." "$CYAN"
+  log "Updating system and installing the latest Fish shell..." "$CYAN"
+
+  # Ensure non-interactive mode
+  export NEEDRESTART_MODE=a
+  export DEBIAN_FRONTEND=noninteractive
 
   if [ "$INSTALL_PROXY" = true ]; then
     log "Detected Debian-based system. Installing Sing-box..." "$MAGENTA"
@@ -93,35 +97,31 @@ install_with_package_manager(){
 
   if [[ "$(uname -s)" == "Linux" ]]; then
     if command -v apt &>/dev/null; then
-      export NEEDRESTART_MODE=a
-      export DEBIAN_FRONTEND=noninteractive
-
       log "Adding Fish Shell repository..." "$CYAN"
       sudo add-apt-repository -y ppa:fish-shell/release-3
 
       log "Updating package list..." "$CYAN"
       sudo apt update -y
 
-      log "Installing packages..." "$CYAN"
-      sudo apt install -y fish curl git bat fd-find vim glances curl wget \
-        dnsutils bind9-host nmap iputils-ping rsync netcat-traditional gcc \
-        build-essential net-tools iproute2 unzip bind9-utils prometheus-node-exporter \
-        ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx ninja-build \
-        gettext cmake unzip
+      log "Installing required packages..." "$CYAN"
+      sudo apt install -y --no-install-recommends \
+        fish curl git bat fd-find vim glances curl wget dnsutils bind9-host \
+        nmap iputils-ping rsync netcat-traditional gcc build-essential \
+        net-tools iproute2 unzip bind9-utils prometheus-node-exporter \
+        ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx \
+        ninja-build gettext cmake unzip
 
-  if [ "$INSTALL_PROXY" = true ]; then
-    sudo apt install -y sing-box
-  fi
-
+      if [ "$INSTALL_PROXY" = true ]; then
+        log "Installing Sing-box..." "$MAGENTA"
+        sudo apt install -y sing-box
+      fi
     fi
   else
     log "Unsupported operating system." "$RED"
     exit 1
   fi
-
-
-
 }
+
 
 install_nodejs(){
   local node_version npm_version
