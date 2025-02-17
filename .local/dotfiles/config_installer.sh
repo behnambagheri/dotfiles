@@ -399,6 +399,7 @@ echo "Setup complete! Make sure to add this to your init.vim:"
 #echo "let g:python3_host_prog = \"$VENV_PATH/bin/python\""
 #sudo chown -R $(id -u):$(id -g) "$HOME/.npm"
 npm install -g neovim --prefix="$HOME/.npm-global"
+npm install -g bash-language-server --prefix="$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
@@ -417,7 +418,7 @@ nvim --headless +PlugInstall +qall
 
 # Ensure Neovim and coc.nvim are installed before running CocInstall
 echo "Installing coc.nvim extensions..."
-nvim --headless -c 'CocInstall -sync coc-json coc-html coc-css coc-yaml' -c 'qall'
+nvim --headless -c 'CocInstall -sync coc-json coc-html coc-css coc-yaml coc-sh' -c 'qall'
 
 echo "Neovim setup completed successfully!"
 

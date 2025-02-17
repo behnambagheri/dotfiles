@@ -5,6 +5,15 @@
     "python": {
       "command": $HOME/".venvs/neovim/bin/pylsp",
       "filetypes": ["python"]
+    
+    },
+
+
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": ["sh"],
+      "shell": "/bin/bash"
     }
   }
 }
