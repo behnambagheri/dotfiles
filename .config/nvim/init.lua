@@ -8,10 +8,6 @@ vim.opt.ignorecase = true               -- Ignore case in searches
 vim.opt.smartcase = true                -- Case-sensitive if search contains uppercase
 vim.opt.incsearch = true                -- Show matches as you type
 vim.opt.hlsearch = true                 -- Highlight matches
-vim.opt.expandtab = true                -- Use spaces instead of tabs
-vim.opt.tabstop = 4                      -- Number of spaces per tab
-vim.opt.shiftwidth = 4                   -- Number of spaces for auto-indent
-vim.opt.softtabstop = 4                  -- Soft tab stops for smoother indenting
 vim.opt.autoindent = true                -- Copy indentation from previous line
 vim.opt.smartindent = true               -- Smart auto-indentation
 vim.opt.showcmd = true                   -- Show commands as you type them
@@ -26,8 +22,16 @@ vim.opt.undodir = os.getenv("HOME") .. "/.vim/nvim_undo"
 vim.opt.foldlevel = 99                    -- Open all folds by default
 vim.opt.encoding = "utf-8"               -- Set encoding to UTF-8
 
+-- Tab inserts 4 spaces
+vim.opt.expandtab = true                -- Use spaces instead of tabs
+vim.opt.tabstop = 4                      -- Number of spaces per tab
+vim.opt.shiftwidth = 4                   -- Number of spaces for auto-indent
+vim.opt.softtabstop = 4                  -- Soft tab stops for smoother indenting
+-- Shift+Tab removes 4 spaces
+vim.api.nvim_set_keymap("i", "<S-CR>", "<C-o>o", { noremap = true, silent = true })
 vim.cmd("syntax enable")                 -- Enable syntax highlighting
 
+vim.opt.conceallevel = 0  -- Always show concealed text (e.g., double quotes in JSON)
 -- ============================
 --       Clipboard Configs
 -- ============================
@@ -179,6 +183,8 @@ call plug#end()
 ]]
 
 
+
+
 -- ============================
 --       LSP Configuration
 -- ============================
@@ -203,3 +209,26 @@ vim.api.nvim_set_keymap("n", "gr", "<Plug>(coc-rename)", { silent = true })
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.python3_host_prog = os.getenv("HOME") .. "/.venvs/neovim/bin/python"
+
+
+
+
+-- Outdent (Shift+Comma) in normal mode
+vim.keymap.set("n", "<lt>", "<lt><lt>", { silent = true, desc = "Outdent" })
+
+-- Indent (Shift+Period) in normal mode
+vim.keymap.set("n", ">", ">>", { silent = true, desc = "Indent" })
+
+-- Outdent (Shift+Comma) in visual mode and reselect the selection
+vim.keymap.set("v", "<lt>", "<lt>gv", { silent = true, desc = "Outdent and reselect" })
+
+-- Indent (Shift+Period) in visual mode and reselect the selection
+vim.keymap.set("v", ">", ">gv", { silent = true, desc = "Indent and reselect" })
+
+
+
+-- Delete a single line (`dd`) without copying it to the clipboard
+vim.api.nvim_set_keymap("n", "dd", '"_dd', { noremap = true, silent = true })
+
+-- Delete selected text (`d`) in visual mode without copying it
+vim.api.nvim_set_keymap("v", "d", '"_d', { noremap = true, silent = true })

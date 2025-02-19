@@ -3,7 +3,7 @@
   "suggest.enablePreview": true,
   "languageserver": {
     "python": {
-      "command": $HOME/".venvs/neovim/bin/pylsp",
+      "command": "$HOME/.venvs/neovim/bin/pylsp",
       "filetypes": ["python"]
     
     },
