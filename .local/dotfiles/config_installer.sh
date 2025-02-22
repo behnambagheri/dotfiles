@@ -120,7 +120,7 @@ install_with_package_manager(){
     if command -v apt &>/dev/null; then
 
     # Check if Fish PPA is already added
-    if grep -Rq "ppa:fish-shell/release-3" /etc/apt/sources.list.d/; then
+    if grep -Rq "fish-shell/release-3" /etc/apt/sources.list.d/; then
       log "PPA already added. Skipping..." "$YELLOW"
     else
       log "Adding Fish Shell repository..." "$CYAN"
