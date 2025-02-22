@@ -68,18 +68,20 @@ log() {
   echo -e "${color}${msg}${DEFAULT_COLOR}"
 #  logger "$msg"
 }
-
-clone_projects(){
+clone_projects() {
   local PROJ DIR
   PROJ="$1"
   DIR="$2"
 
   # Clone the repository
-  log "Cloning repository from $PROJ into $DIR..."
+  log "Cloning repository from $BLUE $PROJ into $GREEN $DIR..."
+
   if [[ -d "$DIR" ]]; then
-    git -C "$DIR" pull
+    # Pull latest changes, but suppress output unless an error occurs
+    git -C "$DIR" pull > /dev/null 2>&1 || log "Error: Git pull failed in $DIR" "$RED"
   else
-    if git clone "$PROJ" "$DIR" > /dev/null; then
+    # Clone the repository, but suppress output unless an error occurs
+    if git clone "$PROJ" "$DIR" > /dev/null 2>&1; then
       log "Git clone success." "$GREEN"
     else
       log "Error: Git clone failed." "$RED"
