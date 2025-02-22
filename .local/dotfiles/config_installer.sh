@@ -73,6 +73,7 @@ clone_projects(){
   local PROJ DIR
   PROJ="$1"
   DIR="$2"
+
   # Clone the repository
   log "Cloning repository from $PROJ into $DIR..."
   if [[ -d "$DIR" ]]; then
@@ -87,7 +88,6 @@ clone_projects(){
   fi
 }
 
-clone_projects "git@github.com:behnambagheri/lab.git" "/tmp/lab"
 # Function to check if a package is installed
 is_installed() {
     dpkg -l "$1" &>/dev/null
@@ -660,7 +660,7 @@ source_varibales(){
 
 
 
-clone_projects
+clone_projects "git@github.com:behnambagheri/lab.git" "/tmp/lab"
 install_packages
 configure_fish
 configure_vim
