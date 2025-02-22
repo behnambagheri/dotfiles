@@ -212,27 +212,33 @@ install_fzf(){
 }
 
 install_omf(){
-    # Install Oh My Fish (OMF) if not already installed
+  # Install Oh My Fish (OMF) if not already installed
   if [ ! -d "$HOME/.local/share/omf" ]; then
       log "Installing Oh My Fish..." "$CYAN"
       curl -L https://get.oh-my.fish | fish
+  else
+    log "omf already exists, skipping clone." "$YELLOW"
   fi
 
 }
 
 install_fisher(){
-    # Install Fisher (if not already installed)
+  # Install Fisher (if not already installed)
   if ! fish -c "functions -q fisher"; then
-      log "Installing Fisher..." "$CYAN"
-  #    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
-      fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher'
+    log "Installing Fisher..." "$CYAN"
+    fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher'
+  else
+    log "fisher already exists, skipping clone." "$YELLOW"
   fi
-
 }
 
 install_lambda_theme(){
-  # Install OMF theme
-  fish -c 'omf install lambda'
+  if fish -c 'omf theme | head -2 | grep lambda > /dev/null'; then
+    log "$CYAN lambda theme already exists, skipping clone." "$YELLOW"
+  else
+    # Install OMF theme
+    fish -c 'omf install lambda'
+  fi
 }
 
 configure_done_notify(){
