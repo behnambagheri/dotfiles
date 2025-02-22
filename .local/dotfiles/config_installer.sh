@@ -168,7 +168,7 @@ install_with_package_manager(){
 install_nodejs(){
   local node_version npm_version NEEDRESTART_MODE DEBIAN_FRONTEND
     # Install Node.js using NodeSource
-  if ! is_installed "node"; then
+  if ! is_installed "nodejs"; then
 
     log "Installing Node.js..." "$CYAN"
     curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
