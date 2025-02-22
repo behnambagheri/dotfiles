@@ -189,49 +189,49 @@ if vim.fn.empty(vim.fn.glob(plug_path)) > 0 then
     })
 end
 
--- -- Start Plugin Setup
--- vim.cmd [[
--- call plug#begin('~/.vim/plugged')
+-- Start Plugin Setup
+vim.cmd [[
+call plug#begin('~/.vim/plugged')
+
+Plug 'vim-airline/vim-airline'
+Plug 'Yggdroot/indentLine'
+Plug 'elzr/vim-json'
+Plug 'stephpy/vim-yaml'
+Plug 'jiangmiao/auto-pairs'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neovim/nvim-lspconfig'
+
+call plug#end()
+]]
+
+-- -- Set leader key (optional)
+-- vim.g.mapleader = " "
 -- 
--- Plug 'vim-airline/vim-airline'
--- Plug 'Yggdroot/indentLine'
--- Plug 'elzr/vim-json'
--- Plug 'stephpy/vim-yaml'
--- Plug 'jiangmiao/auto-pairs'
--- Plug 'neoclide/coc.nvim', {'branch': 'release'}
--- Plug 'neovim/nvim-lspconfig'
+-- -- Bootstrap lazy.nvim
+-- local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+-- if not vim.loop.fs_stat(lazypath) then
+--   vim.fn.system({
+--     "git", "clone", "--filter=blob:none",
+--     "https://github.com/folke/lazy.nvim.git", lazypath
+--   })
+-- end
+-- vim.opt.rtp:prepend(lazypath)
 -- 
--- call plug#end()
--- ]]
-
--- Set leader key (optional)
-vim.g.mapleader = " "
-
--- Bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git", "clone", "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git", lazypath
-  })
-end
-vim.opt.rtp:prepend(lazypath)
-
--- Load plugins
-require("lazy").setup({
-  -- Example plugins:
-  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-  { "neovim/nvim-lspconfig" },
-  { "hrsh7th/nvim-cmp" },
-  { "xiantang/darcula-dark.nvim" },
-  { "vim-airline/vim-airline" },
-  { "Yggdroot/indentLine" },
-  { "elzr/vim-json" },
-  { "stephpy/vim-yaml" },
-  { "jiangmiao/auto-pairs" },
-  { "neovim/nvim-lspconfig" },
-  { "neoclide/coc.nvim", branch = "release" } -- Corrected syntax
-})
+-- -- Load plugins
+-- require("lazy").setup({
+--   -- Example plugins:
+--   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+--   { "neovim/nvim-lspconfig" },
+--   { "hrsh7th/nvim-cmp" },
+--   { "xiantang/darcula-dark.nvim" },
+--   { "vim-airline/vim-airline" },
+--   { "Yggdroot/indentLine" },
+--   { "elzr/vim-json" },
+--   { "stephpy/vim-yaml" },
+--   { "jiangmiao/auto-pairs" },
+--   { "neovim/nvim-lspconfig" },
+--   { "neoclide/coc.nvim", branch = "release" } -- Corrected syntax
+-- })
 
 --       LSP Configuration
 -- ============================
