@@ -129,7 +129,7 @@ install_with_package_manager(){
       sudo add-apt-repository -y ppa:fish-shell/release-3
     fi
       log "Updating package list..." "$CYAN"
-      sudo apt update -y > /dev/null || log "Error occurred during apt update" "$RED"
+      sudo apt-get update -y > /dev/null || log "Error occurred during apt update" "$RED"
       log "Installing required packages..." "$CYAN"
 
       # Filter out already installed packages
@@ -143,9 +143,9 @@ install_with_package_manager(){
 
       # If there are packages to install, install them
       if [ ${#TO_INSTALL[@]} -gt 0 ]; then
-          sudo apt install -y --no-install-recommends "${TO_INSTALL[@]}" > /dev/null || log "Error occurred during package installation" "$RED"
+          sudo apt-get install -y --no-install-recommends "${TO_INSTALL[@]}" > /dev/null || log "Error occurred during package installation" "$RED"
       else
-          echo "All required packages are already installed. Skipping installation."
+          log "All required packages are already installed. Skipping installation." "$GREEN"
       fi
 
       if [ "$INSTALL_PROXY" = true ]; then
@@ -154,7 +154,7 @@ install_with_package_manager(){
         export NEEDRESTART_MODE=a
         export DEBIAN_FRONTEND=noninteractive
         if ! is_installed "sing-box"; then
-          sudo apt install -y sing-box
+          sudo apt-get install -y sing-box
         fi
       fi
     fi
