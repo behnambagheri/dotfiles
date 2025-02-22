@@ -234,7 +234,7 @@ install_fisher(){
 
 install_lambda_theme(){
   if fish -c 'omf theme | head -2 | grep lambda > /dev/null'; then
-    log "$CYAN lambda theme already exists, skipping clone." "$YELLOW"
+    log "$BLUE\lambda theme already exists, skipping clone." "$YELLOW"
   else
     # Install OMF theme
     fish -c 'omf install lambda'
@@ -264,56 +264,137 @@ configure_done_notify(){
       exit 1
   fi
 }
+#
+#install_fish_plugins(){
+#
+#  # Install Fisher plugins
+#  log "Installing Fisher plugins..." "$CYAN"
+#
+#  fish -c "fisher install jorgebucaran/fisher"
+#  fish -c "fisher install meaningful-ooo/sponge"
+#  fish -c "fisher install jhillyerd/plugin-git"
+#  fish -c "fisher install gazorby/fish-abbreviation-tips"
+#  fish -c "fisher install jethrokuan/z"
+#  fish -c "fisher install patrickf3139/colored-man-pages"
+#  fish -c "fisher install markcial/upto"
+#  fish -c "fisher install jorgebucaran/autopair.fish"
+#  fish -c "fisher install laughedelic/pisces"
+#  fish -c "fisher install PatrickF1/fzf.fish"
+#  fish -c "fisher install nickeb96/puffer-fish"
+#  fish -c "fisher install acomagu/fish-async-prompt@a89bf4216b65170e4c3d403e7cbf24ce34b134e6"
+#  fish -c "fisher install franciscolourenco/done"
+#  configure_done_notify
+#
+#  # Install Docker plugins only if Docker is installed
+#  if command -v docker &>/dev/null; then
+#      log "Docker detected! Installing Docker plugins..." "$MAGENTA"
+#      fish -c "fisher install asim-tahir/docker.fish"
+#      fish -c "fisher install brgmnn/fish-docker-compose"
+#      fish -c "fisher install asim-tahir/docker-compose.fish"
+#  else
+#      log "Docker not found. Skipping Docker plugins." "$YELLOW"
+#  fi
+#
+#
+#
+#
+#  # Install Kubernetes plugin only if kubectl is installed
+#  if command -v kubectl &>/dev/null; then
+#      log "kubectl detected! Installing Kubernetes plugin..." "$MAGENTA"
+#      fish -c "fisher install blackjid/plugin-kubectl"
+#  else
+#      log "kubectl not found. Skipping Kubernetes plugin." "$YELLOW"
+#  fi
+#
+#  # Install Homebrew completion plugin only on macOS
+#  if [[ "$(uname -s)" == "Darwin" ]]; then
+#      log "macOS detected! Installing Homebrew completions..." "$MAGENTA"
+#      fish -c "fisher install laughedelic/brew-completions"
+#  else
+#      log "Not macOS. Skipping Homebrew completions." "$YELLOW"
+#  fi
+#
+#}
 
-install_fish_plugins(){
+install_fish_plugins() {
+  # Ensure Fisher is installed before proceeding
+  if ! fish -c "fisher --version" &>/dev/null; then
+    log "Fisher not found. Installing Fisher..." "$CYAN"
+    fish -c "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher" > /dev/null 2>&1 || log "Error installing Fisher!" "$RED"
+  fi
 
-  # Install Fisher plugins
   log "Installing Fisher plugins..." "$CYAN"
 
-  fish -c "fisher install jorgebucaran/fisher"
-  fish -c "fisher install meaningful-ooo/sponge"
-  fish -c "fisher install jhillyerd/plugin-git"
-  fish -c "fisher install gazorby/fish-abbreviation-tips"
-  fish -c "fisher install jethrokuan/z"
-  fish -c "fisher install patrickf3139/colored-man-pages"
-  fish -c "fisher install markcial/upto"
-  fish -c "fisher install jorgebucaran/autopair.fish"
-  fish -c "fisher install laughedelic/pisces"
-  fish -c "fisher install PatrickF1/fzf.fish"
-  fish -c "fisher install nickeb96/puffer-fish"
-  fish -c "fisher install acomagu/fish-async-prompt@a89bf4216b65170e4c3d403e7cbf24ce34b134e6"
-  fish -c "fisher install franciscolourenco/done"
+  # Define plugins list
+  PLUGINS=(
+    "jorgebucaran/fisher"
+    "meaningful-ooo/sponge"
+    "jhillyerd/plugin-git"
+    "gazorby/fish-abbreviation-tips"
+    "jethrokuan/z"
+    "patrickf3139/colored-man-pages"
+    "markcial/upto"
+    "jorgebucaran/autopair.fish"
+    "laughedelic/pisces"
+    "PatrickF1/fzf.fish"
+    "nickeb96/puffer-fish"
+    "acomagu/fish-async-prompt@a89bf4216b65170e4c3d403e7cbf24ce34b134e6"
+    "franciscolourenco/done"
+  )
+
+  # Check and install missing plugins
+  for plugin in "${PLUGINS[@]}"; do
+    if ! fish -c "fisher list | grep -q \"$plugin\""; then
+      fish -c "fisher install $plugin" > /dev/null 2>&1 || log "Error installing $plugin" "$RED"
+    else
+      log "Plugin $plugin is already installed. Skipping..." "$YELLOW"
+    fi
+  done
+
   configure_done_notify
 
   # Install Docker plugins only if Docker is installed
   if command -v docker &>/dev/null; then
-      log "Docker detected! Installing Docker plugins..." "$MAGENTA"
-      fish -c "fisher install asim-tahir/docker.fish"
-      fish -c "fisher install brgmnn/fish-docker-compose"
-      fish -c "fisher install asim-tahir/docker-compose.fish"
+    log "Docker detected! Installing Docker plugins..." "$MAGENTA"
+    DOCKER_PLUGINS=(
+      "asim-tahir/docker.fish"
+      "brgmnn/fish-docker-compose"
+      "asim-tahir/docker-compose.fish"
+    )
+    for plugin in "${DOCKER_PLUGINS[@]}"; do
+      if ! fish -c "fisher list | grep -q \"$plugin\""; then
+        fish -c "fisher install $plugin" > /dev/null 2>&1 || log "Error installing $plugin" "$RED"
+      else
+        log "Plugin $plugin is already installed. Skipping..." "$YELLOW"
+      fi
+    done
   else
-      log "Docker not found. Skipping Docker plugins." "$YELLOW"
+    log "Docker not found. Skipping Docker plugins." "$YELLOW"
   fi
-
-
-
 
   # Install Kubernetes plugin only if kubectl is installed
   if command -v kubectl &>/dev/null; then
-      log "kubectl detected! Installing Kubernetes plugin..." "$MAGENTA"
-      fish -c "fisher install blackjid/plugin-kubectl"
+    log "kubectl detected! Installing Kubernetes plugin..." "$MAGENTA"
+    if ! fish -c "fisher list | grep -q 'blackjid/plugin-kubectl'"; then
+      fish -c "fisher install blackjid/plugin-kubectl" > /dev/null 2>&1 || log "Error installing Kubernetes plugin" "$RED"
+    else
+      log "Kubernetes plugin is already installed. Skipping..." "$YELLOW"
+    fi
   else
-      log "kubectl not found. Skipping Kubernetes plugin." "$YELLOW"
+    log "kubectl not found. Skipping Kubernetes plugin." "$YELLOW"
   fi
 
   # Install Homebrew completion plugin only on macOS
   if [[ "$(uname -s)" == "Darwin" ]]; then
-      log "macOS detected! Installing Homebrew completions..." "$MAGENTA"
-      fish -c "fisher install laughedelic/brew-completions"
+    log "macOS detected! Installing Homebrew completions..." "$MAGENTA"
+    if ! fish -c "fisher list | grep -q 'laughedelic/brew-completions'"; then
+      fish -c "fisher install laughedelic/brew-completions" > /dev/null 2>&1 || log "Error installing Homebrew completions" "$RED"
+    else
+      log "Homebrew completions plugin is already installed. Skipping..." "$YELLOW"
+    fi
   else
-      log "Not macOS. Skipping Homebrew completions." "$YELLOW"
+    log "Not macOS. Skipping Homebrew completions." "$YELLOW"
   fi
-
 }
 
 install_iterm2_shell_integrations(){
