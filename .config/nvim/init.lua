@@ -33,16 +33,7 @@ vim.cmd("syntax enable")                 -- Enable syntax highlighting
 -- Enable full 24-bit color support
 vim.opt.termguicolors = true
 -- 
--- -- Ensure the colorscheme is set correctly
--- vim.g.molokai_original = 1
--- vim.g.rehash256 = 1
-
--- -- Apply the colorscheme with error handling
--- local status, _ = pcall(vim.cmd, "colorscheme molokai")
--- if not status then
---     print("Warning: Colorscheme 'molokai' not found!")
--- end
-
+--vim.cmd.colorscheme("darcula-dark")
 
 vim.opt.conceallevel = 0  -- Always show concealed text (e.g., double quotes in JSON)
 -- ============================
@@ -198,25 +189,50 @@ if vim.fn.empty(vim.fn.glob(plug_path)) > 0 then
     })
 end
 
--- Start Plugin Setup
-vim.cmd [[
-call plug#begin('~/.vim/plugged')
+-- -- Start Plugin Setup
+-- vim.cmd [[
+-- call plug#begin('~/.vim/plugged')
+-- 
+-- Plug 'vim-airline/vim-airline'
+-- Plug 'Yggdroot/indentLine'
+-- Plug 'elzr/vim-json'
+-- Plug 'stephpy/vim-yaml'
+-- Plug 'jiangmiao/auto-pairs'
+-- Plug 'neoclide/coc.nvim', {'branch': 'release'}
+-- Plug 'neovim/nvim-lspconfig'
+-- 
+-- call plug#end()
+-- ]]
 
-Plug 'vim-airline/vim-airline'
-Plug 'Yggdroot/indentLine'
-Plug 'elzr/vim-json'
-Plug 'stephpy/vim-yaml'
-Plug 'jiangmiao/auto-pairs'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neovim/nvim-lspconfig'
+-- Set leader key (optional)
+vim.g.mapleader = " "
 
-call plug#end()
-]]
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git", lazypath
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
+-- Load plugins
+require("lazy").setup({
+  -- Example plugins:
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+  { "neovim/nvim-lspconfig" },
+  { "hrsh7th/nvim-cmp" },
+  { "xiantang/darcula-dark.nvim" },
+  { "vim-airline/vim-airline" },
+  { "Yggdroot/indentLine" },
+  { "elzr/vim-json" },
+  { "stephpy/vim-yaml" },
+  { "jiangmiao/auto-pairs" },
+  { "neovim/nvim-lspconfig" },
+  { "neoclide/coc.nvim", branch = "release" } -- Corrected syntax
+})
 
-
-
--- ============================
 --       LSP Configuration
 -- ============================
 
@@ -263,3 +279,4 @@ vim.api.nvim_set_keymap("n", "dd", '"_dd', { noremap = true, silent = true })
 
 -- Delete selected text (`d`) in visual mode without copying it
 vim.api.nvim_set_keymap("v", "d", '"_d', { noremap = true, silent = true })
+

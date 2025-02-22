@@ -567,7 +567,7 @@ configure_singbox(){
               log "Appending public proxy modification to sing-box-fetch.sh..." "$MAGENTA"
               echo "$MODIFICATION_LINE" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
               echo "$MODIFICATION_LINE2" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
-              echo "systemctl restart sing-box.service" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
+#               echo "systemctl restart sing-box.service" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
 
               enable_singbox_service
               log "Public proxy settings applied successfully." "$GREEN"
