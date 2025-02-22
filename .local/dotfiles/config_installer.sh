@@ -168,25 +168,30 @@ install_with_package_manager(){
 install_nodejs(){
   local node_version npm_version NEEDRESTART_MODE DEBIAN_FRONTEND
     # Install Node.js using NodeSource
-  log "Installing Node.js..." "$CYAN"
-  curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-    # Ensure non-interactive mode
-  export NEEDRESTART_MODE=a
-  export DEBIAN_FRONTEND=noninteractive
-  sudo apt install -y nodejs
+  if ! is_installed "node"; then
 
-  # Verify installation
-  log "Verifying Node.js installation..." "$YELLOW"
-  node_version=$(node -v)
-  npm_version=$(npm -v)
+    log "Installing Node.js..." "$CYAN"
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+      # Ensure non-interactive mode
+    export NEEDRESTART_MODE=a
+    export DEBIAN_FRONTEND=noninteractive
+    sudo apt-get install -y nodejs
 
-  if [[ -n "$node_version" && -n "$npm_version" ]]; then
-    log "Node.js installed successfully!" "$GREEN"
-    log "Node.js version: $node_version" "$MAGENTA"
-    log "NPM version: $npm_version" "$MAGENTA"
+    # Verify installation
+    log "Verifying Node.js installation..." "$YELLOW"
+    node_version=$(node -v)
+    npm_version=$(npm -v)
+
+    if [[ -n "$node_version" && -n "$npm_version" ]]; then
+      log "Node.js installed successfully!" "$GREEN"
+      log "Node.js version: $node_version" "$MAGENTA"
+      log "NPM version: $npm_version" "$MAGENTA"
+    else
+      log "Node.js installation failed." "$RED"
+      exit 1
+    fi
   else
-    log "Node.js installation failed." "$RED"
-    exit 1
+    log "Node.js is already installed. Skipping installation." "$YELLOW"
   fi
 
 }
