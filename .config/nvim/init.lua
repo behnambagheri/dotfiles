@@ -3,7 +3,6 @@
 -- ============================
 
 vim.opt.number = true                   -- Show line numbers
-vim.opt.termguicolors = true            -- Use full 24-bit colors
 vim.opt.ignorecase = true               -- Ignore case in searches
 vim.opt.smartcase = true                -- Case-sensitive if search contains uppercase
 vim.opt.incsearch = true                -- Show matches as you type
@@ -30,6 +29,20 @@ vim.opt.softtabstop = 4                  -- Soft tab stops for smoother indentin
 -- Shift+Tab removes 4 spaces
 vim.api.nvim_set_keymap("i", "<S-CR>", "<C-o>o", { noremap = true, silent = true })
 vim.cmd("syntax enable")                 -- Enable syntax highlighting
+
+-- -- Enable full 24-bit color support
+-- vim.opt.termguicolors = true
+-- 
+-- Ensure the colorscheme is set correctly
+vim.g.molokai_original = 1
+vim.g.rehash256 = 1
+
+-- -- Apply the colorscheme with error handling
+-- local status, _ = pcall(vim.cmd, "colorscheme molokai")
+-- if not status then
+--     print("Warning: Colorscheme 'molokai' not found!")
+-- end
+
 
 vim.opt.conceallevel = 0  -- Always show concealed text (e.g., double quotes in JSON)
 -- ============================
