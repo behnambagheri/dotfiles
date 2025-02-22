@@ -42,18 +42,36 @@ vim.opt.clipboard = "unnamedplus"
 vim.api.nvim_set_keymap("n", "yy", '"+yy', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "y", '"+y', { noremap = true, silent = true })
 
--- Enable OSC 52 clipboard support
-vim.g.clipboard = {
-  name = "OSC 52",
-  copy = {
-    ["+"] = function(lines, _) require("vim.ui.clipboard.osc52").copy("+")(lines) end,
-    ["*"] = function(lines, _) require("vim.ui.clipboard.osc52").copy("*")(lines) end,
-  },
-  paste = {
-    ["+"] = function() return require("vim.ui.clipboard.osc52").paste("+")() end,
-    ["*"] = function() return require("vim.ui.clipboard.osc52").paste("*")() end,
-  },
-}
+-- -- Enable OSC 52 clipboard support
+-- vim.g.clipboard = {
+--   name = "OSC 52",
+--   copy = {
+--     ["+"] = function(lines, _) require("vim.ui.clipboard.osc52").copy("+")(lines) end,
+--     ["*"] = function(lines, _) require("vim.ui.clipboard.osc52").copy("*")(lines) end,
+--   },
+--   paste = {
+--     ["+"] = function() return require("vim.ui.clipboard.osc52").paste("+")() end,
+--     ["*"] = function() return require("vim.ui.clipboard.osc52").paste("*")() end,
+--   },
+-- }
+--
+-- Enable OSC 52 clipboard support safely
+local status, osc52 = pcall(require, "vim.ui.clipboard.osc52")
+if status then
+    vim.g.clipboard = {
+        name = "OSC 52",
+        copy = {
+            ["+"] = osc52.copy("+"),
+            ["*"] = osc52.copy("*"),
+        },
+        paste = {
+            ["+"] = osc52.paste("+"),
+            ["*"] = osc52.paste("*"),
+        },
+    }
+else
+    print("Warning: OSC 52 clipboard support not available.")
+end
 -- ============================
 --       Key Mappings
 -- ============================
