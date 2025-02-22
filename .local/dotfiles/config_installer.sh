@@ -13,9 +13,7 @@
 INSTALL_PROXY=false
 PUBLIC_PROXY=false
 
-TEMP_DIR="/tmp/lab"
 
-GIT_REPO="git@github.com:behnambagheri/lab.git"
 
 # Define proxy settings
 PROXY="socks5h://127.0.0.1:7890"
@@ -72,24 +70,24 @@ log() {
 }
 
 clone_projects(){
+  local PROJ DIR
+  PROJ="$1"
+  DIR="$2"
   # Clone the repository
-  log "Cloning repository from $GIT_REPO..."
-  if [[ -d "/tmp/lab" ]]; then
-    git -C /tmp/lab pull
-    git -C /tmp/dotfiles pull
-  fi
-  #git clone "$GIT_REPO" "$TEMP_DIR"
-
-  # Check if git clone was successful
-  if git clone "$GIT_REPO" "$TEMP_DIR"; then
-    log "Git clone success." "$GREEN"
+  log "Cloning repository from $PROJ into $DIR..."
+  if [[ -d "$DIR" ]]; then
+    git -C "$DIR" pull
   else
-    log "Error: Git clone failed." "$RED"
-    exit 1
+    if git clone "$PROJ" "$DIR" > /dev/null; then
+      log "Git clone success." "$GREEN"
+    else
+      log "Error: Git clone failed." "$RED"
+      exit 1
+    fi
   fi
 }
 
-
+clone_projects "git@github.com:behnambagheri/lab.git" "/tmp/lab"
 # Function to check if a package is installed
 is_installed() {
     dpkg -l "$1" &>/dev/null
