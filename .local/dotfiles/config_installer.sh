@@ -32,6 +32,16 @@ CYAN="\033[36m"
 WHITE="\033[37m"
 DEFAULT_COLOR="\033[0m"
 
+# List of required packages
+PACKAGES=(
+    fish curl git bat fd-find vim glances wget dnsutils bind9-host
+    nmap iputils-ping rsync netcat-traditional gcc build-essential
+    net-tools iproute2 unzip bind9-utils prometheus-node-exporter
+    ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx
+    ninja-build gettext cmake unzip
+)
+
+
 # Parse script arguments
 for arg in "$@"; do
     case "$arg" in
@@ -65,7 +75,8 @@ clone_projects(){
   # Clone the repository
   log "Cloning repository from $GIT_REPO..."
   if [[ -d "/tmp/lab" ]]; then
-    rm -rf /tmp/lab /tmp/dotfiles
+    git -C /tmp/lab pull
+    git -C /tmp/dotfiles pull
   fi
   #git clone "$GIT_REPO" "$TEMP_DIR"
 
@@ -78,8 +89,16 @@ clone_projects(){
   fi
 }
 
+
+# Function to check if a package is installed
+is_installed() {
+    dpkg -l "$1" &>/dev/null
+}
+
+
+
 install_with_package_manager(){
-  local NEEDRESTART_MODE DEBIAN_FRONTEND
+  local NEEDRESTART_MODE DEBIAN_FRONTEND TO_INSTALL pkg
   log "Updating system and installing the latest Fish shell..." "$CYAN"
 
   # Ensure non-interactive mode
@@ -88,35 +107,54 @@ install_with_package_manager(){
 
   if [ "$INSTALL_PROXY" = true ]; then
     log "Detected Debian-based system. Installing Sing-box..." "$MAGENTA"
-    sudo mkdir -p /etc/apt/keyrings
+    if ! [[ -d "/etc/apt/keyrings" ]]; then
+      sudo mkdir -p /etc/apt/keyrings
+    fi
     sudo curl -fsSL https://sing-box.app/gpg.key -o /etc/apt/keyrings/sagernet.asc
     sudo chmod a+r /etc/apt/keyrings/sagernet.asc
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/sagernet.asc] https://deb.sagernet.org/ * *" | \
-      sudo tee /etc/apt/sources.list.d/sagernet.list > /dev/null
+    if ! [[ -f "/etc/apt/sources.list.d/sagernet.list" ]]; then
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/sagernet.asc] https://deb.sagernet.org/ * *" | \
+        sudo tee /etc/apt/sources.list.d/sagernet.list > /dev/null
+    fi
   fi
 
   if [[ "$(uname -s)" == "Linux" ]]; then
     if command -v apt &>/dev/null; then
-      log "Adding Fish Shell repository..." "$CYAN"
-      sudo add-apt-repository -y ppa:fish-shell/release-3
+      if ! grep -q "^deb .*fish-shell/release-3" /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null; then
+          log "Adding Fish Shell repository..." "$CYAN"
+          sudo add-apt-repository -y ppa:fish-shell/release-3
+      else
+          log  "PPA already added. Skipping..." "$YELLOW"
+      fi
 
       log "Updating package list..." "$CYAN"
-      sudo apt update -y
-
+      sudo apt update -y > /dev/null || log "Error occurred during apt update" "$RED"
       log "Installing required packages..." "$CYAN"
-      sudo apt install -y --no-install-recommends \
-        fish curl git bat fd-find vim glances curl wget dnsutils bind9-host \
-        nmap iputils-ping rsync netcat-traditional gcc build-essential \
-        net-tools iproute2 unzip bind9-utils prometheus-node-exporter \
-        ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx \
-        ninja-build gettext cmake unzip
+
+      # Filter out already installed packages
+      TO_INSTALL=()
+      for pkg in "${PACKAGES[@]}"; do
+          if ! is_installed "$pkg"; then
+              TO_INSTALL+=("$pkg")
+          fi
+      done
+
+
+      # If there are packages to install, install them
+      if [ ${#TO_INSTALL[@]} -gt 0 ]; then
+          sudo apt install -y --no-install-recommends "${TO_INSTALL[@]}" > /dev/null || log "Error occurred during package installation" "$RED"
+      else
+          echo "All required packages are already installed. Skipping installation."
+      fi
 
       if [ "$INSTALL_PROXY" = true ]; then
         log "Installing Sing-box..." "$MAGENTA"
           # Ensure non-interactive mode
         export NEEDRESTART_MODE=a
         export DEBIAN_FRONTEND=noninteractive
-        sudo apt install -y sing-box
+        if ! is_installed "sing-box"; then
+          sudo apt install -y sing-box
+        fi
       fi
     fi
   else
@@ -567,7 +605,6 @@ configure_singbox(){
               log "Appending public proxy modification to sing-box-fetch.sh..." "$MAGENTA"
               echo "$MODIFICATION_LINE" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
               echo "$MODIFICATION_LINE2" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
-#               echo "systemctl restart sing-box.service" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
 
               enable_singbox_service
               log "Public proxy settings applied successfully." "$GREEN"
