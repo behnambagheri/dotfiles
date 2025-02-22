@@ -30,12 +30,12 @@ vim.opt.softtabstop = 4                  -- Soft tab stops for smoother indentin
 vim.api.nvim_set_keymap("i", "<S-CR>", "<C-o>o", { noremap = true, silent = true })
 vim.cmd("syntax enable")                 -- Enable syntax highlighting
 
--- -- Enable full 24-bit color support
--- vim.opt.termguicolors = true
+-- Enable full 24-bit color support
+vim.opt.termguicolors = true
 -- 
--- Ensure the colorscheme is set correctly
-vim.g.molokai_original = 1
-vim.g.rehash256 = 1
+-- -- Ensure the colorscheme is set correctly
+-- vim.g.molokai_original = 1
+-- vim.g.rehash256 = 1
 
 -- -- Apply the colorscheme with error handling
 -- local status, _ = pcall(vim.cmd, "colorscheme molokai")
