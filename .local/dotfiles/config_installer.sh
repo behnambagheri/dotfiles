@@ -234,7 +234,7 @@ install_fisher(){
 
 install_lambda_theme(){
   if fish -c 'omf theme | head -2 | grep lambda > /dev/null'; then
-    log "$BLUE\lambda theme already exists, skipping clone." "$YELLOW"
+    log "lambda theme already exists, skipping clone." "$YELLOW"
   else
     # Install OMF theme
     fish -c 'omf install lambda'
@@ -396,11 +396,23 @@ install_fish_plugins() {
     log "Not macOS. Skipping Homebrew completions." "$YELLOW"
   fi
 }
+install_iterm2_shell_integrations() {
+  local iterm_file="$HOME/.iterm2_shell_integration.fish"
 
-install_iterm2_shell_integrations(){
-  log "Install iterm2 shell_integration" "$CYAN"
-  curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
-  # source $HOME/.iterm2_shell_integration.fish
+  # Check if the shell integration script is already present
+  if [[ -f "$iterm_file" ]]; then
+    log "iTerm2 shell integration is already installed. Skipping installation." "$YELLOW"
+    return 0
+  fi
+
+  # Install iTerm2 shell integration
+  log "Installing iTerm2 shell integration..." "$CYAN"
+  if curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash > /dev/null 2>&1; then
+    log "iTerm2 shell integration installed successfully." "$GREEN"
+  else
+    log "Error: iTerm2 shell integration installation failed." "$RED"
+    exit 1
+  fi
 }
 
 install_virtual_fish(){
