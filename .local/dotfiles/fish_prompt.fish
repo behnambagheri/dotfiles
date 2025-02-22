@@ -59,7 +59,8 @@ function fish_prompt
 
   if test (uname -n | cut -d . -f 1) = "Bagheri-MacBook-Pro"
       set -g current_user bea
-      set -g kubenv_current_cluster (kubectl config view --minify --output 'jsonpath={.contexts[0].context.cluster}' 2> /dev/null | cut -d'@' -f1)
+#       set -g kubenv_current_cluster (kubectl config view --minify --output 'jsonpath={.contexts[0].context.cluster}' 2> /dev/null | cut -d'@' -f1)
+      set -g kubenv_current_cluster (kubectl config view --minify --output 'jsonpath={.contexts[0].name}' 2> /dev/null | cut -d'@' -f1)
       set -g kubenv_current_namespace (kubectl config view --minify --output 'jsonpath={.contexts[0].context.namespace}' 2> /dev/null | cut -d'@' -f1)
       ##
       ## Line 1
