@@ -196,17 +196,19 @@ install_nodejs(){
 
 }
 install_fzf(){
-
-  # Install fzf (Fuzzy Finder)
-  log "Installing fzf..." "$CYAN"
-  if [ ! -d "$HOME/.fzf" ]; then
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  # Install Docker plugins only if Docker is installed
+  if command -v fzf &>/dev/null; then
+      log "fzf already installed." "$MAGENTA"
   else
-    log "fzf already exists, skipping clone." "$YELLOW"
+    # Install fzf (Fuzzy Finder)
+    log "Installing fzf..." "$CYAN"
+    if [ ! -d "$HOME/.fzf" ]; then
+      git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    else
+      log "fzf already exists, skipping clone." "$YELLOW"
+    fi
+    ~/.fzf/install --all
   fi
-
-  ~/.fzf/install --all
-
 }
 
 install_omf(){
