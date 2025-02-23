@@ -449,9 +449,8 @@ install_nvim(){
   local INSTALL_DIR LOG_FILE
 
   LOG_FILE="/tmp/nvim_install.log"
-  sudo chmod 777 "$LOG_FILE"
 
-  if ! command -v nvi____m &>/dev/null; then
+  if ! command -v nvi_______m &>/dev/null; then
 
     log "🛠️ Installing Neovim..." "$CYAN"
 
@@ -471,12 +470,11 @@ install_nvim(){
 
     # Build Neovim with limited output
     log "🔧 Building Neovim (this may take some time)..." "$BLUE"
-    make CMAKE_BUILD_TYPE=RelWithDebInfo -j"$(nproc)" 2>&1 | sudo tee -a "$LOG_FILE" | tail -n 5
-
+    make CMAKE_BUILD_TYPE=RelWithDebInfo -j"$(nproc)" &>> "$LOG_FILE"
 
     # Install Neovim
     log "📦 Installing Neovim..." "$CYAN"
-    sudo make install 2>&1 | sudo tee -a "$LOG_FILE" | tail -n5
+    sudo make install 2>&1 | sudo tee -a "$LOG_FILE" 2>&1 /dev/null
 
     # Verify installation
     if is_installed "nvim"; then
