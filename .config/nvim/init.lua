@@ -18,27 +18,27 @@ vim.opt.lazyredraw = true                -- Don't redraw screen while executing 
 vim.opt.wrap = false                     -- Don't wrap long lines
 vim.opt.undofile = true                  -- Enable persistent undo
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/nvim_undo"
-vim.opt.foldlevel = 99                    -- Open all folds by default
 vim.opt.encoding = "utf-8"               -- Set encoding to UTF-8
 
--- Tab inserts 4 spaces
 vim.opt.expandtab = true                -- Use spaces instead of tabs
 vim.opt.tabstop = 4                      -- Number of spaces per tab
 vim.opt.shiftwidth = 4                   -- Number of spaces for auto-indent
 vim.opt.softtabstop = 4                  -- Soft tab stops for smoother indenting
--- Shift+Tab removes 4 spaces
-vim.api.nvim_set_keymap("i", "<S-CR>", "<C-o>o", { noremap = true, silent = true })
+
 vim.cmd("syntax enable")                 -- Enable syntax highlighting
 
--- Enable full 24-bit color support
-vim.opt.termguicolors = true
--- 
---vim.cmd.colorscheme("darcula-dark")
+-- Enable folding
+vim.opt.foldmethod = "indent"  -- Fold based on indentation
+vim.opt.foldlevel = 99         -- Start with all folds open
+vim.opt.foldenable = true      -- Enable folding by default
 
-vim.opt.conceallevel = 0  -- Always show concealed text (e.g., double quotes in JSON)
+vim.opt.termguicolors = true -- Enable full 24-bit color support
+
+-- vim.g.vim_json_conceal = 0  -- Show all quotes in JSON
 -- ============================
 --       Clipboard Configs
 -- ============================
+
 -- Use system clipboard for copy/paste
 vim.opt.clipboard = "unnamedplus"
 
@@ -46,19 +46,6 @@ vim.opt.clipboard = "unnamedplus"
 vim.api.nvim_set_keymap("n", "yy", '"+yy', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "y", '"+y', { noremap = true, silent = true })
 
--- -- Enable OSC 52 clipboard support
--- vim.g.clipboard = {
---   name = "OSC 52",
---   copy = {
---     ["+"] = function(lines, _) require("vim.ui.clipboard.osc52").copy("+")(lines) end,
---     ["*"] = function(lines, _) require("vim.ui.clipboard.osc52").copy("*")(lines) end,
---   },
---   paste = {
---     ["+"] = function() return require("vim.ui.clipboard.osc52").paste("+")() end,
---     ["*"] = function() return require("vim.ui.clipboard.osc52").paste("*")() end,
---   },
--- }
---
 -- Enable OSC 52 clipboard support safely
 local status, osc52 = pcall(require, "vim.ui.clipboard.osc52")
 if status then
@@ -76,6 +63,8 @@ if status then
 else
     print("Warning: OSC 52 clipboard support not available.")
 end
+
+
 -- ============================
 --       Key Mappings
 -- ============================
@@ -148,7 +137,8 @@ vim.cmd([[
 
 -- Enable file type detection and plugin support
 vim.cmd("filetype plugin on")
-
+-- Disable json concealing
+vim.cmd("let g:vim_json_syntax_conceal = 0")
 -- Define comment leaders based on file type
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "c", "cpp", "java", "scala" },
@@ -156,18 +146,18 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "sh", "ruby", "python", "bash" },
-    command = "let b:comment_leader = '# '"
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "nginx",
+    pattern = { "sh", "ruby", "python", "bash", "nginx" },
     command = "let b:comment_leader = '# '"
 })
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "vim",
-    command = "let b:comment_leader = '\" '"
+    command = "let b:comment_leader = '-- '"
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "lua",
+    command = "let b:comment_leader = '-- '"
 })
 
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
@@ -175,8 +165,9 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     command = "set filetype=conf"
 })
 
+
 -- ============================
---       Plugins (Lazy.nvim)
+--       Plugins (vim-plug)
 -- ============================
 
 
@@ -203,40 +194,6 @@ Plug 'neovim/nvim-lspconfig'
 
 call plug#end()
 ]]
-
--- -- Set leader key (optional)
--- vim.g.mapleader = " "
--- 
--- -- Bootstrap lazy.nvim
--- local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
--- if not vim.loop.fs_stat(lazypath) then
---   vim.fn.system({
---     "git", "clone", "--filter=blob:none",
---     "https://github.com/folke/lazy.nvim.git", lazypath
---   })
--- end
--- vim.opt.rtp:prepend(lazypath)
--- 
--- -- Load plugins
--- require("lazy").setup({
---   -- Example plugins:
---   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
---   { "neovim/nvim-lspconfig" },
---   { "hrsh7th/nvim-cmp" },
---   { "xiantang/darcula-dark.nvim" },
---   { "vim-airline/vim-airline" },
---   { "Yggdroot/indentLine" },
---   { "elzr/vim-json" },
---   { "stephpy/vim-yaml" },
---   { "jiangmiao/auto-pairs" },
---   { "neovim/nvim-lspconfig" },
---   { "neoclide/coc.nvim", branch = "release" } -- Corrected syntax
--- })
-
---       LSP Configuration
--- ============================
-
--- require'lspconfig'.bashls.setup{}
 
 -- ============================
 --       Completion Key Bindings
