@@ -446,49 +446,49 @@ install_virtual_fish() {
   fi
 }
 
-install_nvim2(){
-  local  INSTALL_DIR
-
-
-  if ! is_installed "nvim"; then
-    log "🛠️ Installing Neovim..." "$CYAN"
-    # Define the installation directory
-    INSTALL_DIR="$HOME/neovim-build"
-    # Clone the Neovim repository
-    log "📥 Cloning Neovim repository..." "$CYAN"
-    git clone "https://github.com/neovim/neovim.git" "$INSTALL_DIR" > /dev/null 2>&1
-    # Navigate to the Neovim directory
-    cd "$INSTALL_DIR" || exit
-
-    # Checkout the stable version
-    log "🔄 Checking out the stable version of Neovim..." "$BLUE"
-    git checkout stable > /dev/null 2>&1
-
-    # Build Neovim
-    log "🔧 Building Neovim (this may take some time)..." "$BLUE"
-    make CMAKE_BUILD_TYPE=RelWithDebInfo > /dev/null 2>&1
-
-    # Install Neovim
-    log "📦 Installing Neovim..." "$CYAN"
-    sudo make install > /dev/null 2>&1
-
-    # Verify installation
-    log "Verifying Neovim installation..." "$MAGENTA"
-    log "$(nvim --version)" "$GREEN"
-
-    # Cleanup: Remove the build directory
-    log "Cleaning up..." "$BLUE"
-    cd "$HOME" || exit
-    rm -rf "$INSTALL_DIR"
-
-    log "Neovim installation completed successfully!" "$GREEN"
-  else
-    log "Neovim is already installed! Skipping installation." "$YELLOW"
-  fi
-
-
-
-}
+#install_nvim2(){
+#  local  INSTALL_DIR
+#
+#
+#  if ! is_installed "nvim"; then
+#    log "🛠️ Installing Neovim..." "$CYAN"
+#    # Define the installation directory
+#    INSTALL_DIR="$HOME/neovim-build"
+#    # Clone the Neovim repository
+#    log "📥 Cloning Neovim repository..." "$CYAN"
+#    git clone "https://github.com/neovim/neovim.git" "$INSTALL_DIR" > /dev/null 2>&1
+#    # Navigate to the Neovim directory
+#    cd "$INSTALL_DIR" || exit
+#
+#    # Checkout the stable version
+#    log "🔄 Checking out the stable version of Neovim..." "$BLUE"
+#    git checkout stable > /dev/null 2>&1
+#
+#    # Build Neovim
+#    log "🔧 Building Neovim (this may take some time)..." "$BLUE"
+#    make CMAKE_BUILD_TYPE=RelWithDebInfo > /dev/null 2>&1
+#
+#    # Install Neovim
+#    log "📦 Installing Neovim..." "$CYAN"
+#    sudo make install > /dev/null 2>&1
+#
+#    # Verify installation
+#    log "Verifying Neovim installation..." "$MAGENTA"
+#    log "$(nvim --version)" "$GREEN"
+#
+#    # Cleanup: Remove the build directory
+#    log "Cleaning up..." "$BLUE"
+#    cd "$HOME" || exit
+#    rm -rf "$INSTALL_DIR"
+#
+#    log "Neovim installation completed successfully!" "$GREEN"
+#  else
+#    log "Neovim is already installed! Skipping installation." "$YELLOW"
+#  fi
+#
+#
+#
+#}
 
 
 install_nvim(){
@@ -516,14 +516,14 @@ install_nvim(){
 
     # Build Neovim with limited output
     log "🔧 Building Neovim (this may take some time)..." "$BLUE"
-    make CMAKE_BUILD_TYPE=RelWithDebInfo -j$(nproc) &>> "$LOG_FILE"
+    make CMAKE_BUILD_TYPE=RelWithDebInfo -j"$(nproc)" &>> "$LOG_FILE"
 
     # Install Neovim
     log "📦 Installing Neovim..." "$CYAN"
-    sudo make install &>> "$LOG_FILE"
-
+#    sudo make install &>> "$LOG_FILE"
+    sudo make install 2>&1 | sudo tee -a "$LOG_FILE" > /dev/null
     # Verify installation
-    if ! command -v nvim &>/dev/null; then
+    if command -v nvim &>/dev/null; then
 
       log "✅ Neovim installed successfully!" "$GREEN"
     else
@@ -602,7 +602,7 @@ configure_vim(){
 
 }
 
-configure_nvim(){
+configure_nvim2(){
   local VENV_PATH
     sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.local/share/nvim"
 
@@ -664,7 +664,83 @@ configure_nvim(){
 
 }
 
+# shellcheck disable=SC1094
+configure_nvim() {
+    set -e  # Exit on error
 
+    local VENV_PATH="$HOME/.venvs/neovim"
+    local NPM_GLOBAL_PATH="$HOME/.npm-global"
+
+    log "Setting correct permissions for Neovim directories..." "$CYAN"
+    sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.local/share/nvim" "$HOME/.local/state/nvim/"
+
+    # Create the virtual environment if not exists
+    if [ ! -d "$VENV_PATH" ]; then
+        log "Creating Python virtual environment for Neovim..." "$CYAN"
+        python3 -m venv "$VENV_PATH"
+    else
+        log "Virtual environment already exists at $VENV_PATH." "$YELLOW"
+    fi
+
+    # Activate the virtual environment
+    log "Activating virtual environment..." "$BLUE"
+    # shellcheck source=./activate
+    source "$VENV_PATH/bin/activate"
+
+    # Upgrade pip and install necessary Python packages
+    log "Installing/upgrading Python dependencies for Neovim..." "$CYAN"
+    pip install --upgrade pip
+    pip install neovim 'python-lsp-server[all]'
+
+    deactivate
+
+    # Ensure npm is installed
+    if ! command -v npm &> /dev/null; then
+        log "npm not found! Please install Node.js and npm first." "$RED"
+        exit 1
+    fi
+
+    # Set npm global installation path
+    log "Setting up npm global installation path..." "$CYAN"
+    mkdir -p "$NPM_GLOBAL_PATH"
+    export PATH="$NPM_GLOBAL_PATH/bin:$PATH"
+    echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$HOME/.bashrc"
+
+
+    # Set permissions for npm directory
+    if [[ -d "$HOME/.npm" ]]; then
+        log "Fixing permissions for .npm directory..." "$CYAN"
+        sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.npm"
+    fi
+
+    # Install Neovim-related npm packages
+    log "Installing npm packages for Neovim..." "$CYAN"
+    npm install -g neovim bash-language-server --prefix="$NPM_GLOBAL_PATH"
+    sudo npm install -g neovim bash-language-server
+
+    # Source bashrc to ensure changes take effect
+    log "Refreshing shell environment..." "$BLUE"
+    # shellcheck source=/Users/behnam/.bashrc
+    source ~/.bashrc
+    # shellcheck source=/Users/behnam/.profile
+    source ~/.profile
+    # shellcheck source=/Users/behnam/.config/fish/config.fish
+#    source ~/.config/fish/config.fish
+    # Install Vim-Plug
+    log "Installing Vim-Plug for Neovim..." "$CYAN"
+    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+    # Install Neovim plugins
+    log "Installing Neovim plugins..." "$CYAN"
+    nvim --headless +PlugInstall +qall
+
+    # Install CoC extensions
+    log "Installing coc.nvim extensions..." "$CYAN"
+    nvim --headless -c 'CocInstall -sync coc-json coc-html coc-css coc-yaml coc-sh' -c 'qall'
+
+    log "Neovim setup completed successfully!" "$GREEN"
+}
 setup_apt_proxy() {
     local PROXY="$1"  # Accept proxy URL as an argument
     local CONFIG_FILE="/etc/apt/apt.conf.d/01proxy"
