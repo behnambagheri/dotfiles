@@ -317,7 +317,7 @@ install_lambda_theme(){
 #}
 
 configure_done_notify() {
-    local DONE_NOTIFY_PATH="$TEMP_DIR/bea/scripts/bea/done_notify.fish"
+    local DONE_NOTIFY_PATH="/tmp/lab/bea/scripts/bea/done_notify.fish"
 
     log "Adding done_notify..." "$CYAN"
 
