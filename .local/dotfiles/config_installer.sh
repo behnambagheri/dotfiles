@@ -459,7 +459,7 @@ install_nvim(){
 
     # Clone the Neovim repository
     log "📥 Cloning Neovim repository..." "$CYAN"
-    clone_projects "https://github.com/neovim/neovim.git" "$INSTALL_DIR" &> "$LOG_FILE"
+    git clone "https://github.com/neovim/neovim.git" "$INSTALL_DIR" &> "$LOG_FILE"
 
     # Navigate to the Neovim directory
     cd "$INSTALL_DIR" || exit
@@ -470,7 +470,7 @@ install_nvim(){
 
     # Build Neovim with limited output
     log "🔧 Building Neovim (this may take some time)..." "$BLUE"
-    make CMAKE_BUILD_TYPE=RelWithDebInfo -j"$(nproc)" &>> "$LOG_FILE"
+    make CMAKE_BUILD_TYPE=RelWithDebInfo &>> "$LOG_FILE"
 
     # Install Neovim
     log "📦 Installing Neovim..." "$CYAN"
