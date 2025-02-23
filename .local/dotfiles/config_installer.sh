@@ -445,13 +445,58 @@ install_virtual_fish() {
       log "✅ VirtualFish installation completed successfully." "$GREEN"
   fi
 }
+
 install_nvim(){
+  local  INSTALL_DIR
+
+
+  if ! is_installed "nvim"; then
+    log "Installing neovim" "$CYAN"
+    # Define the installation directory
+    INSTALL_DIR="$HOME/neovim-build"
+    # Clone the Neovim repository
+    log "Cloning Neovim repository..." "$CYAN"
+    clone_projects "https://github.com/neovim/neovim.git" "$INSTALL_DIR"
+    # Navigate to the Neovim directory
+    cd "$INSTALL_DIR" || exit
+
+    # Checkout the stable version
+    log "Checking out the stable version of Neovim..." "$BLUE"
+    git checkout stable  > /dev/null 2>&1
+
+    # Build Neovim
+    log "Building Neovim..." "$BLUE"
+    make CMAKE_BUILD_TYPE=RelWithDebInfo
+
+    # Install Neovim
+    log "Installing Neovim..." "$CYAN"
+    sudo make install
+
+    # Verify installation
+    log "Verifying Neovim installation..." "$MAGENTA"
+    log "$(nvim --version)" "$BLUE"
+
+    # Cleanup: Remove the build directory
+    log "Cleaning up..." "$BLUE"
+    cd "$HOME" || exit
+    rm -rf "$INSTALL_DIR"
+
+    log "Neovim installation completed successfully!" "$GREEN"
+  else
+    log "Neovim is already installed! Skipping installation." "$YELLOW"
+  fi
+
+
+
+}
+
+
+install_nvim2(){
   local INSTALL_DIR LOG_FILE
 
   LOG_FILE="/tmp/nvim_install.log"
 
-  if ! command -v nvi_______m &>/dev/null; then
-
+  if ! is_installed "nvim"; then
     log "🛠️ Installing Neovim..." "$CYAN"
 
     # Define the installation directory
@@ -459,7 +504,7 @@ install_nvim(){
 
     # Clone the Neovim repository
     log "📥 Cloning Neovim repository..." "$CYAN"
-    git clone "https://github.com/neovim/neovim.git" "$INSTALL_DIR" &> "$LOG_FILE"
+    clone_projects "https://github.com/neovim/neovim.git" "$INSTALL_DIR" &> "$LOG_FILE"
 
     # Navigate to the Neovim directory
     cd "$INSTALL_DIR" || exit
@@ -470,11 +515,11 @@ install_nvim(){
 
     # Build Neovim with limited output
     log "🔧 Building Neovim (this may take some time)..." "$BLUE"
-    make CMAKE_BUILD_TYPE=RelWithDebInfo 
+    make CMAKE_BUILD_TYPE=RelWithDebInfo -j$(nproc) &>> "$LOG_FILE"
 
     # Install Neovim
     log "📦 Installing Neovim..." "$CYAN"
-    sudo make install 2>&1 | sudo tee -a "$LOG_FILE" 2>&1 /dev/null
+    sudo make install &>> "$LOG_FILE"
 
     # Verify installation
     if is_installed "nvim"; then
@@ -493,6 +538,12 @@ install_nvim(){
     log "⚠️ Neovim is already installed! Skipping installation." "$YELLOW"
   fi
 }
+
+
+
+
+
+
 install_packages(){
   install_with_package_manager
   install_nodejs
@@ -783,7 +834,7 @@ initialize_config(){
 
 cleanup(){
   # Clean up the cloned repository
-  log "Cleaning up temporary files..." "$BLUE"
+  log "🧹 Cleaning up temporary files..." "$BLUE"
   for arg in "$@"; do
     if [[ -d "$arg" ]]; then
       rm -rf "$arg"
