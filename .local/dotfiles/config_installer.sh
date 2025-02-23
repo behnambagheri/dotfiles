@@ -446,35 +446,35 @@ install_virtual_fish() {
   fi
 }
 
-install_nvim(){
+install_nvim2(){
   local  INSTALL_DIR
 
 
   if ! is_installed "nvim"; then
-    log "Installing neovim" "$CYAN"
+    log "🛠️ Installing Neovim..." "$CYAN"
     # Define the installation directory
     INSTALL_DIR="$HOME/neovim-build"
     # Clone the Neovim repository
-    log "Cloning Neovim repository..." "$CYAN"
-    git clone "https://github.com/neovim/neovim.git" "$INSTALL_DIR"
+    log "📥 Cloning Neovim repository..." "$CYAN"
+    git clone "https://github.com/neovim/neovim.git" "$INSTALL_DIR" > /dev/null 2>&1
     # Navigate to the Neovim directory
     cd "$INSTALL_DIR" || exit
 
     # Checkout the stable version
-    log "Checking out the stable version of Neovim..." "$BLUE"
-    git checkout stable  > /dev/null 2>&1
+    log "🔄 Checking out the stable version of Neovim..." "$BLUE"
+    git checkout stable > /dev/null 2>&1
 
     # Build Neovim
-    log "Building Neovim..." "$BLUE"
-    make CMAKE_BUILD_TYPE=RelWithDebInfo
+    log "🔧 Building Neovim (this may take some time)..." "$BLUE"
+    make CMAKE_BUILD_TYPE=RelWithDebInfo > /dev/null 2>&1
 
     # Install Neovim
-    log "Installing Neovim..." "$CYAN"
-    sudo make install
+    log "📦 Installing Neovim..." "$CYAN"
+    sudo make install > /dev/null 2>&1
 
     # Verify installation
     log "Verifying Neovim installation..." "$MAGENTA"
-    log "$(nvim --version)" "$BLUE"
+    log "$(nvim --version)" "$GREEN"
 
     # Cleanup: Remove the build directory
     log "Cleaning up..." "$BLUE"
@@ -491,12 +491,13 @@ install_nvim(){
 }
 
 
-install_nvim2(){
+install_nvim(){
   local INSTALL_DIR LOG_FILE
 
   LOG_FILE="/tmp/nvim_install.log"
 
-  if ! is_installed "nvim"; then
+#  if ! is_installed "nvim"; then
+  if ! command -v nvi____m &>/dev/null; then
     log "🛠️ Installing Neovim..." "$CYAN"
 
     # Define the installation directory
@@ -522,7 +523,8 @@ install_nvim2(){
     sudo make install &>> "$LOG_FILE"
 
     # Verify installation
-    if is_installed "nvim"; then
+    if ! command -v nvim &>/dev/null; then
+
       log "✅ Neovim installed successfully!" "$GREEN"
     else
       log "❌ Installation failed! Check the log: $LOG_FILE" "$RED"
