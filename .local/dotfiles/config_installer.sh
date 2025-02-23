@@ -449,8 +449,10 @@ install_nvim(){
   local INSTALL_DIR LOG_FILE
 
   LOG_FILE="/tmp/nvim_install.log"
+  sudo chmod 777 "$LOG_FILE"
 
-  if ! is_installed "nvim"; then
+  if command -v nvi____m &>/dev/null; then
+
     log "🛠️ Installing Neovim..." "$CYAN"
 
     # Define the installation directory
@@ -458,22 +460,23 @@ install_nvim(){
 
     # Clone the Neovim repository
     log "📥 Cloning Neovim repository..." "$CYAN"
-    clone_projects "https://github.com/neovim/neovim.git" "$INSTALL_DIR" 2>&1 | tee -a "$LOG_FILE" | tail -n 5
+    clone_projects "https://github.com/neovim/neovim.git" "$INSTALL_DIR" &> "$LOG_FILE"
 
     # Navigate to the Neovim directory
     cd "$INSTALL_DIR" || exit
 
     # Checkout the stable version
     log "🔄 Checking out the stable version of Neovim..." "$BLUE"
-    git checkout stable 2>&1 | tee -a "$LOG_FILE" | tail -n 5
+    git checkout stable &>> "$LOG_FILE"
 
     # Build Neovim with limited output
     log "🔧 Building Neovim (this may take some time)..." "$BLUE"
-    make CMAKE_BUILD_TYPE=RelWithDebInfo -j"$(nproc)" 2>&1 | tee -a "$LOG_FILE" | tail -n 5
+    make CMAKE_BUILD_TYPE=RelWithDebInfo -j"$(nproc)" 2>&1 | sudo tee -a "$LOG_FILE" | tail -n 5
 
-    # Install Neovim (sudo requires a special way to redirect output)
+
+    # Install Neovim
     log "📦 Installing Neovim..." "$CYAN"
-    sudo make install 2>&1 | sudo tee -a "$LOG_FILE" | tail -n 5
+    sudo make install 2>&1 | sudo tee -a "$LOG_FILE" | tail -n5
 
     # Verify installation
     if is_installed "nvim"; then
