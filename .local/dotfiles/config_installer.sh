@@ -317,6 +317,7 @@ configure_done_notify(){
 #}
 
 install_fish_plugins() {
+  local PLUGINS plugin DOCKER_PLUGINS
   # Ensure Fisher is installed before proceeding
   if ! fish -c "fisher --version" &>/dev/null; then
     log "Fisher not found. Installing Fisher..." "$CYAN"
@@ -415,78 +416,82 @@ install_iterm2_shell_integrations() {
   fi
 }
 
-install_virtual_fish(){
-  # Ensure pipx path is set
-  pipx ensurepath
+install_virtual_fish() {
+  # Ensure pipx is available
+  if ! command -v pipx &>/dev/null; then
+      log "Error: pipx is not installed. Please install it first." "$RED"
+      return 1
+  fi
 
-  # Install VirtualFish
-  pipx install virtualfish
-  pipx ensurepath
-  export PATH="$HOME/.local/bin:$PATH"
-
-  # Configure VirtualFish
-  vf install compat_aliases auto_activation
-
-  log "VirtualFish installation completed successfully." "$GREEN"
-
-}
-
-install_nvim(){
-  local  INSTALL_DIR
-  log "Installing neovim" "$CYAN"
-
-
-  log "Checking if Neovim is already installed..." "$MAGENTA"
-  if command -v nvim &>/dev/null; then
-      log "Neovim is already installed! Skipping installation." "$YELLOW"
-      nvim --version
-
+  # Check if VirtualFish is already installed
+  if pipx list | grep -q "virtualfish"; then
+      log "✅ VirtualFish is already installed. No changes needed." "$GREEN"
   else
+      log "⚠️ VirtualFish not found. Installing now..." "$MAGENTA"
 
-    log "Installing Neovim..." "$CYAN"
+      # Ensure pipx path is set
+      pipx ensurepath
+
+      # Install VirtualFish
+      pipx install virtualfish
+      pipx ensurepath
+
+      # Export PATH to include pipx binaries
+      export PATH="$HOME/.local/bin:$PATH"
+
+      # Configure VirtualFish with plugins
+      vf install compat_aliases auto_activation
+
+      log "✅ VirtualFish installation completed successfully." "$GREEN"
+  fi
+}
+install_nvim(){
+  local INSTALL_DIR LOG_FILE
+
+  LOG_FILE="/tmp/nvim_install.log"
+
+  if ! is_installed "nvim"; then
+    log "🛠️ Installing Neovim..." "$CYAN"
 
     # Define the installation directory
     INSTALL_DIR="$HOME/neovim-build"
 
-
     # Clone the Neovim repository
-    log "Cloning Neovim repository..." "$CYAN"
-    git clone https://github.com/neovim/neovim.git "$INSTALL_DIR"
+    log "📥 Cloning Neovim repository..." "$CYAN"
+    clone_projects "https://github.com/neovim/neovim.git" "$INSTALL_DIR" &> "$LOG_FILE"
 
     # Navigate to the Neovim directory
     cd "$INSTALL_DIR" || exit
 
     # Checkout the stable version
-    log "Checking out the stable version of Neovim..." "$BLUE"
-    git checkout stable
+    log "🔄 Checking out the stable version of Neovim..." "$BLUE"
+    git checkout stable &>> "$LOG_FILE"
 
-    # Build Neovim
-    log "Building Neovim..." "$BLUE"
-    make CMAKE_BUILD_TYPE=RelWithDebInfo
+    # Build Neovim with limited output
+    log "🔧 Building Neovim (this may take some time)..." "$BLUE"
+    make CMAKE_BUILD_TYPE=RelWithDebInfo -j"$(nproc)" &>> "$LOG_FILE"
 
     # Install Neovim
-    log "Installing Neovim..." "$CYAN"
-    sudo make install
+    log "📦 Installing Neovim..." "$CYAN"
+    sudo make install 2>&1 | sudo tee -a "$LOG_FILE" > /dev/null
 
     # Verify installation
-    log "Verifying Neovim installation..." "$MAGENTA"
-    nvim --version
+    if is_installed "nvim"; then
+      log "✅ Neovim installed successfully!" "$GREEN"
+    else
+      log "❌ Installation failed! Check the log: $LOG_FILE" "$RED"
+      return 1
+    fi
 
-    # Cleanup: Remove the build directory
-    log "Cleaning up..." "$BLUE"
+    # Cleanup
+    log "🧹 Cleaning up..." "$BLUE"
     cd "$HOME" || exit
     rm -rf "$INSTALL_DIR"
 
-
-
-    log "Neovim installation completed successfully!" "$GREEN"
-
-
+  else
+    log "⚠️ Neovim is already installed! Skipping installation." "$YELLOW"
   fi
-
-
 }
-
 install_packages(){
   install_with_package_manager
   install_nodejs
@@ -606,114 +611,138 @@ configure_nvim(){
 }
 
 
-# APT Proxy Setup (For Debian-based systems)
 setup_apt_proxy() {
-    log "Configuring APT proxy..." "$BLUE"
-    sudo bash -c "cat > /etc/apt/apt.conf.d/01proxy" <<EOF
+    local PROXY="$1"  # Accept proxy URL as an argument
+    local CONFIG_FILE="/etc/apt/apt.conf.d/01proxy"
+
+    log "Checking APT proxy configuration..." "$BLUE"
+
+    # Check if the configuration file already contains the expected proxy setting
+    if [[ -f "$CONFIG_FILE" ]] && grep -qF "Acquire::http::Proxy  \"$PROXY\";" "$CONFIG_FILE"; then
+        log "✅ APT proxy is already configured. No changes needed." "$GREEN"
+    else
+        log "⚠️ APT proxy is not configured. Setting it up now..." "$YELLOW"
+        sudo bash -c "cat > $CONFIG_FILE" <<EOF
 Acquire::http::Proxy  "$PROXY";
 Acquire::https::Proxy "$PROXY";
 EOF
-    log "APT proxy configured successfully!" "$GREEN"
-}
-
-# Enable and Start Sing-box Service
-enable_singbox_service() {
-    log "Enabling and starting Sing-box service..." "$BLUE"
-    if command -v systemctl &>/dev/null; then
-        sudo systemctl enable --now sing-box
-        sudo systemctl restart sing-box
-
-        log "Sing-box service started and enabled on boot." "$BLUE"
-    else
-        log "Error: systemctl not found. Unable to enable Sing-box service." "$RED"
-        exit 1
+        log "✅ APT proxy configured successfully!" "$GREEN"
     fi
 }
+
+manage_systemd_service() {
+    local service_name="$1" is_active is_enabled
+
+    # Check if the service is enabled
+    is_enabled=$(systemctl is-enabled "$service_name" 2>/dev/null)
+
+    # Check if the service is running
+    is_active=$(systemctl is-active "$service_name" 2>/dev/null)
+
+    if [[ "$is_enabled" == "enabled" && "$is_active" == "active" ]]; then
+        log "✅ $service_name is already enabled and running." "$MAGENTA"
+        log "Restarting $service_name..." "$BLUE"
+        sudo systemctl restart "$service_name"
+
+    elif [[ "$is_enabled" != "enabled" && "$is_active" == "active" ]]; then
+        log "⚠️ $service_name is running but not enabled. Enabling it now..." "$YELLOW"
+        sudo systemctl enable --now "$service_name"
+
+    elif [[ "$is_enabled" == "enabled" && "$is_active" != "active" ]]; then
+        log "⚠️ $service_name is enabled but not running. Starting it now..." "$YELLOW"
+        sudo systemctl start "$service_name"
+
+    else
+        log "🚨 $service_name is neither enabled nor running. Enabling and starting..." "$CYAN"
+        sudo systemctl enable --now "$service_name"
+    fi
+}
+
 
 configure_singbox(){
   local CONFIG_DEST CONFIG_SOURCE FETCH_SCRIPT_DEST FETCH_SCRIPT_SOURCE CRON_ENTRY MODIFICATION_LINE MODIFICATION_LINE2
 
-  # Install Sing-box and configure proxy if `--with-proxy` is provided
+  # Ensure INSTALL_PROXY and PUBLIC_PROXY are set
   if [ "$INSTALL_PROXY" = true ]; then
 
-
       # Define source and destination paths for configuration
-      CONFIG_SOURCE="$TEMP_DIR/var/www/subscription/sbox/routers.json"
+      CONFIG_SOURCE="/tmp/lab/var/www/subscription/sbox/routers.json"
       CONFIG_DEST="/etc/sing-box/config.json"
 
       # Check if the configuration file exists
       if [ -f "$CONFIG_SOURCE" ]; then
           log "Copying Sing-box configuration file..." "$MAGENTA"
-          sudo mkdir -p /etc/sing-box
-          sudo cp "$CONFIG_SOURCE" "$CONFIG_DEST"
-          log "Configuration file copied successfully." "$GREEN"
+
+          if ! [[ -d "/etc/sing-box" ]]; then
+            sudo mkdir -p /etc/sing-box
+          fi
+
+          if cmp -s "$CONFIG_SOURCE" "$CONFIG_DEST"; then
+            log "sing-box configuration is latest." "$GREEN"
+          else
+            sudo cp "$CONFIG_SOURCE" "$CONFIG_DEST"
+            log "Configuration file copied successfully." "$GREEN"
+          fi
+
+          manage_systemd_service "sing-box"
       else
           log "Error: Configuration file not found at $CONFIG_SOURCE" "$RED"
-          rm -rf "$TEMP_DIR"  # Clean up the cloned repository
-          exit 1
-      fi
-
-
-
-      # Enable and Start Sing-box service
-      log "Enabling and starting Sing-box service..." "$MAGENTA"
-      if command -v systemctl &>/dev/null; then
-          sudo systemctl enable --now sing-box
-          sudo systemctl restart sing-box
-          log "Sing-box service started and enabled on boot." "$GREEN"
-      else
-          log "Error: systemctl not found. Unable to enable Sing-box service." "$RED"
           exit 1
       fi
 
       # === Install `sing-box-fetch.sh` Script ===
-      FETCH_SCRIPT_SOURCE="$TEMP_DIR/home/bea/scripts/bea/sing-box-fetch.sh"
-
+      FETCH_SCRIPT_SOURCE="/tmp/lab/home/bea/scripts/bea/sing-box-fetch.sh"
       FETCH_SCRIPT_DEST="/usr/local/bin/sing-box-fetch.sh"
 
       if [ -f "$FETCH_SCRIPT_SOURCE" ]; then
           log "Copying sing-box-fetch.sh to /usr/local/bin..." "$MAGENTA"
-          sudo cp "$FETCH_SCRIPT_SOURCE" "$FETCH_SCRIPT_DEST"
-          sudo chmod +x "$FETCH_SCRIPT_DEST"
-          log "Sing-box fetch script installed successfully." "$GREEN"
+
+          if cmp -s "$FETCH_SCRIPT_SOURCE" "$FETCH_SCRIPT_DEST"; then
+            log "Local script is the same as the remote script." "$GREEN"
+          else
+            sudo cp "$FETCH_SCRIPT_SOURCE" "$FETCH_SCRIPT_DEST"
+            sudo chmod +x "$FETCH_SCRIPT_DEST"
+            log "Sing-box fetch script installed successfully." "$GREEN"
+          fi
       else
-          log "Error: sing-box-fetch.sh not found in $FETCH_SCRIPT_SOURCE" "$GREEN"
+          log "Error: sing-box-fetch.sh not found in $FETCH_SCRIPT_SOURCE" "$RED"
           exit 1
       fi
 
       # === Add to Root Crontab if Not Already Present ===
       CRON_ENTRY="* * * * * /usr/local/bin/sing-box-fetch.sh >> /var/log/sing-box-fetch.log 2>&1"
-      sudo crontab -l | grep -F "$CRON_ENTRY" || (
-          log "Adding sing-box-fetch.sh to root's crontab..." "$BLUE"
+
+      # Check if the cron entry already exists in the root's crontab
+      if sudo crontab -l 2>/dev/null | grep -Fq "$CRON_ENTRY"; then
+          log "✅ Cron job is already set. No changes needed." "$BLUE"
+      else
+          log "⚠️ Cron job not found. Adding it now..." "$MAGENTA"
           (sudo crontab -l 2>/dev/null; echo "$CRON_ENTRY") | sudo crontab -
-          log "Crontab updated successfully." "$GREEN"
-      )
+          log "✅ Crontab updated successfully." "$GREEN"
+      fi
 
-
-
+      # Setup APT proxy if necessary
       if command -v apt &>/dev/null; then
-          setup_apt_proxy
-
+          setup_apt_proxy "$PROXY"
       else
           log "Unsupported package manager. Skipping Sing-box installation." "$RED"
       fi
 
-
-
+      # === Apply Public Proxy Settings ===
       if [ "$PUBLIC_PROXY" = true ]; then
           log "Applying public proxy settings to sing-box-fetch.sh..." "$MAGENTA"
 
-          # Define the exact modification line
+          # Define the modification lines
           MODIFICATION_LINE="sed -i 's#\"listen\": \"127.0.0.1\",#\"listen\": \"0.0.0.0\",#g' /etc/sing-box/config.json"
           MODIFICATION_LINE2="sed -i 's#\"external_controller\": \"127.0.0.1:9090\"#\"external_controller\": \"0.0.0.0:9090\"#g' /etc/sing-box/config.json"
 
-          # Check if the line already exists in the script before appending
-          if ! sudo grep -Fxq "$MODIFICATION_LINE" "$FETCH_SCRIPT_DEST"; then
+          # Check if modification already exists before appending
+          if ! sudo grep -Fq "listen\": \"0.0.0.0" "$FETCH_SCRIPT_DEST"; then
               log "Appending public proxy modification to sing-box-fetch.sh..." "$MAGENTA"
               echo "$MODIFICATION_LINE" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
               echo "$MODIFICATION_LINE2" | sudo tee -a "$FETCH_SCRIPT_DEST" > /dev/null
 
-              enable_singbox_service
+              manage_systemd_service "sing-box"
               log "Public proxy settings applied successfully." "$GREEN"
           else
               log "Public proxy modification already exists in sing-box-fetch.sh, skipping." "$YELLOW"
@@ -729,7 +758,7 @@ initialize_config(){
   # Clone dotfiles repository if it doesn't exist
   if [ ! -d "$HOME/.dotfiles" ]; then
       log "Cloning dotfiles repository..." "$CYAN"
-      git clone --bare git@github.com:behnambagheri/dotfiles.git "$HOME/.dotfiles"
+      git clone --bare git@github.com:behnambagheri/dotfiles.git "$HOME/.dotfiles" > /dev/null 2>&1
   else
       log "Dotfiles repository already exists, skipping clone." "$YELLOW"
   fi
@@ -754,7 +783,12 @@ initialize_config(){
 cleanup(){
   # Clean up the cloned repository
   log "Cleaning up temporary files..." "$BLUE"
-  rm -rf "$TEMP_DIR"
+  for arg in "$@"; do
+    if [[ -d "$arg" ]]; then
+      rm -rf "$arg"
+      log "DIR: $arg Deleted." "$YELLOW"
+    fi
+  done
 }
 
 source_varibales(){
@@ -772,11 +806,11 @@ source_varibales(){
 clone_projects "git@github.com:behnambagheri/lab.git" "/tmp/lab"
 install_packages
 configure_fish
-configure_vim
+#configure_vim
 configure_nvim
 configure_singbox
 initialize_config
 source_varibales
-cleanup
+cleanup "/tmp/lab" "/tmp/dotfiles"
 
 log "Dotfiles installation and Fish setup complete!" "$GREEN"
