@@ -456,7 +456,7 @@ install_nvim(){
     INSTALL_DIR="$HOME/neovim-build"
     # Clone the Neovim repository
     log "Cloning Neovim repository..." "$CYAN"
-    clone_projects "https://github.com/neovim/neovim.git" "$INSTALL_DIR"
+    git clone "https://github.com/neovim/neovim.git" "$INSTALL_DIR"
     # Navigate to the Neovim directory
     cd "$INSTALL_DIR" || exit
 
