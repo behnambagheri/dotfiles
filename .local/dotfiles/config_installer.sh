@@ -451,7 +451,7 @@ install_nvim(){
   LOG_FILE="/tmp/nvim_install.log"
   sudo chmod 777 "$LOG_FILE"
 
-  if command -v nvi____m &>/dev/null; then
+  if ! command -v nvi____m &>/dev/null; then
 
     log "🛠️ Installing Neovim..." "$CYAN"
 
