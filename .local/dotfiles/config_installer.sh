@@ -241,29 +241,29 @@ install_lambda_theme(){
   fi
 }
 
-configure_done_notify(){
-  local DONE_NOTIFY_PATH
-  log "Adding done_notify..." "$CYAN"
-
-  # Corrected path (removed extra 'home')
-  DONE_NOTIFY_PATH="$TEMP_DIR/home/bea/scripts/bea/done_notify.fish"
-
-  # Ensure the script exists before sourcing
-  if [ -f "$DONE_NOTIFY_PATH" ]; then
-      log "Sourcing done_notify.fish..." "$CYAN"
-      fish -c "source $DONE_NOTIFY_PATH"
-      fish -c "fisher install franciscolourenco/done"
-
-      fish -c "source $DONE_NOTIFY_PATH"
-
-      cp "$DONE_NOTIFY_PATH" "$HOME/.local/dotfiles/"
-
-      fish -c "source $HOME/.local/dotfiles/done_notify.fish"
-  else
-      log "Error: done_notify.fish not found at $DONE_NOTIFY_PATH" "$RED"
-      exit 1
-  fi
-}
+#configure_done_notify(){
+#  local DONE_NOTIFY_PATH
+#  log "Adding done_notify..." "$CYAN"
+#
+#  # Corrected path (removed extra 'home')
+#  DONE_NOTIFY_PATH="$TEMP_DIR/home/bea/scripts/bea/done_notify.fish"
+#
+#  # Ensure the script exists before sourcing
+#  if [ -f "$DONE_NOTIFY_PATH" ]; then
+#      log "Sourcing done_notify.fish..." "$CYAN"
+#      fish -c "source $DONE_NOTIFY_PATH"
+#      fish -c "fisher install franciscolourenco/done"
+#
+#      fish -c "source $DONE_NOTIFY_PATH"
+#
+#      cp "$DONE_NOTIFY_PATH" "$HOME/.local/dotfiles/"
+#
+#      fish -c "source $HOME/.local/dotfiles/done_notify.fish"
+#  else
+#      log "Error: done_notify.fish not found at $DONE_NOTIFY_PATH" "$RED"
+#      exit 1
+#  fi
+#}
 #
 #install_fish_plugins(){
 #
@@ -315,6 +315,51 @@ configure_done_notify(){
 #  fi
 #
 #}
+
+configure_done_notify() {
+    local DONE_NOTIFY_PATH="$TEMP_DIR/bea/scripts/bea/done_notify.fish"
+
+    log "Adding done_notify..." "$CYAN"
+
+    # Ensure fish shell is installed
+    if ! command -v fish &> /dev/null; then
+        log "Error: fish shell is not installed. Please install fish first." "$RED"
+        exit 1
+    fi
+
+    # Ensure the script exists before sourcing
+    if [ -f "$DONE_NOTIFY_PATH" ]; then
+        log "Sourcing done_notify.fish..." "$CYAN"
+
+        fish -c "source $DONE_NOTIFY_PATH"
+
+        # Ensure fisher is installed
+        if ! fish -c "functions -q fisher"; then
+            log "Installing Fisher package manager for fish..." "$YELLOW"
+            fish -c "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher"
+        fi
+
+        # Install `done` plugin if not already installed
+        if ! fish -c "functions -q done"; then
+            log "Installing done plugin..." "$CYAN"
+            fish -c "fisher install franciscolourenco/done"
+        else
+            log "done plugin already installed." "$YELLOW"
+        fi
+
+        # Copy to local dotfiles for persistence
+        mkdir -p "$HOME/.local/dotfiles/"
+        cp "$DONE_NOTIFY_PATH" "$HOME/.local/dotfiles/"
+
+        # Source from local dotfiles
+        fish -c "source $HOME/.local/dotfiles/done_notify.fish"
+
+        log "done_notify setup completed successfully!" "$GREEN"
+    else
+        log "Error: done_notify.fish not found at $DONE_NOTIFY_PATH" "$RED"
+        exit 1
+    fi
+}
 
 install_fish_plugins() {
   local PLUGINS plugin DOCKER_PLUGINS
@@ -497,7 +542,7 @@ install_nvim(){
   LOG_FILE="/tmp/nvim_install.log"
 
 #  if ! is_installed "nvim"; then
-  if ! command -v nvi____m &>/dev/null; then
+  if ! command -v nvim &>/dev/null; then
     log "🛠️ Installing Neovim..." "$CYAN"
 
     # Define the installation directory
@@ -521,7 +566,7 @@ install_nvim(){
     # Install Neovim
     log "📦 Installing Neovim..." "$CYAN"
 #    sudo make install &>> "$LOG_FILE"
-    sudo make install 2>&1 | sudo tee -a "$LOG_FILE" > /dev/null
+    sudo make install 2>&1 | sudo tee -a "$LOG_FILE"  > /dev/null 2>&1 /dev/null
     # Verify installation
     if command -v nvim &>/dev/null; then
 
@@ -689,9 +734,8 @@ configure_nvim() {
 
     # Upgrade pip and install necessary Python packages
     log "Installing/upgrading Python dependencies for Neovim..." "$CYAN"
-    pip install --upgrade pip
-    pip install neovim 'python-lsp-server[all]'
-
+    pip install --upgrade pip >/dev/null 2>&1 || log "Error upgrading pip!" "$RED"
+    pip install neovim 'python-lsp-server[all]' >/dev/null 2>&1 || log "Error installing Python dependencies!" "$RED"
     deactivate
 
     # Ensure npm is installed
@@ -704,7 +748,7 @@ configure_nvim() {
     log "Setting up npm global installation path..." "$CYAN"
     mkdir -p "$NPM_GLOBAL_PATH"
     export PATH="$NPM_GLOBAL_PATH/bin:$PATH"
-    echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$HOME/.bashrc"
+    echo "export PATH=\"$HOME/.npm-global/bin:\$PATH\"" >> "$HOME/.bashrc"
 
 
     # Set permissions for npm directory
@@ -715,8 +759,8 @@ configure_nvim() {
 
     # Install Neovim-related npm packages
     log "Installing npm packages for Neovim..." "$CYAN"
-    npm install -g neovim bash-language-server --prefix="$NPM_GLOBAL_PATH"
-    sudo npm install -g neovim bash-language-server
+    npm install -g neovim bash-language-server --prefix="$NPM_GLOBAL_PATH" >/dev/null 2>&1 || log "Error installing Neovim and bash-language-server (user-level)!" "$RED"
+    sudo npm install -g neovim bash-language-server >/dev/null 2>&1 || log "Error installing Neovim and bash-language-server (system-wide)!" "$RED"
 
     # Source bashrc to ensure changes take effect
     log "Refreshing shell environment..." "$BLUE"
@@ -728,7 +772,7 @@ configure_nvim() {
 #    source ~/.config/fish/config.fish
     # Install Vim-Plug
     log "Installing Vim-Plug for Neovim..." "$CYAN"
-    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    curl -s -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
          https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
     # Install Neovim plugins
