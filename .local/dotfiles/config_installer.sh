@@ -470,7 +470,7 @@ install_nvim(){
 
     # Build Neovim with limited output
     log "🔧 Building Neovim (this may take some time)..." "$BLUE"
-    make CMAKE_BUILD_TYPE=RelWithDebInfo &>> "$LOG_FILE"
+    make CMAKE_BUILD_TYPE=RelWithDebInfo 
 
     # Install Neovim
     log "📦 Installing Neovim..." "$CYAN"
