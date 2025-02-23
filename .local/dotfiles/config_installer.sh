@@ -38,8 +38,6 @@ PACKAGES=(
     ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx
     ninja-build gettext cmake unzip
 )
-
-
 # Parse script arguments
 for arg in "$@"; do
     case "$arg" in
@@ -52,8 +50,6 @@ for arg in "$@"; do
             ;;
     esac
 done
-
-
 log() {
   local msg="$1"
   local color="${2:-$DEFAULT_COLOR}"
@@ -89,14 +85,10 @@ clone_projects() {
     fi
   fi
 }
-
 # Function to check if a package is installed
 is_installed() {
     dpkg -l "$1" &>/dev/null
 }
-
-
-
 install_with_package_manager(){
   local NEEDRESTART_MODE DEBIAN_FRONTEND TO_INSTALL pkg
   log "Updating system and installing the latest Fish shell..." "$CYAN"
@@ -163,8 +155,6 @@ install_with_package_manager(){
     exit 1
   fi
 }
-
-
 install_nodejs(){
   local node_version npm_version NEEDRESTART_MODE DEBIAN_FRONTEND
     # Install Node.js using NodeSource
@@ -210,7 +200,6 @@ install_fzf(){
     ~/.fzf/install --all
   fi
 }
-
 install_omf(){
   # Install Oh My Fish (OMF) if not already installed
   if [ ! -d "$HOME/.local/share/omf" ]; then
@@ -221,7 +210,6 @@ install_omf(){
   fi
 
 }
-
 install_fisher(){
   # Install Fisher (if not already installed)
   if ! fish -c "functions -q fisher"; then
@@ -231,7 +219,6 @@ install_fisher(){
     log "fisher already exists, skipping clone." "$YELLOW"
   fi
 }
-
 install_lambda_theme(){
   if fish -c 'omf theme | head -2 | grep lambda > /dev/null'; then
     log "lambda theme already exists, skipping clone." "$YELLOW"
@@ -240,82 +227,6 @@ install_lambda_theme(){
     fish -c 'omf install lambda'
   fi
 }
-
-#configure_done_notify(){
-#  local DONE_NOTIFY_PATH
-#  log "Adding done_notify..." "$CYAN"
-#
-#  # Corrected path (removed extra 'home')
-#  DONE_NOTIFY_PATH="$TEMP_DIR/home/bea/scripts/bea/done_notify.fish"
-#
-#  # Ensure the script exists before sourcing
-#  if [ -f "$DONE_NOTIFY_PATH" ]; then
-#      log "Sourcing done_notify.fish..." "$CYAN"
-#      fish -c "source $DONE_NOTIFY_PATH"
-#      fish -c "fisher install franciscolourenco/done"
-#
-#      fish -c "source $DONE_NOTIFY_PATH"
-#
-#      cp "$DONE_NOTIFY_PATH" "$HOME/.local/dotfiles/"
-#
-#      fish -c "source $HOME/.local/dotfiles/done_notify.fish"
-#  else
-#      log "Error: done_notify.fish not found at $DONE_NOTIFY_PATH" "$RED"
-#      exit 1
-#  fi
-#}
-#
-#install_fish_plugins(){
-#
-#  # Install Fisher plugins
-#  log "Installing Fisher plugins..." "$CYAN"
-#
-#  fish -c "fisher install jorgebucaran/fisher"
-#  fish -c "fisher install meaningful-ooo/sponge"
-#  fish -c "fisher install jhillyerd/plugin-git"
-#  fish -c "fisher install gazorby/fish-abbreviation-tips"
-#  fish -c "fisher install jethrokuan/z"
-#  fish -c "fisher install patrickf3139/colored-man-pages"
-#  fish -c "fisher install markcial/upto"
-#  fish -c "fisher install jorgebucaran/autopair.fish"
-#  fish -c "fisher install laughedelic/pisces"
-#  fish -c "fisher install PatrickF1/fzf.fish"
-#  fish -c "fisher install nickeb96/puffer-fish"
-#  fish -c "fisher install acomagu/fish-async-prompt@a89bf4216b65170e4c3d403e7cbf24ce34b134e6"
-#  fish -c "fisher install franciscolourenco/done"
-#  configure_done_notify
-#
-#  # Install Docker plugins only if Docker is installed
-#  if command -v docker &>/dev/null; then
-#      log "Docker detected! Installing Docker plugins..." "$MAGENTA"
-#      fish -c "fisher install asim-tahir/docker.fish"
-#      fish -c "fisher install brgmnn/fish-docker-compose"
-#      fish -c "fisher install asim-tahir/docker-compose.fish"
-#  else
-#      log "Docker not found. Skipping Docker plugins." "$YELLOW"
-#  fi
-#
-#
-#
-#
-#  # Install Kubernetes plugin only if kubectl is installed
-#  if command -v kubectl &>/dev/null; then
-#      log "kubectl detected! Installing Kubernetes plugin..." "$MAGENTA"
-#      fish -c "fisher install blackjid/plugin-kubectl"
-#  else
-#      log "kubectl not found. Skipping Kubernetes plugin." "$YELLOW"
-#  fi
-#
-#  # Install Homebrew completion plugin only on macOS
-#  if [[ "$(uname -s)" == "Darwin" ]]; then
-#      log "macOS detected! Installing Homebrew completions..." "$MAGENTA"
-#      fish -c "fisher install laughedelic/brew-completions"
-#  else
-#      log "Not macOS. Skipping Homebrew completions." "$YELLOW"
-#  fi
-#
-#}
-
 configure_done_notify() {
     local DONE_NOTIFY_PATH="/tmp/lab/home/bea/scripts/bea/done_notify.fish"
 
@@ -360,7 +271,6 @@ configure_done_notify() {
         exit 1
     fi
 }
-
 install_fish_plugins() {
   local PLUGINS plugin DOCKER_PLUGINS
   # Ensure Fisher is installed before proceeding
@@ -460,7 +370,6 @@ install_iterm2_shell_integrations() {
     exit 1
   fi
 }
-
 install_virtual_fish() {
   # Ensure pipx is available
   if ! command -v pipx &>/dev/null; then
@@ -490,52 +399,6 @@ install_virtual_fish() {
       log "✅ VirtualFish installation completed successfully." "$GREEN"
   fi
 }
-
-#install_nvim2(){
-#  local  INSTALL_DIR
-#
-#
-#  if ! is_installed "nvim"; then
-#    log "🛠️ Installing Neovim..." "$CYAN"
-#    # Define the installation directory
-#    INSTALL_DIR="$HOME/neovim-build"
-#    # Clone the Neovim repository
-#    log "📥 Cloning Neovim repository..." "$CYAN"
-#    git clone "https://github.com/neovim/neovim.git" "$INSTALL_DIR" > /dev/null 2>&1
-#    # Navigate to the Neovim directory
-#    cd "$INSTALL_DIR" || exit
-#
-#    # Checkout the stable version
-#    log "🔄 Checking out the stable version of Neovim..." "$BLUE"
-#    git checkout stable > /dev/null 2>&1
-#
-#    # Build Neovim
-#    log "🔧 Building Neovim (this may take some time)..." "$BLUE"
-#    make CMAKE_BUILD_TYPE=RelWithDebInfo > /dev/null 2>&1
-#
-#    # Install Neovim
-#    log "📦 Installing Neovim..." "$CYAN"
-#    sudo make install > /dev/null 2>&1
-#
-#    # Verify installation
-#    log "Verifying Neovim installation..." "$MAGENTA"
-#    log "$(nvim --version)" "$GREEN"
-#
-#    # Cleanup: Remove the build directory
-#    log "Cleaning up..." "$BLUE"
-#    cd "$HOME" || exit
-#    rm -rf "$INSTALL_DIR"
-#
-#    log "Neovim installation completed successfully!" "$GREEN"
-#  else
-#    log "Neovim is already installed! Skipping installation." "$YELLOW"
-#  fi
-#
-#
-#
-#}
-
-
 install_nvim(){
   local INSTALL_DIR LOG_FILE
 
@@ -585,12 +448,6 @@ install_nvim(){
     log "⚠️ Neovim is already installed! Skipping installation." "$YELLOW"
   fi
 }
-
-
-
-
-
-
 install_packages(){
   install_with_package_manager
   install_nodejs
@@ -605,7 +462,6 @@ install_packages(){
 
 
 }
-
 configure_fish(){
 
   # Check if Fish shell is installed before proceeding
@@ -630,7 +486,6 @@ configure_fish(){
 
 
 }
-
 configure_vim(){
 
   # Install Vim-Plug if not installed
@@ -646,69 +501,6 @@ configure_vim(){
   #vim -es -c "CocInstall coc-pyright" -c "q"
 
 }
-
-configure_nvim2(){
-  local VENV_PATH
-    sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.local/share/nvim"
-
-
-    # Set the virtual environment path
-    VENV_PATH="$HOME/.venvs/neovim"
-
-    # Create the virtual environment if it doesn't exist
-    if [ ! -d "$VENV_PATH" ]; then
-        log "Creating Python virtual environment for Neovim..." "$CYAN"
-        python3 -m venv "$VENV_PATH"
-    else
-        log "Virtual environment already exists at $VENV_PATH." "$YELLOW"
-    fi
-
-    # Activate the virtual environment
-    log "Activating virtual environment..." "$BLUE"
-    # shellcheck source=./activate
-    source "$VENV_PATH/bin/activate"
-
-    # Install the Neovim Python package
-    log "Installing Neovim Python package..." "$CYAN"
-    "$HOME"/.venvs/neovim/bin/pip install --upgrade pip
-    "$HOME"/.venvs/neovim/bin/pip install neovim
-    "$HOME"/.venvs/neovim/bin/pip install 'python-lsp-server[all]'
-
-    # Deactivate the virtual environment
-    deactivate
-
-    log "Setup complete! Make sure to add this to your init.vim:" "$GREEN"
-    if [[ -d "$HOME/.npm" ]]; then
-      sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.npm"
-    fi
-    npm install -g neovim --prefix="$HOME/.npm-global"
-    npm install -g bash-language-server --prefix="$HOME/.npm-global"
-    sudo npm install -g neovim
-    sudo npm install -g bash-language-server
-    export PATH="$HOME/.npm-global/bin:$PATH"
-    # shellcheck source=/Users/behnam/.bashrc
-    source ~/.bashrc
-
-    log "Installing Vim-Plug for Neovim..." "$CYAN"
-
-    # Install Vim-Plug if not already installed
-    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-    log "Installing NeoVim plugins..." "$CYAN"
-    sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.local/state/nvim/"
-
-    nvim --headless +PlugInstall +qall
-
-    # Ensure Neovim and coc.nvim are installed before running CocInstall
-    log "Installing coc.nvim extensions..." "$CYAN"
-    nvim --headless -c 'CocInstall -sync coc-json coc-html coc-css coc-yaml coc-sh' -c 'qall'
-
-    log "Neovim setup completed successfully!" "$GREEN"
-
-
-}
-
 # shellcheck disable=SC1094
 configure_nvim() {
     set -e  # Exit on error
@@ -803,7 +595,6 @@ EOF
         log "✅ APT proxy configured successfully!" "$GREEN"
     fi
 }
-
 manage_systemd_service() {
     local service_name="$1" is_active is_enabled
 
@@ -831,8 +622,6 @@ manage_systemd_service() {
         sudo systemctl enable --now "$service_name"
     fi
 }
-
-
 configure_singbox(){
   local CONFIG_DEST CONFIG_SOURCE FETCH_SCRIPT_DEST FETCH_SCRIPT_SOURCE CRON_ENTRY MODIFICATION_LINE MODIFICATION_LINE2
 
@@ -878,6 +667,7 @@ configure_singbox(){
             sudo chmod +x "$FETCH_SCRIPT_DEST"
             log "Sing-box fetch script installed successfully." "$GREEN"
           fi
+          manage_systemd_service "sing-box"
       else
           log "Error: sing-box-fetch.sh not found in $FETCH_SCRIPT_SOURCE" "$RED"
           exit 1
@@ -926,7 +716,6 @@ configure_singbox(){
       log "Skipping Sing-box installation and proxy setup (no --with-proxy argument provided)." "$YELLOW"
   fi
 }
-
 initialize_config(){
 
   # Clone dotfiles repository if it doesn't exist
@@ -953,7 +742,6 @@ initialize_config(){
   mkdir -p "$HOME/.local/share/omf/themes/lambda/functions"
   ln -sf "$HOME/.local/dotfiles/fish_prompt.fish" "$HOME/.local/share/omf/themes/lambda/functions/fish_prompt.fish"
 }
-
 cleanup(){
   # Clean up the cloned repository
   log "🧹 Cleaning up temporary files..." "$BLUE"
@@ -964,17 +752,10 @@ cleanup(){
     fi
   done
 }
-
 source_varibales(){
   log "source variables..." "$BLUE"
   fish -c "source $HOME/.local/dotfiles/variables.fish"
 }
-
-
-
-
-
-
 
 
 clone_projects "git@github.com:behnambagheri/lab.git" "/tmp/lab"
