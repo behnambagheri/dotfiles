@@ -163,8 +163,8 @@ install_nodejs(){
     log "Installing Node.js..." "$CYAN"
     curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
       # Ensure non-interactive mode
-    export NEEDRESTART_MODE=a
-    export DEBIAN_FRONTEND=noninteractive
+#     export NEEDRESTART_MODE=a
+#     export DEBIAN_FRONTEND=noninteractive
     sudo apt-get install -y nodejs
 
     # Verify installation
