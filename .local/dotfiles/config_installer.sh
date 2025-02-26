@@ -36,7 +36,7 @@ PACKAGES=(
     nmap iputils-ping rsync netcat-traditional gcc build-essential
     net-tools iproute2 unzip bind9-utils prometheus-node-exporter
     ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx
-    ninja-build gettext cmake unzip
+    ninja-build gettext cmake unzip software-properties-common
 )
 # Parse script arguments
 for arg in "$@"; do
