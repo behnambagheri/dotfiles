@@ -509,7 +509,9 @@ configure_nvim() {
     local NPM_GLOBAL_PATH="$HOME/.npm-global"
 
     log "Setting correct permissions for Neovim directories..." "$CYAN"
+    if [[ -d "$HOME/.local/share/nvim" ]]; then 
     sudo chown -R "$(id -u)":"$(id -g)" "$HOME/.local/share/nvim" "$HOME/.local/state/nvim/"
+    fi
 
     # Create the virtual environment if not exists
     if [ ! -d "$VENV_PATH" ]; then
