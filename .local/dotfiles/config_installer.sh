@@ -284,9 +284,7 @@ install_fish_plugins() {
   # Define plugins list
   PLUGINS=(
     "jorgebucaran/fisher"
-    "meaningful-ooo/sponge"
     "jhillyerd/plugin-git"
-    "gazorby/fish-abbreviation-tips"
     "jethrokuan/z"
     "patrickf3139/colored-man-pages"
     "markcial/upto"
