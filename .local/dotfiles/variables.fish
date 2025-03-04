@@ -39,3 +39,7 @@ if test -d /home/bea/.local/bin
 end
 
 set -U fish_user_paths $HOME/.local/bin $fish_user_paths
+
+
+source ~/.config/fish/conf.d/fzf.fish
+
