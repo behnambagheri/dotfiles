@@ -36,7 +36,7 @@ PACKAGES=(
     nmap iputils-ping rsync netcat-traditional gcc build-essential
     net-tools iproute2 unzip bind9-utils prometheus-node-exporter
     ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx
-    ninja-build gettext cmake unzip software-properties-common
+    ninja-build gettext cmake unzip software-properties-common lsd ripgrep chafa eza
 )
 # Parse script arguments
 for arg in "$@"; do
@@ -294,6 +294,8 @@ install_fish_plugins() {
     "nickeb96/puffer-fish"
     "acomagu/fish-async-prompt@a89bf4216b65170e4c3d403e7cbf24ce34b134e6"
     "franciscolourenco/done"
+    "gazorby/fifc"
+    "0rax/fish-bd"
   )
 
   # Check and install missing plugins
