@@ -4,7 +4,11 @@ if status is-interactive
     source ~/.config/fish/conf.d/forgit.plugin.fish
 end
 
-source ~/.config/fish/conf.d/fzf.fish
+if status is-login
+    source ~/.config/fish/config.fish
+    source ~/.config/fish/conf.d/fzf.fish
+
+end
 #test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
 
 #kubectl completion fish | source
