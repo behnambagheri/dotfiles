@@ -9,6 +9,10 @@ if status is-login
     source ~/.config/fish/conf.d/fzf.fish
 
 end
+
+if set -q SSH_TTY
+    source ~/.config/fish/config.fish
+end
 #test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
 
 #kubectl completion fish | source

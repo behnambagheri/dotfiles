@@ -228,6 +228,14 @@ install_lambda_theme(){
     fish -c 'omf install lambda'
   fi
 }
+
+configure_bat(){
+  mkdir -p ~/.local/bin
+  ln -s /usr/bin/batcat ~/.local/bin/bat
+  echo "export PATH=\$HOME/.local/bin:\$PATH" >> ~/.bashrc
+  # shellcheck source=/Users/behnam/.bashrc
+  source ~/.bashrc
+}
 configure_done_notify() {
     local DONE_NOTIFY_PATH="/tmp/lab/home/bea/scripts/bea/done_notify.fish"
 
@@ -765,6 +773,7 @@ source_varibales(){
 clone_projects "git@github.com:behnambagheri/lab.git" "/tmp/lab"
 install_packages
 configure_fish
+configure_bat
 #configure_vim
 configure_nvim
 configure_singbox
