@@ -11,7 +11,7 @@ if status is-login
 end
 
 if set -q SSH_TTY
-    source ~/.config/fish/config.fish
+    source ~/.local/dotfiles/variables.fish
 end
 #test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
 
