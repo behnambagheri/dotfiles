@@ -2,6 +2,7 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
     source ~/.config/fish/conf.d/fifc.fish
     source ~/.config/fish/conf.d/forgit.plugin.fish
+    source ~/.local/dotfiles/variables.fish
 end
 
 if status is-login
@@ -10,9 +11,7 @@ if status is-login
 
 end
 
-if set -q SSH_TTY
     source ~/.local/dotfiles/variables.fish
-end
 #test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
 
 #kubectl completion fish | source
