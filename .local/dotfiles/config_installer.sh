@@ -132,6 +132,7 @@ install_with_package_manager(){
           fi
       done
 
+      ln -s "$(which fdfind)" ~/.local/bin/fd
 
       # If there are packages to install, install them
       if [ ${#TO_INSTALL[@]} -gt 0 ]; then

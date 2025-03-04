@@ -38,3 +38,4 @@ if test -d /home/bea/.local/bin
     set -Ux PATH $PATH /home/bea/.local/bin
 end
 
+set -U fish_user_paths $HOME/.local/bin $fish_user_paths

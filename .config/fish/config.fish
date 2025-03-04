@@ -1,10 +1,10 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
-    source $HOME/.config/fish/conf.d/fifc.fish
-    source $HOME/.config/fish/conf.d/forgit.plugin.fish
+    source ~/.config/fish/conf.d/fifc.fish
+    source ~/.config/fish/conf.d/forgit.plugin.fish
 end
 
-source $HOME/.config/fish/conf.d/fzf.fish
+source ~/.config/fish/conf.d/fzf.fish
 #test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
 
 #kubectl completion fish | source
