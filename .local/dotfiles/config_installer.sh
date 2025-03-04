@@ -296,6 +296,7 @@ install_fish_plugins() {
     "franciscolourenco/done"
     "gazorby/fifc"
     "0rax/fish-bd"
+    "wfxr/forgit"
   )
 
   # Check and install missing plugins
