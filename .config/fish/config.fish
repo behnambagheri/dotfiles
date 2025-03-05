@@ -1,8 +1,9 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
-    source ~/.config/fish/conf.d/fifc.fish
-    source ~/.config/fish/conf.d/forgit.plugin.fish
+#     source ~/.config/fish/conf.d/fifc.fish
+#     source ~/.config/fish/conf.d/forgit.plugin.fish
     source ~/.local/dotfiles/variables.fish
+    source ~/.config/fish/conf.d/fzf.fish
 end
 
 if status is-login

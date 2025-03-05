@@ -16,3 +16,4 @@ ClientAliveInterval 120
 ClientAliveCountMax 6
 # AllowGroups ssh_users
 AllowTcpForwarding yes
+PermitUserEnvironment yes
