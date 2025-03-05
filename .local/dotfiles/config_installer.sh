@@ -131,8 +131,9 @@ install_with_package_manager(){
               TO_INSTALL+=("$pkg")
           fi
       done
-
-      ln -s "$(which fdfind)" ~/.local/bin/fd
+      if ! [[ -L "$HOME/.local/bin/fd" ]]; then
+        ln -s "$(which fdfind)" ~/.local/bin/fd
+      fi
 
       # If there are packages to install, install them
       if [ ${#TO_INSTALL[@]} -gt 0 ]; then
@@ -231,7 +232,9 @@ install_lambda_theme(){
 
 configure_bat(){
   mkdir -p ~/.local/bin
-  ln -s /usr/bin/batcat ~/.local/bin/bat
+  if ! [[ -L "$HOME/.local/bin/bat" ]]; then
+    ln -s /usr/bin/batcat ~/.local/bin/bat
+  fi
   echo "export PATH=\$HOME/.local/bin:\$PATH" >> ~/.bashrc
   # shellcheck source=/Users/behnam/.bashrc
   source ~/.bashrc
