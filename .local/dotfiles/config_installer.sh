@@ -36,7 +36,7 @@ PACKAGES=(
     nmap iputils-ping rsync netcat-traditional gcc build-essential
     net-tools iproute2 unzip bind9-utils prometheus-node-exporter
     ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx
-    ninja-build gettext cmake unzip software-properties-common lsd ripgrep chafa eza
+    ninja-build gettext cmake unzip software-properties-common ripgrep chafa exa
 )
 # Parse script arguments
 for arg in "$@"; do
@@ -235,6 +235,16 @@ configure_bat(){
   echo "export PATH=\$HOME/.local/bin:\$PATH" >> ~/.bashrc
   # shellcheck source=/Users/behnam/.bashrc
   source ~/.bashrc
+}
+install_lsd(){
+  # Install Docker plugins only if Docker is installed
+  if command -v lsd &>/dev/null; then
+      log "lsd already installed." "$MAGENTA"
+  else
+    # Install fzf (Fuzzy Finder)
+    log "Installing lsd..." "$CYAN"
+    sudo snap install lsd > /dev/null || log "Error occurred during lsd installation" "$RED"
+  fi
 }
 configure_done_notify() {
     local DONE_NOTIFY_PATH="/tmp/lab/home/bea/scripts/bea/done_notify.fish"
@@ -462,6 +472,7 @@ install_packages(){
   install_with_package_manager
   install_nodejs
   install_fzf
+  install_lsd
   install_omf
   install_fisher
   install_lambda_theme
