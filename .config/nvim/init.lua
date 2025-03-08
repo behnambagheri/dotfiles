@@ -237,3 +237,13 @@ vim.api.nvim_set_keymap("n", "dd", '"_dd', { noremap = true, silent = true })
 -- Delete selected text (`d`) in visual mode without copying it
 vim.api.nvim_set_keymap("v", "d", '"_d', { noremap = true, silent = true })
 
+
+vim.api.nvim_set_keymap("i", "<CR>", "pumvisible() ? coc#_select_confirm() : '<CR>'", { noremap = true, expr = true, silent = true })
+--vim.api.nvim_set_keymap("i", "<CR>", "pumvisible() ? '<C-y>' : '<CR>'", { noremap = true, expr = true })
+--
+--
+--
+vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"}, {
+    pattern = {"*.nginx", "nginx.conf", "*.conf"},
+    command = "set filetype=nginx"
+})
