@@ -78,6 +78,7 @@ function fish_prompt
   else
 
       set -g current_user (whoami)
+      source ~/.local/dotfiles/variables.fish
 
       ##
       ## Line 1
