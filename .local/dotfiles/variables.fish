@@ -9,9 +9,10 @@ set -Ux EDITOR $PREFERRED_EDITOR
 set -Ux VISUAL $PREFERRED_EDITOR
 
 set -Ux fifc_editor nvim
-set -U fifc_bat_opts --style=numbers
-set -U fifc_fd_opts --hidden
-
+# set -U fifc_bat_opts --style=numbers
+# set -U fifc_fd_opts --hidden
+set -U fifc_fd_opts 
+set -U fifc_bat_opts --style="full"
 
 #Only completing at the end of the line
 set -U pisces_only_insert_at_eol 1

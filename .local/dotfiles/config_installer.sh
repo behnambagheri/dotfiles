@@ -95,7 +95,7 @@ install_with_package_manager(){
 
   # Ensure non-interactive mode
 #  export NEEDRESTART_MODE=a
-#  export DEBIAN_FRONTEND=noninteractive
+ export DEBIAN_FRONTEND=noninteractive
 
   if [ "$INSTALL_PROXY" = true ]; then
     log "Detected Debian-based system. Installing Sing-box..." "$MAGENTA"
@@ -146,7 +146,7 @@ install_with_package_manager(){
         log "Installing Sing-box..." "$MAGENTA"
           # Ensure non-interactive mode
 #        export NEEDRESTART_MODE=a
-#        export DEBIAN_FRONTEND=noninteractive
+       export DEBIAN_FRONTEND=noninteractive
         if ! is_installed "sing-box"; then
           sudo apt-get install -y sing-box
         fi
@@ -166,7 +166,7 @@ install_nodejs(){
     curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
       # Ensure non-interactive mode
 #     export NEEDRESTART_MODE=a
-#     export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_FRONTEND=noninteractive
     sudo apt-get install -y nodejs
 
     # Verify installation
