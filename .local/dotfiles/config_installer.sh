@@ -131,7 +131,7 @@ install_with_package_manager(){
               TO_INSTALL+=("$pkg")
           fi
       done
-      if ! [[ -L "$HOME/.local/bin/fd" ]]; then
+      if ! [[ -L "$HOME/.local/bin/fd" ]] && [[ -e "$(which fdfind)" ]]; then
         ln -s "$(which fdfind)" ~/.local/bin/fd
       fi
 
