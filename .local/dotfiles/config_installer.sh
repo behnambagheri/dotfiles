@@ -501,6 +501,7 @@ install_packages(){
   install_fish_plugins
   install_iterm2_shell_integrations
   install_virtual_fish
+  install_helix
 #  install_nvim
 
 
