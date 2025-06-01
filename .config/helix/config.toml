@@ -1,0 +1,16 @@
+theme = "tokyonight"
+
+[editor]
+line-number = "relative"  
+cursorline = true           
+auto-save = true            
+completion-trigger-len = 1  
+idle-timeout = 300          
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[keys.normal]
+"C-s" = ":w"  # ذخیره با Ctrl+S

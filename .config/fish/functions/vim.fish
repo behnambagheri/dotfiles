@@ -1,3 +1,3 @@
 function vim
-    nvim $argv
+    hx $argv
 end

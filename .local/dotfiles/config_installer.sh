@@ -471,9 +471,28 @@ install_nvim(){
     log "⚠️ Neovim is already installed! Skipping installation." "$YELLOW"
   fi
 }
+install_helix(){
+    if ! command -v hx &>/dev/null; then
+      log "🛠️ Installing Helix..." "$CYAN"
+      curl -LO https://github.com/helix-editor/helix/releases/download/25.01.1/helix-25.01.1-x86_64.AppImage
+      chmod +x helix-25.01.1-x86_64.AppImage
+      sudo mv helix-25.01.1-x86_64.AppImage /usr/local/bin/hx
+      hx --version
+
+      if command -v hx &>/dev/null; then
+
+        log "✅ Helix installed successfully!" "$GREEN"
+      else
+        log "❌ Installation failed!" "$RED"
+        return 1
+      fi
+    else
+      log "⚠️ Helix is already installed! Skipping installation." "$YELLOW"
+    fi
+}
 install_packages(){
   install_with_package_manager
-  install_nodejs
+#  install_nodejs
   install_fzf
   install_lsd
   install_omf
@@ -482,7 +501,7 @@ install_packages(){
   install_fish_plugins
   install_iterm2_shell_integrations
   install_virtual_fish
-  install_nvim
+#  install_nvim
 
 
 }
@@ -789,7 +808,7 @@ install_packages
 configure_fish
 configure_bat
 #configure_vim
-configure_nvim
+#configure_nvim
 configure_singbox
 initialize_config
 source_varibales
