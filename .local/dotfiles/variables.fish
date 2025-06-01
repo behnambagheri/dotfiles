@@ -4,11 +4,14 @@ set -U __done_exclude '^git (?!push|pull|fetch)'  '^ssh' '^vim'   '^sudo -Es' '^
 set -U __done_min_cmd_duration 29000  # default: 5000 ms
 set -U __done_allow_nongraphical 1
 
-set -Ux PREFERRED_EDITOR nvim
+set -Ux PREFERRED_EDITOR hx
 set -Ux EDITOR $PREFERRED_EDITOR
 set -Ux VISUAL $PREFERRED_EDITOR
 
-set -Ux fifc_editor nvim
+set -Ux TERM xterm-256color
+set -Ux COLORTERM truecolor
+
+set -Ux fifc_editor hx
 # set -U fifc_bat_opts --style=numbers
 # set -U fifc_fd_opts --hidden
 # set -U fifc_fd_opts 
