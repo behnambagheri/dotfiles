@@ -474,10 +474,10 @@ install_nvim(){
 install_helix(){
     if ! command -v hx &>/dev/null; then
       log "🛠️ Installing Helix..." "$CYAN"
-      curl -LO https://github.com/helix-editor/helix/releases/download/25.01.1/helix-25.01.1-x86_64.AppImage
+      curl -s -LO https://github.com/helix-editor/helix/releases/download/25.01.1/helix-25.01.1-x86_64.AppImage
       chmod +x helix-25.01.1-x86_64.AppImage
       sudo mv helix-25.01.1-x86_64.AppImage /usr/local/bin/hx
-      hx --version
+      log "Helix Version: $(hx --version)" "$BLUE"
 
       if command -v hx &>/dev/null; then
 
