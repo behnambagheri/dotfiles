@@ -1,5 +1,6 @@
-theme = "tokyonight"
+# theme = "noctis"
 
+theme = "ao"
 [editor]
 line-number = "relative"  
 cursorline = true           
@@ -13,4 +14,11 @@ normal = "block"
 select = "underline"
 
 [keys.normal]
-"C-s" = ":w"  # ذخیره با Ctrl+S
+"C-s" = ":w" 
+V = ["extend_line_below", "select_mode"]
+D = ["select_all", "delete_selection"]
+S-tab = "unindent"
+
+[keys.select]
+tab = "indent"
+S-tab = "unindent"
