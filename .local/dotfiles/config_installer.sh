@@ -788,6 +788,12 @@ initialize_config(){
   mkdir -p "$HOME/.local/share/omf/themes/lambda/functions"
   ln -sf "$HOME/.local/dotfiles/fish_prompt.fish" "$HOME/.local/share/omf/themes/lambda/functions/fish_prompt.fish"
 }
+
+
+configure_helix(){
+  sudo ln -s "$HOME/.config/helix" "/root/.config/helix"
+}
+
 cleanup(){
   # Clean up the cloned repository
   log "🧹 Cleaning up temporary files..." "$BLUE"
@@ -810,6 +816,7 @@ configure_fish
 configure_bat
 #configure_vim
 #configure_nvim
+configure_helix
 configure_singbox
 initialize_config
 source_varibales
