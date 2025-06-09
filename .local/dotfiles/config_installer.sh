@@ -814,7 +814,15 @@ initialize_config(){
 
 
 configure_helix(){
-  sudo ln -s "$HOME/.config/helix" "/root/.config/helix"
+  if ! sudo test -L "/root/.config/helix"; then
+    sudo rm -rf "/root/.config/helix"
+  fi
+  if ! sudo test -d "/root/.config"; then
+    mkdir "/root/.config"
+  fi
+  if ! sudo test -e "/root/.config/helix"; then
+    sudo ln -s "$HOME/.config/helix" "/root/.config/helix"
+  fi
 #  sudo mkdir -p /root/.config/helix
 #  sudo cp -r "$HOME/.config/helix/config.toml" "/root/.config/"
 }
@@ -847,6 +855,8 @@ remove_features(){
       log "Plugin $plugin is already Removed. Skipping..." "$YELLOW"
     fi
   done
+
+
 }
 
 source_varibales(){
