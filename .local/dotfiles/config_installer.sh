@@ -36,7 +36,7 @@ PACKAGES=(
     nmap iputils-ping rsync netcat-traditional gcc build-essential
     net-tools iproute2 unzip bind9-utils prometheus-node-exporter
     ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx
-    ninja-build gettext cmake unzip software-properties-common ripgrep chafa build-essential cmake libfuse2 exa eza
+    ninja-build gettext cmake unzip software-properties-common ripgrep chafa build-essential cmake libfuse2
 )
 # Parse script arguments
 for arg in "$@"; do
@@ -793,7 +793,7 @@ initialize_config(){
 configure_helix(){
   # sudo ln -s "$HOME/.config/helix" "/root/.config/helix"
 
-  sudo cp -r "$HOME/.config/helix" "/root/.config/helix"
+  sudo cp -r "$HOME/.config/helix" "/root/.config/"
 }
 
 cleanup(){
