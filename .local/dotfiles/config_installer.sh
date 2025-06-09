@@ -823,6 +823,7 @@ remove_features(){
     fi
   done
 }
+
 source_varibales(){
   log "source variables..." "$BLUE"
   fish -c "source $HOME/.local/dotfiles/variables.fish"
@@ -832,7 +833,7 @@ source_varibales(){
 clone_projects "git@github.com:behnambagheri/lab.git" "/tmp/lab"
 install_packages
 configure_fish
-configure_bat
+#configure_bat
 #configure_vim
 #configure_nvim
 configure_helix

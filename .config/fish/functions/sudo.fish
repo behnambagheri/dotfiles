@@ -1,8 +1,14 @@
 function sudo
-    if test "$argv[1]" = "vim"
-        command sudo -E nvim $argv[2..-1]  # Run nvim instead of vim while preserving the environment
+    if count $argv
+        switch $argv[1]
+            case l
+                command sudo lsd -lh $argv[2..-1]
+            case vim
+                command sudo hx $argv[2..-1]
+            case '*'
+                command sudo $argv
+        end
     else
-#         command sudo -E $argv  # Run all other sudo commands normally while preserving the environment
-        command sudo $argv  # Run all other sudo commands normally while preserving the environment
+        command sudo
     end
 end

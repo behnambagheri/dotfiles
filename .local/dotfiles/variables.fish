@@ -11,12 +11,12 @@ set -Ux VISUAL $PREFERRED_EDITOR
 set -Ux TERM xterm-256color
 set -Ux COLORTERM truecolor
 
-set -Ux fifc_editor hx
+# set -Ux fifc_editor hx
 # set -U fifc_bat_opts --style=numbers
 # set -U fifc_fd_opts --hidden
 # set -U fifc_fd_opts 
 # set -U fifc_bat_opts --style="full"
-set -U fifc_keybinding \cg
+# set -U fifc_keybinding \cg
 
 #Only completing at the end of the line
 set -U pisces_only_insert_at_eol 1
