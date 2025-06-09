@@ -1,6 +1,6 @@
 # theme = "noctis"
 
-theme = "ao"
+# theme = "ao"
 theme = "tokyonight"
 [editor]
 line-number = "relative"  
