@@ -1,3 +1,5 @@
+
+
 function ptg --description 'Send stdin or argument to Telegram'
     set -l who $argv[1]
     if test -z "$who"
@@ -168,3 +170,4 @@ for chunk in $splitdir/chunk_*
 
     echo "✓ Message successfully sent to '$who'."
 end
+
