@@ -240,9 +240,12 @@ configure_bat(){
   source ~/.bashrc
 }
 install_lsd() {
+  # Remove snap version if it exists
   if [[ -e "/snap/bin/lsd" ]]; then
-      sudo snap remove lsd
+    log "Removing snap version of lsd..." "$YELLOW"
+    sudo snap remove lsd
   fi
+
   # Install lsd only if it's not already installed
   if command -v lsd &>/dev/null; then
     log "lsd already installed." "$MAGENTA"
@@ -252,7 +255,7 @@ install_lsd() {
     local LSD_DEB="lsd_${LSD_VERSION}_amd64.deb"
     local LSD_URL="https://github.com/lsd-rs/lsd/releases/download/v${LSD_VERSION}/${LSD_DEB}"
 
-    wget "$LSD_URL" -O "$LSD_DEB"
+    curl -sL "$LSD_URL" -o "$LSD_DEB"
     if sudo dpkg -i "$LSD_DEB"; then
       log "lsd installation completed successfully." "$GREEN"
     else
@@ -271,7 +274,6 @@ install_lsd() {
     fi
   fi
 }
-
 configure_done_notify() {
     local DONE_NOTIFY_PATH="/tmp/lab/home/bea/scripts/bea/done_notify.fish"
 
