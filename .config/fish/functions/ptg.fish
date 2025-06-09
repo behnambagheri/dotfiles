@@ -1,5 +1,3 @@
-
-
 function ptg --description 'Send stdin or argument to Telegram'
     set -l who $argv[1]
     if test -z "$who"
@@ -51,13 +49,25 @@ function ptg --description 'Send stdin or argument to Telegram'
                 set -l abs_path (realpath $file)
                 set -l caption (printf "📄 <b>File:</b> %s\n📍 <b>Path:</b> %s" (basename $file) $abs_path)
 
-                set -l response (curl -s -X POST $base_url"sendDocument" \
-                                                                                                                                            -F chat_id="$chat_id" \
-                                                                                                                                            -F document=@"$file" \
-                                                                                                                                            -F caption="$caption" \
-                                                                                                                                            -F parse_mode="HTML" \
-                                                                                                                                            --connect-timeout 10 \
-                                                                                                                                            --max-time 30)
+                if test "$chat_id" = "-1001804111897"
+                    set -U response (curl -s -X POST "$base_url""sendDocument" \
+                        -F chat_id="$chat_id" \
+                        -F document=@"$file" \
+                        -F caption="$caption" \
+                        -F reply_to_message_id=41849 \
+                        -F parse_mode="HTML" \
+                        --connect-timeout 10 \
+                        --max-time 30)
+                else
+                    set -U response (curl -s -X POST "$base_url""sendDocument" \
+                        -F chat_id="$chat_id" \
+                        -F document=@"$file" \
+                        -F caption="$caption" \
+                        -F parse_mode="HTML" \
+                        --connect-timeout 10 \
+                        --max-time 30)
+                end
+
 
                 if test $status -ne 0
                     echo "Error: Failed to connect to Telegram API!"
@@ -74,12 +84,28 @@ function ptg --description 'Send stdin or argument to Telegram'
             else
                 # Regular message
                 set -l message (string join \n $argv[2..-1])
-                set -l response (curl -s -X POST "$telegram_url" \
-                                                                                                                                                -d chat_id="$chat_id" \
-                                                                                                                                                --data-urlencode text="$message" \
-                                                                                                                                                -d parse_mode="HTML" \
-                                                                                                                                                --connect-timeout 10 \
-                                                                                                                                                --max-time 30)
+
+
+                if test "$chat_id" = "-1001804111897"
+
+                    set -U response (curl -s -X POST "$telegram_url" \
+                        -d chat_id="$chat_id" \
+                        -d reply_to_message_id=41849 \
+                        --data-urlencode text="$message" \
+                        -d parse_mode="HTML" \
+                        --connect-timeout 10 \
+                        --max-time 30)
+                else
+                    set -U response (curl -s -X POST "$telegram_url" \
+                        -d chat_id="$chat_id" \
+                        --data-urlencode text="$message" \
+                        -d parse_mode="HTML" \
+                        --connect-timeout 10 \
+                        --max-time 30)
+                end
+
+
+
 
                 if test $status -ne 0
                     echo "Error: Failed to connect to Telegram API!"
@@ -144,12 +170,23 @@ for chunk in $splitdir/chunk_*
         echo '<pre>' | cat - "$chunk" > "$chunk.tmp"
         mv "$chunk.tmp" "$chunk"
     end
-            set -l response (curl -s -X POST "$telegram_url" \
-                                                                                                                            -d chat_id="$chat_id" \
-                                                                                                                            --data-urlencode text="$(cat $chunk)" \
-                                                                                                                            -d parse_mode="HTML" \
-                                                                                                                            --connect-timeout 10 \
-                                                                                                                            --max-time 30)
+
+            if test "$chat_id" = "-1001804111897"
+                set -U response (curl -s -X POST "$telegram_url" \
+                    -d chat_id="$chat_id" \
+                    -d reply_to_message_id=41849 \
+                    --data-urlencode text="$(cat $chunk)" \
+                    -d parse_mode="HTML" \
+                    --connect-timeout 10 \
+                    --max-time 30)
+            else
+                set -U response (curl -s -X POST "$telegram_url" \
+                    -d chat_id="$chat_id" \
+                    --data-urlencode text="$(cat $chunk)" \
+                    -d parse_mode="HTML" \
+                    --connect-timeout 10 \
+                    --max-time 30)
+            end
 
             if test $status -ne 0
                 rm -rf $splitdir
@@ -170,4 +207,3 @@ for chunk in $splitdir/chunk_*
 
     echo "✓ Message successfully sent to '$who'."
 end
-
