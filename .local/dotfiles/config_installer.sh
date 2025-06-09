@@ -316,9 +316,7 @@ install_fish_plugins() {
     "nickeb96/puffer-fish"
     "acomagu/fish-async-prompt@a89bf4216b65170e4c3d403e7cbf24ce34b134e6"
     "franciscolourenco/done"
-    "gazorby/fifc"
     "0rax/fish-bd"
-    "wfxr/forgit"
   )
 
   # Check and install missing plugins
@@ -805,6 +803,25 @@ cleanup(){
       log "DIR: $arg Deleted." "$YELLOW"
     fi
   done
+
+}
+
+remove_features(){
+  local PLUGINS
+  # Define plugins list
+  PLUGINS=(
+    "wfxr/forgit"
+    "gazorby/fifc"
+  )
+
+  # Check and install missing plugins
+  for plugin in "${PLUGINS[@]}"; do
+    if fish -c "fisher list | grep -q \"$plugin\""; then
+      fish -c "fisher remove $plugin" > /dev/null 2>&1 || log "Error Removing $plugin" "$RED"
+    else
+      log "Plugin $plugin is already Removed. Skipping..." "$YELLOW"
+    fi
+  done
 }
 source_varibales(){
   log "source variables..." "$BLUE"
@@ -822,6 +839,7 @@ configure_helix
 configure_singbox
 initialize_config
 source_varibales
+remove_features
 cleanup "/tmp/lab" "/tmp/dotfiles"
 
 log "Dotfiles installation and Fish setup complete!" "$GREEN"
