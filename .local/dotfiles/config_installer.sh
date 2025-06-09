@@ -818,7 +818,7 @@ configure_helix(){
     sudo rm -rf "/root/.config/helix"
   fi
   if ! sudo test -d "/root/.config"; then
-    mkdir "/root/.config"
+    sudo mkdir "/root/.config"
   fi
   if ! sudo test -e "/root/.config/helix"; then
     sudo ln -s "$HOME/.config/helix" "/root/.config/helix"
