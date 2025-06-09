@@ -1,3 +1,3 @@
 function tg
-    ptg bea $argv 
+    ptg pastebin $argv 
 end
