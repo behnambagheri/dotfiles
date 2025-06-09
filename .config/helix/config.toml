@@ -1,6 +1,7 @@
 # theme = "noctis"
 
-theme = "ao"
+# theme = "ao"
+theme = "github_dark"
 [editor]
 line-number = "relative"  
 cursorline = true           
