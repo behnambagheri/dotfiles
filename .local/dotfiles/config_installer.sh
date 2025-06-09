@@ -791,9 +791,9 @@ initialize_config(){
 
 
 configure_helix(){
-  # sudo ln -s "$HOME/.config/helix" "/root/.config/helix"
-
-  sudo cp -r "$HOME/.config/helix" "/root/.config/"
+  sudo ln -s "$HOME/.config/helix" "/root/.config/helix"
+#  sudo mkdir -p /root/.config/helix
+#  sudo cp -r "$HOME/.config/helix/config.toml" "/root/.config/"
 }
 
 cleanup(){
