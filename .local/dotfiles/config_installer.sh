@@ -524,7 +524,7 @@ install_packages(){
   install_fisher
   install_lambda_theme
   install_fish_plugins
-  install_iterm2_shell_integrations
+#  install_iterm2_shell_integrations
   install_virtual_fish
   install_helix
 #  install_nvim
