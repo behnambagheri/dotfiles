@@ -2,7 +2,7 @@ function ipinfo
     if test (count $argv) -eq 0
         # Fetch data from both APIs
         set data1 (curl -s -H 'Accept: application/json' "ip.bea.sh")
-        set data2 (curl -s -H 'Accept: application/json' "tnedi.me/json")
+        set data2 (curl -s -H 'Accept: application/json' "ident.me/json")
 
         # Extract IP addresses
         set ip1 (echo $data1 | jq -r '.ip')

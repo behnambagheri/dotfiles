@@ -207,7 +207,8 @@ install_omf(){
   # Install Oh My Fish (OMF) if not already installed
   if [ ! -d "$HOME/.local/share/omf" ]; then
       log "Installing Oh My Fish..." "$CYAN"
-      curl -L https://get.oh-my.fish | fish
+#      curl -L https://get.oh-my.fish | fish
+      curl https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install | fish
   else
     log "omf already exists, skipping clone." "$YELLOW"
   fi
