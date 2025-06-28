@@ -190,7 +190,7 @@ install_nodejs(){
 }
 
 install_fzf() {
-  local REQUIRED_VERSION CURRENT_VERSION
+  local REQUIRED_VERSION CURRENT_VERSION temp_dir
   REQUIRED_VERSION="0.63.0"
   CURRENT_VERSION=$(command -v fzf >/dev/null && fzf --version | awk '{print $1}' || echo "0")
 
@@ -208,12 +208,12 @@ install_fzf() {
   fi
 
   temp_dir=$(mktemp -d)
-  cd "$temp_dir" || exit 1
-  wget https://github.com/junegunn/fzf/releases/download/v$REQUIRED_VERSION/fzf-${REQUIRED_VERSION}-linux_amd64.tar.gz
-  tar xzvf fzf-${REQUIRED_VERSION}-linux_amd64.tar.gz
-  sudo mv fzf /usr/local/bin/
+  cd "$temp_dir" >/dev/null || exit 1
+  wget -q https://github.com/junegunn/fzf/releases/download/v$REQUIRED_VERSION/fzf-${REQUIRED_VERSION}-linux_amd64.tar.gz
+  tar xzf fzf-${REQUIRED_VERSION}-linux_amd64.tar.gz >/dev/null
+  sudo mv fzf /usr/local/bin/ >/dev/null 2>&1
   cd - >/dev/null || exit
-  rm -rf "$temp_dir" "$HOME/.fzf"
+  rm -rf "$temp_dir" "$HOME/.fzf" >/dev/null 2>&1
 }
 
 install_omf(){
