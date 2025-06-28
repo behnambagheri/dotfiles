@@ -188,21 +188,34 @@ install_nodejs(){
   fi
 
 }
-install_fzf(){
-  # Install Docker plugins only if Docker is installed
-  if command -v fzf &>/dev/null; then
-      log "fzf already installed." "$MAGENTA"
+
+install_fzf() {
+  local REQUIRED_VERSION CURRENT_VERSION
+  REQUIRED_VERSION="0.63.0"
+  CURRENT_VERSION=$(command -v fzf >/dev/null && fzf --version | awk '{print $1}' || echo "0")
+
+  version_lt() {
+    [ "$(printf '%s\n' "$1" "$2" | sort -V | head -n1)" != "$2" ]
+  }
+
+  if ! command -v fzf &>/dev/null; then
+    log "fzf not found, installing..." "$CYAN"
+  elif version_lt "$CURRENT_VERSION" "$REQUIRED_VERSION"; then
+    log "fzf outdated ($CURRENT_VERSION), upgrading..." "$MAGENTA"
   else
-    # Install fzf (Fuzzy Finder)
-    log "Installing fzf..." "$CYAN"
-    if [ ! -d "$HOME/.fzf" ]; then
-      git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    else
-      log "fzf already exists, skipping clone." "$YELLOW"
-    fi
-    ~/.fzf/install --all
+    log "fzf already installed (version $CURRENT_VERSION)." "$MAGENTA"
+    return
   fi
+
+  temp_dir=$(mktemp -d)
+  cd "$temp_dir" || exit 1
+  wget https://github.com/junegunn/fzf/releases/download/v$REQUIRED_VERSION/fzf-${REQUIRED_VERSION}-linux_amd64.tar.gz
+  tar xzvf fzf-${REQUIRED_VERSION}-linux_amd64.tar.gz
+  sudo mv fzf /usr/local/bin/
+  cd - >/dev/null || exit
+  rm -rf "$temp_dir" "$HOME/.fzf"
 }
+
 install_omf(){
   # Install Oh My Fish (OMF) if not already installed
   if [ ! -d "$HOME/.local/share/omf" ]; then
