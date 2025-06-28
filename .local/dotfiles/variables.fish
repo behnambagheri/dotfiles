@@ -41,6 +41,6 @@ end
 
 set -U fish_user_paths $HOME/.local/bin $fish_user_paths
 
-# source ~/.config/fish/conf.d/fzf.fish
+source ~/.config/fish/conf.d/fzf.fish
 # source ~/.config/fish/conf.d/fifc.fish
 # source ~/.config/fish/conf.d/forgit.plugin.fish
