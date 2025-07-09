@@ -210,7 +210,7 @@ install_fzf() {
   temp_dir=$(mktemp -d)
   cd "$temp_dir" >/dev/null || exit 1
   wget -q https://github.com/junegunn/fzf/releases/download/v$REQUIRED_VERSION/fzf-${REQUIRED_VERSION}-linux_"${ARCHITECTURE}".tar.gz
-  tar xzf fzf-${REQUIRED_VERSION}-linux_amd64.tar.gz >/dev/null
+  tar xzf fzf-${REQUIRED_VERSION}-linux_"${ARCHITECTURE}".tar.gz >/dev/null
   sudo mv fzf /usr/local/bin/ >/dev/null 2>&1
   cd - >/dev/null || exit
   rm -rf "$temp_dir" "$HOME/.fzf" >/dev/null 2>&1
