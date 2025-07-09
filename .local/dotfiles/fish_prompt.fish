@@ -54,7 +54,9 @@ function fish_prompt
         set exit_color (set_color red)
     end
 
-    if test (uname -n | cut -d . -f 1) = Bagheri-MacBook-Pro
+    # if test (uname -n | cut -d . -f 1) = Bagheri-MacBook-Pro
+    if test (uname -n | cut -d . -f 1) = Bagheri-MacBook-Pro; or test (uname -n | cut -d . -f 1) = MacBookPro
+
         # if test (uname -n | cut -d . -f 1) = "MacBookPro"
         set -g current_user bea
         #       set -g kubenv_current_cluster (kubectl config view --minify --output 'jsonpath={.contexts[0].context.cluster}' 2> /dev/null | cut -d'@' -f1)

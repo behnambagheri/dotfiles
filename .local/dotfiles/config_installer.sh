@@ -115,11 +115,11 @@ install_with_package_manager(){
     if command -v apt &>/dev/null; then
 
     # Check if Fish PPA is already added
-    if grep -Rq "fish-shell/release-3" /etc/apt/sources.list.d/; then
+    if grep -Rq "fish-shell/release-4" /etc/apt/sources.list.d/; then
       log "PPA already added. Skipping..." "$YELLOW"
     else
       log "Adding Fish Shell repository..." "$CYAN"
-      sudo add-apt-repository -y ppa:fish-shell/release-3
+      sudo add-apt-repository -y ppa:fish-shell/release-4
     fi
       log "Updating package list..." "$CYAN"
       sudo apt-get update -y > /dev/null || log "Error occurred during apt update" "$RED"
