@@ -191,7 +191,7 @@ install_nodejs(){
 
 install_fzf() {
   local REQUIRED_VERSION CURRENT_VERSION temp_dir
-  REQUIRED_VERSION="0.63.0"
+  REQUIRED_VERSION="0.64.0"
   CURRENT_VERSION=$(command -v fzf >/dev/null && fzf --version | awk '{print $1}' || echo "0")
 
   version_lt() {
