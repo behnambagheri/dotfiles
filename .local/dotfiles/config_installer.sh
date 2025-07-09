@@ -255,7 +255,8 @@ configure_bat(){
   source ~/.bashrc
 }
 install_lsd() {
-  # Remove snap version if it exists
+  local LSD_DEB LSD_URL LSD_VERSION
+  # Remove a snap version if it exists
   if [[ -e "/snap/bin/lsd" ]]; then
     log "Removing snap version of lsd..." "$YELLOW"
     sudo snap remove lsd
@@ -266,9 +267,9 @@ install_lsd() {
     log "lsd already installed." "$MAGENTA"
   else
     log "Installing lsd..." "$CYAN"
-    local LSD_VERSION="1.1.5"
-    local LSD_DEB="lsd_${LSD_VERSION}_amd64.deb"
-    local LSD_URL="https://github.com/lsd-rs/lsd/releases/download/v${LSD_VERSION}/${LSD_DEB}"
+    LSD_VERSION="1.1.5"
+    LSD_DEB="lsd_${LSD_VERSION}_$(dpkg --print-architecture).deb"
+    LSD_URL="https://github.com/lsd-rs/lsd/releases/download/v${LSD_VERSION}/${LSD_DEB}"
 
     curl -sL "$LSD_URL" -o "$LSD_DEB"
     if sudo dpkg -i "$LSD_DEB"; then
