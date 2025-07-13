@@ -339,6 +339,7 @@ configure_mail_smtp() {
 
     log "Adding .msmtprc..." "$CYAN"
     cp "$SMTP_CONF" "$HOME/"
+    chmod 600 "$HOME/.msmtprc"
 }
 install_fish_plugins() {
   local PLUGINS plugin DOCKER_PLUGINS
