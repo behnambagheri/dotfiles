@@ -896,6 +896,7 @@ configure_fish
 configure_helix
 configure_singbox
 initialize_config
+configure_mail_smtp
 source_varibales
 remove_features
 cleanup "/tmp/lab" "/tmp/dotfiles"
