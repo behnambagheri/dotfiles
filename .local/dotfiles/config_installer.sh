@@ -37,7 +37,7 @@ PACKAGES=(
     net-tools iproute2 unzip bind9-utils prometheus-node-exporter
     ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx
     ninja-build gettext cmake unzip software-properties-common
-    ripgrep chafa build-essential cmake libfuse2 unrar
+    ripgrep chafa build-essential cmake libfuse2 unrar msmtp msmtp-mta
 )
 # Parse script arguments
 for arg in "$@"; do
@@ -333,6 +333,13 @@ configure_done_notify() {
         log "Error: done_notify.fish not found at $DONE_NOTIFY_PATH" "$RED"
         exit 1
     fi
+}
+configure_mail_smtp() {
+    local SMTP_CONF="/tmp/lab/home/bea/.msmtprc"
+
+    log "Adding .msmtprc..." "$CYAN"
+    cp "$SMTP_CONF" "$HOME/"
+    chmod 600 "$HOME/.msmtprc"
 }
 install_fish_plugins() {
   local PLUGINS plugin DOCKER_PLUGINS
@@ -890,6 +897,7 @@ configure_fish
 configure_helix
 configure_singbox
 initialize_config
+configure_mail_smtp
 source_varibales
 remove_features
 cleanup "/tmp/lab" "/tmp/dotfiles"

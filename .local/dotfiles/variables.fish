@@ -21,7 +21,8 @@ set -Ux COLORTERM truecolor
 #Only completing at the end of the line
 set -U pisces_only_insert_at_eol 1
 
-set -Ux KUBECONFIG /Users/behnam/.kube/aircodeup.yaml:/Users/behnam/.kube/arvan.yaml:/Users/behnam/.kube/delta.yaml:/Users/behnam/.kube/novin.yaml:/Users/behnam/.kube/ilka.yaml:/Users/behnam/.kube/max-ir-central1-arvan.yaml:/Users/behnam/.kube/bea.yaml:
+# set -Ux KUBECONFIG /Users/behnam/.kube/aircodeup.yaml:/Users/behnam/.kube/arvan.yaml:/Users/behnam/.kube/delta.yaml:/Users/behnam/.kube/novin.yaml:/Users/behnam/.kube/ilka.yaml:/Users/behnam/.kube/max-ir-central1-arvan.yaml:/Users/behnam/.kube/bea.yaml:
+set -Ux KUBECONFIG /Users/behnam/.kube/delta.yaml:/Users/behnam/.kube/novin.yaml:/Users/behnam/.kube/bea.yaml:
 test -e {$HOME}/.iterm2_shell_integration.fish; and source {$HOME}/.iterm2_shell_integration.fish
 
 # Load kubectl completions only if kubectl exists
@@ -44,3 +45,5 @@ set -U fish_user_paths $HOME/.local/bin $fish_user_paths
 source ~/.config/fish/conf.d/fzf.fish
 # source ~/.config/fish/conf.d/fifc.fish
 # source ~/.config/fish/conf.d/forgit.plugin.fish
+#
+sync_history
