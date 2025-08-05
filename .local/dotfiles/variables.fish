@@ -11,6 +11,10 @@ set -Ux VISUAL $PREFERRED_EDITOR
 set -Ux TERM xterm-256color
 set -Ux COLORTERM truecolor
 
+set -Ux VIRTUAL_ENV_DISABLE_PROMPT 1
+set -Ux VIRTUAL_ENV_DISABLE_PROMPT true
+set -Ux VIRTUAL_ENV_DISABLE_PROMPT True
+
 # set -Ux fifc_editor hx
 # set -U fifc_bat_opts --style=numbers
 # set -U fifc_fd_opts --hidden

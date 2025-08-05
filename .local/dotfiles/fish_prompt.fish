@@ -1,6 +1,7 @@
 function fish_prompt
     # Cache the last command's exit status at the very beginning of the function
     set -l last_status $status
+#     set -g VIRTUAL_ENV_DISABLE_PROMPT true
 
     sync_history
 
@@ -93,9 +94,8 @@ function fish_prompt
         echo -n $hostcolor'╰'
 
     end
-
     # Disable virtualenv's default prompt
-#     set -g VIRTUAL_ENV_DISABLE_PROMPT true
+    set -g VIRTUAL_ENV_DISABLE_PROMPT true
 
     # Support for virtual environment name
       if set -q VIRTUAL_ENV
