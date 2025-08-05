@@ -546,7 +546,7 @@ install_packages(){
   install_lambda_theme
   install_fish_plugins
 #  install_iterm2_shell_integrations
-  install_virtual_fish
+#  install_virtual_fish
   install_helix
 #  install_nvim
 
@@ -878,6 +878,15 @@ remove_features(){
       log "Plugin $plugin is already Removed. Skipping..." "$YELLOW"
     fi
   done
+
+  if pipx list | grep -q "virtualfish"; then
+        pipx uninstall virtualfish > /dev/null 2>&1 || log "Error Removing virtualfish" "$RED"
+        rm -rf "$HOME/.config/fish/conf.d/virtualfish-loader.fish"
+        log "Uninstalling VirtualFish." "$GREEN"
+    else
+        log "⚠️ VirtualFish already removed...." "$MAGENTA"
+  fi
+
 
 
 }

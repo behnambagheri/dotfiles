@@ -22,7 +22,7 @@ set -Ux COLORTERM truecolor
 set -U pisces_only_insert_at_eol 1
 
 # set -Ux KUBECONFIG /Users/behnam/.kube/aircodeup.yaml:/Users/behnam/.kube/arvan.yaml:/Users/behnam/.kube/delta.yaml:/Users/behnam/.kube/novin.yaml:/Users/behnam/.kube/ilka.yaml:/Users/behnam/.kube/max-ir-central1-arvan.yaml:/Users/behnam/.kube/bea.yaml:
-set -Ux KUBECONFIG /Users/behnam/.kube/delta.yaml:/Users/behnam/.kube/novin.yaml:/Users/behnam/.kube/bea.yaml:
+set -Ux KUBECONFIG /Users/behnam/.kube/delta.yaml:/Users/behnam/.kube/coinchecko.yaml:/Users/behnam/.kube/novin.yaml:/Users/behnam/.kube/bea.yaml:
 test -e {$HOME}/.iterm2_shell_integration.fish; and source {$HOME}/.iterm2_shell_integration.fish
 
 # Load kubectl completions only if kubectl exists
@@ -35,10 +35,6 @@ if test -d /Users/behnam/.local/bin
     set -Ux PATH $PATH /Users/behnam/.local/bin
 end
 
-# Add /Users/behnam/.local/bin to PATH if it exists
-if test -d /home/bea/.local/bin
-    set -Ux PATH $PATH /home/bea/.local/bin
-end
 
 set -U fish_user_paths $HOME/.local/bin $fish_user_paths
 

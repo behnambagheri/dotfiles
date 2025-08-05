@@ -95,16 +95,16 @@ function fish_prompt
     end
 
     # Disable virtualenv's default prompt
-    set -g VIRTUAL_ENV_DISABLE_PROMPT true
+#     set -g VIRTUAL_ENV_DISABLE_PROMPT true
 
     # Support for virtual environment name
-    #   if set -q VIRTUAL_ENV
-    #     echo -n -s "($turquoise"(basename "$VIRTUAL_ENV")"$white)"
-    #   end
+      if set -q VIRTUAL_ENV
+        echo -n -s "($turquoise"(basename "$VIRTUAL_ENV")"$white)"
+      end
 
-    if set -q VIRTUAL_ENV
-        echo -n -s (set_color -b normal 5fdfff) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
-    end
+#     if set -q VIRTUAL_ENV
+#         echo -n -s (set_color -b normal 5fdfff) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
+#     end
     ##
     ## Support for vi mode
     ##

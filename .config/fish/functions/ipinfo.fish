@@ -2,12 +2,12 @@ function ipinfo
     if test (count $argv) -eq 0
         # Fetch data from both APIs
         set data1 (curl -s -H 'Accept: application/json' "ip.bea.sh")
-        set data2 (curl -s -H 'Accept: application/json' "ident.me/json")
-
+        set data2 (curl -s -H 'Accept: application/json' "tnedi.me/json")
+        
         # Extract IP addresses
         set ip1 (echo $data1 | jq -r '.ip')
         set ip2 (echo $data2 | jq -r '.ip')
-
+        
         # Compare IPs and format JSON output
         if test "$ip1" = "$ip2"
             echo '{
@@ -16,7 +16,7 @@ function ipinfo
         else
             echo '{
   "ip.bea.sh":' (echo $data1 | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .time_zone, .asn)') ',
-  "ident.me":' (echo $data2 | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .tz, .weather, .postal, .asn, .continent)') '
+  "tnedi.me":' (echo $data2 | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .tz, .weather, .postal, .asn, .continent)') '
 }' | jq .
         end
     else if string match -q -r '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' -- $argv[1]
