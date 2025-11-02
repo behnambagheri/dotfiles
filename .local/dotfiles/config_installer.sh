@@ -271,6 +271,8 @@ install_lsd() {
     LSD_DEB="lsd_${LSD_VERSION}_$(dpkg --print-architecture).deb"
     LSD_URL="https://github.com/lsd-rs/lsd/releases/download/v${LSD_VERSION}/${LSD_DEB}"
 
+    log "LSD URL: $LSD_URL" "$RED"
+
     curl -sL "$LSD_URL" -o "$LSD_DEB"
     if sudo dpkg -i "$LSD_DEB"; then
       log "lsd installation completed successfully." "$GREEN"
