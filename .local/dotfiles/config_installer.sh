@@ -267,7 +267,7 @@ install_lsd() {
     log "lsd already installed." "$MAGENTA"
   else
     log "Installing lsd..." "$CYAN"
-    LSD_VERSION="1.1.5"
+    LSD_VERSION="1.2.0"
     LSD_DEB="lsd_${LSD_VERSION}_$(dpkg --print-architecture).deb"
     LSD_URL="https://github.com/lsd-rs/lsd/releases/download/v${LSD_VERSION}/${LSD_DEB}"
 
