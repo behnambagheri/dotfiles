@@ -64,8 +64,8 @@ if test -n "$MANPATH[1]"
     set --global --export MANPATH '' $MANPATH
 end
 
-if not contains /opt/homebrew/share/info $INFOPATH
-    set --global --export INFOPATH /opt/homebrew/share/info $INFOPATH
-end
+# if not contains /opt/homebrew/share/info $INFOPATH
+#     set --global --export INFOPATH /opt/homebrew/share/info $INFOPATH
+# end
 
 sync_history
