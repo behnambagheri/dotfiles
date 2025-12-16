@@ -51,21 +51,24 @@ source ~/.config/fish/conf.d/fzf.fish
 # source ~/.config/fish/conf.d/forgit.plugin.fish
 #
 # Homebrew environment without calling /bin/ps
-eval (/opt/homebrew/bin/brew shellenv fish)
-set --global --export HOMEBREW_PREFIX /opt/homebrew
+#
+if test (hostname) = Bagheri-MacBook-Pro.local
 
-set --global --export HOMEBREW_CELLAR /opt/homebrew/Cellar
+    eval (/opt/homebrew/bin/brew shellenv fish)
+    set --global --export HOMEBREW_PREFIX /opt/homebrew
 
-set --global --export HOMEBREW_REPOSITORY /opt/homebrew
+    set --global --export HOMEBREW_CELLAR /opt/homebrew/Cellar
 
-fish_add_path --global --move --path /opt/homebrew/bin /opt/homebrew/sbin
+    set --global --export HOMEBREW_REPOSITORY /opt/homebrew
 
-if test -n "$MANPATH[1]"
-    set --global --export MANPATH '' $MANPATH
+    fish_add_path --global --move --path /opt/homebrew/bin /opt/homebrew/sbin
+
+    if test -n "$MANPATH[1]"
+        set --global --export MANPATH '' $MANPATH
+    end
+
+    if not contains /opt/homebrew/share/info $INFOPATH
+        set --global --export INFOPATH /opt/homebrew/share/info $INFOPATH
+    end
 end
-
-# if not contains /opt/homebrew/share/info $INFOPATH
-#     set --global --export INFOPATH /opt/homebrew/share/info $INFOPATH
-# end
-
 sync_history
