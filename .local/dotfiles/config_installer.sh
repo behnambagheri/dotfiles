@@ -374,7 +374,7 @@ install_fish_plugins() {
     "acomagu/fish-async-prompt@a89bf4216b65170e4c3d403e7cbf24ce34b134e6"
     "franciscolourenco/done"
     "0rax/fish-bd"
-    "behnambagheri/paste-gram"
+    "behnambagheri/fish-paste-gram"
   )
 
   # Check and install missing plugins
