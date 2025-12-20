@@ -72,7 +72,7 @@ if test (hostname) = Bagheri-MacBook-Pro.local
     end
 end
 
-set -Ux TELEGRAM_CHAT_ID '123456789'
+set -Ux TELEGRAM_CHAT_ID '323101679'
 set -Ux TELEGRAM_API_URL 'https://tg.bea.sh'
 set -Ux PASTEGRAM_HOSTNAME 'true'
 set -Ux PASTEGRAM_LAST_COMMAND 'true'
