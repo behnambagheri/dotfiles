@@ -336,6 +336,12 @@ configure_done_notify() {
         exit 1
     fi
 }
+
+configure_paste_gram() {
+    local TELEGRAM_TOKEN="$(cat /tmp/lab/home/bea/scripts/bea/telegram.token)"
+    fish -c "set -Ux TELEGRAM_TOKEN '$TELEGRAM_TOKEN'"
+}
+
 configure_mail_smtp() {
     local SMTP_CONF="/tmp/lab/home/bea/.msmtprc"
 
@@ -367,6 +373,7 @@ install_fish_plugins() {
     "acomagu/fish-async-prompt@a89bf4216b65170e4c3d403e7cbf24ce34b134e6"
     "franciscolourenco/done"
     "0rax/fish-bd"
+    "behnambagheri/paste-gram"
   )
 
   # Check and install missing plugins
@@ -379,7 +386,7 @@ install_fish_plugins() {
   done
 
   configure_done_notify
-
+  configure_paste_gram
   # Install Docker plugins only if Docker is installed
   if command -v docker &>/dev/null; then
     log "Docker detected! Installing Docker plugins..." "$MAGENTA"
