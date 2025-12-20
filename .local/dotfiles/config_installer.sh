@@ -338,7 +338,7 @@ configure_done_notify() {
 }
 
 configure_paste_gram() {
-    log "Configure PasteGram."
+    log "Configure PasteGram." "$CYAN"
     local TELEGRAM_TOKEN="$(cat /tmp/lab/home/bea/scripts/bea/telegram.token)"
     fish -c "set -Ux TELEGRAM_TOKEN '$TELEGRAM_TOKEN'"
 }
