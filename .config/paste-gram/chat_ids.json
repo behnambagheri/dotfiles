@@ -1,10 +1,25 @@
 {
-  "bea": "323101679",
-  "bea2": "7871724490",
-  "reza": "5415541173",
-  "pastebin": "-1001804111897",
-  "nikneshan": "110876335",
-  "nik": "110876335",
-  "ali": "226172014",
-  "yara": "157350506"
+  "bea": {
+    "chat_id": "323101679",
+    "username": "@behnambaqeri"
+  },
+  "bea2": {
+    "chat_id": "7871724490",
+    "username": "@behnumbagheri"
+  },
+  "reza": {
+    "chat_id": "5415541173",
+    "username": "@reza_x86_64"
+  },
+  "pastebin": {
+    "chat_id": "-1001804111897"
+  },
+  "nik": {
+    "chat_id": "110876335",
+    "username": "@nikneshan"
+  },
+  "yara": {
+    "chat_id": "157350506",
+    "username": "@yarak"
   }
+}
