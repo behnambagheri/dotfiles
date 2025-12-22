@@ -39,6 +39,7 @@ PACKAGES=(
     ncdu nethogs jq python3-full python3-pip python3-venv ripgrep pipx
     ninja-build gettext cmake unzip software-properties-common
     ripgrep chafa build-essential cmake libfuse2 unrar msmtp msmtp-mta
+    libncursesw5-dev pkg-config
 )
 # Parse script arguments
 for arg in "$@"; do
@@ -547,6 +548,56 @@ install_helix(){
       log "⚠️ Helix is already installed! Skipping installation." "$YELLOW"
     fi
 }
+
+install_ncdu() {
+  log "Installing / Configuring NCDU." "$CYAN"
+
+  local REQUIRED_VERSION="2.9.1"
+  local ARCHIVE_URL="https://dev.yorhel.nl/download/ncdu-2.9.1-linux-x86_64.tar.gz"
+  local TMP_DIR
+  local CURRENT_VERSION
+  local src="$HOME/.config/ncdu/config"
+  local dst="/etc/ncdu.conf"
+
+  version_lt() {
+    [ "$(printf '%s\n' "$1" "$2" | sort -V | head -n1)" != "$2" ]
+  }
+
+  # Check installed version (if any)
+  if command -v ncdu &>/dev/null; then
+    CURRENT_VERSION="$(ncdu --version | awk '{print $NF}')"
+    if ! version_lt "$CURRENT_VERSION" "$REQUIRED_VERSION"; then
+      log "ncdu version $CURRENT_VERSION is up to date. Skipping binary install." "$DIM"
+      goto_config=true
+    else
+      log "ncdu version $CURRENT_VERSION is older than $REQUIRED_VERSION. Replacing..." "$YELLOW"
+      sudo rm -f "$(command -v ncdu)"
+    fi
+  fi
+
+  # Install ncdu if needed
+  if ! command -v ncdu &>/dev/null; then
+    TMP_DIR="$(mktemp -d)"
+    curl -fsSL "$ARCHIVE_URL" -o "$TMP_DIR/ncdu.tar.gz"
+    tar -xzf "$TMP_DIR/ncdu.tar.gz" -C "$TMP_DIR"
+    sudo install -m 755 "$TMP_DIR/ncdu" /usr/local/bin/ncdu
+    rm -rf "$TMP_DIR"
+    log "ncdu $REQUIRED_VERSION installed to /usr/local/bin/ncdu" "$GREEN"
+  fi
+
+  # Configure ncdu config
+  if [[ ! -f "$src" ]]; then
+    log "Source ncdu config not found: $src" "$RED"
+    return 1
+  fi
+
+  if [[ ! -f "$dst" ]] || ! cmp -s "$src" "$dst"; then
+    sudo install -m 644 "$src" "$dst"
+    log "ncdu config installed/updated." "$GREEN"
+  else
+    log "ncdu config already up to date." "$DIM"
+  fi
+}
 install_packages(){
   install_with_package_manager
 #  install_nodejs
@@ -560,7 +611,7 @@ install_packages(){
 #  install_virtual_fish
   install_helix
 #  install_nvim
-
+  install_ncdu
 
 }
 configure_fish(){
@@ -860,23 +911,6 @@ configure_helix(){
 #  sudo mkdir -p /root/.config/helix
 #  sudo cp -r "$HOME/.config/helix/config.toml" "/root/.config/"
 }
-configure_ncdu() {
-  log "Configure NCDU." "$CYAN"
-
-  local src="$HOME/.config/ncdu/config"
-  local dst="/etc/ncdu.conf"
-
-  if [[ ! -f "$src" ]]; then
-    log "Source ncdu config not found: $src" "$RED"
-  fi
-
-  if [[ ! -f "$dst" ]] || ! cmp -s "$src" "$dst"; then
-    sudo cp "$src" "$dst"
-    log "ncdu config installed/updated." "$GREEN"
-  else
-    log "ncdu config already up to date." "$DIM"
-  fi
-}
 cleanup(){
   # Clean up the cloned repository
   log "🧹 Cleaning up temporary files..." "$BLUE"
@@ -931,7 +965,6 @@ configure_fish
 #configure_vim
 #configure_nvim
 configure_helix
-configure_ncdu
 configure_singbox
 initialize_config
 configure_mail_smtp
