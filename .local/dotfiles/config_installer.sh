@@ -28,6 +28,7 @@ BLUE="\033[34m"
 MAGENTA="\033[35m"
 CYAN="\033[36m"
 WHITE="\033[37m"
+DIM="\033[2m"
 DEFAULT_COLOR="\033[0m"
 
 # List of required packages
@@ -859,7 +860,23 @@ configure_helix(){
 #  sudo mkdir -p /root/.config/helix
 #  sudo cp -r "$HOME/.config/helix/config.toml" "/root/.config/"
 }
+configure_ncdu() {
+  log "Configure NCDU." "$CYAN"
 
+  local src="$HOME/.config/ncdu/config"
+  local dst="/etc/ncdu.conf"
+
+  if [[ ! -f "$src" ]]; then
+    log "Source ncdu config not found: $src" "$RED"
+  fi
+
+  if [[ ! -f "$dst" ]] || ! cmp -s "$src" "$dst"; then
+    sudo cp "$src" "$dst"
+    log "ncdu config installed/updated." "$GREEN"
+  else
+    log "ncdu config already up to date." "$DIM"
+  fi
+}
 cleanup(){
   # Clean up the cloned repository
   log "🧹 Cleaning up temporary files..." "$BLUE"
@@ -914,6 +931,7 @@ configure_fish
 #configure_vim
 #configure_nvim
 configure_helix
+configure_ncdu
 configure_singbox
 initialize_config
 configure_mail_smtp

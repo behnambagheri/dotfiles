@@ -1,4 +1,5 @@
 --color dark
+
 -x
 -e
 --exclude .git
