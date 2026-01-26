@@ -1,7 +1,7 @@
 function ipinfo
     if test (count $argv) -eq 0
         # Fetch data from both APIs
-        set data1 (curl -s -H 'Accept: application/json' "ip.bea.sh")
+        set data1 (curl -s -H 'Accept: application/json' "ip.behnam.pro")
         set data2 (curl -s -H 'Accept: application/json' "tnedi.me/json")
         
         # Extract IP addresses
@@ -11,18 +11,18 @@ function ipinfo
         # Compare IPs and format JSON output
         if test "$ip1" = "$ip2"
             echo '{
-  "ip.bea.sh":' (echo $data1 | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .time_zone, .asn)') '
+  "ip.behnam.pro":' (echo $data1 | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .time_zone, .asn)') '
 }' | jq .
         else
             echo '{
-  "ip.bea.sh":' (echo $data1 | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .time_zone, .asn)') ',
+  "ip.behnam.pro":' (echo $data1 | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .time_zone, .asn)') ',
   "tnedi.me":' (echo $data2 | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .tz, .weather, .postal, .asn, .continent)') '
 }' | jq .
         end
     else if string match -q -r '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' -- $argv[1]
-        curl -s -H 'Accept: application/json' "ip.bea.sh/?ip=$argv[1]" | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .time_zone, .asn)' | jq .
+        curl -s -H 'Accept: application/json' "ip.behnam.pro/?ip=$argv[1]" | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .time_zone, .asn)' | jq .
     else
         set ip (dig +short $argv[1] | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -1)
-        curl -s -H 'Accept: application/json' "ip.bea.sh/?ip=$ip" | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .time_zone, .asn)' | jq .
+        curl -s -H 'Accept: application/json' "ip.behnam.pro/?ip=$ip" | jq 'del(.user_agent, .ip_decimal, .country_eu, .region_code, .latitude, .longitude, .time_zone, .asn)' | jq .
     end
 end
