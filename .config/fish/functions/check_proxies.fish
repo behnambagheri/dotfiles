@@ -1,5 +1,5 @@
 function check_proxies
-    for port in 7890 7891 7892
+    for port in 7890 7891 7892 7893 7894 7895
         set -l ip (curl --silent --fail --connect-timeout 3 --max-time 5 --proxy 127.0.0.1:$port ipinfo.io 2>/dev/null | grep '"ip"' | awk '{print $2}' | cut -d"," -f1)
         
         if test -z "$ip"
