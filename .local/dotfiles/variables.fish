@@ -73,8 +73,9 @@ if test (hostname) = Bagheri-MacBook-Pro.local
 end
 
 set -Ux TELEGRAM_CHAT_ID 323101679
-set -Ux TELEGRAM_API_URL 'https://tg.bea.sh'
+set -Ux TELEGRAM_API_URL 'https://tg.bimax.space'
 set -Ux PASTEGRAM_HOSTNAME true
 set -Ux PASTEGRAM_LAST_COMMAND true
+set -Ux TELEGRAM_MT_PROXY 'http://172.16.40.131:7890'
 
 sync_history
