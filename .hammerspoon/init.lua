@@ -1,5 +1,5 @@
 local previousLayout = nil
-local targetApps = { "iTerm2", "Remote Desktop Manager", "AnyDesk", "PyCharm", "WinBox", "KeePassXC", "Preview"}
+local targetApps = { "iTerm2", "Remote Desktop Manager", "AnyDesk", "PyCharm", "WinBox", "KeePassXC", "Preview", "RustDesk.app"}
 
 local function isTargetApp(appName)
     for _, name in ipairs(targetApps) do
